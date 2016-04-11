@@ -1,2 +1,6 @@
 user-*-passwordfile
 openvpn-server*
+*~
+\#*
+result
+*-backup

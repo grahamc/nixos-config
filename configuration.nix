@@ -28,7 +28,7 @@
   boot.kernelParams = [
    "libata.force=noncq"
   ];
-  
+
   networking.hostName = "NdNdNx";
 
   # Select internationalisation properties.
@@ -67,7 +67,7 @@
      thunderbird-bin
 
      terminator
-     wireshark
+
   ];
 
   # Enable the OpenSSH daemon.
@@ -90,7 +90,7 @@
   };
   #services.xserver.enable = true;
   #services.xserver.autorun = true;
-  
+
   #services.xserver.layout = "dvorak";
   #services.xserver.xkbVariant = "mac";
   #services.xserver.xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
@@ -100,7 +100,7 @@
   hardware.opengl.driSupport32Bit = true;
   hardware.pulseaudio.enable = true;
   hardware.facetimehd.enable = true;
-  
+
 
 
   networking.networkmanager.enable = true;
@@ -114,7 +114,7 @@
   '';
   #Option         "nvidiaXineramaInfoOrder" "DFP-5"
   #    Option "metamodes" "2880x1800 +0+0; nvidia-auto-select +0+0 {viewportin=1680x1050}"
-  
+
   services.xserver.synaptics = {
     enable = true;
     tapButtons = false;
@@ -156,7 +156,7 @@
   '';
 
   programs.zsh.enable = true;
-	  
+
 
   users.mutableUsers = false;
   users.extraUsers.root.passwordFile = "/etc/nixos/user-root-passwordfile";
@@ -189,7 +189,7 @@
     wantedBy = [ "multi-user.target" "post-resume.target" ];
     after = [ "multi-user.target" "post-resume.target" ];
     serviceConfig.Type = "oneshot";
-    
+
     serviceConfig.script = ''
       if ${pkgs.gnugrep}/bin/grep -q '\bXHC1\b.*\benabled\b' /proc/acpi/wakeup; then
         echo XHC1 > /proc/acpi/wakeup
@@ -217,7 +217,7 @@
       ExecStop = "${pkgs.emacs}/bin/emacsclient --eval (kill-emacs)";
       Restart = "always";
     };
-    
+
     wantedBy = [ "default.target" ];
   };
 
@@ -227,11 +227,9 @@
   nix = {
       useChroot = true;
   };
-  
+
   nixpkgs.config.allowUnfree = true;
 
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "15.09";
 }
-
-
