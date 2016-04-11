@@ -3,6 +3,10 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
+let
+ mypkgs = import ./packages { inherit pkgs; };
+in
+
 {
   imports =
     [
@@ -197,7 +201,19 @@
     '';
   };
 
+  systemd.services.monitor-hotplug = {
+    wantedBy = [ "multi-user.target" ];
+    after = [ "multi-user.target" ];
+    enable = true;
 
+    environment = {
+        DISPLAY = ":0";
+    };
+
+    serviceConfig = {
+      ExecStart = "${mypkgs.monitor-hotplug}/bin/monitor-hotplug  --delay 15 --side right --primary DP-2";
+    };
+  };
 
   systemd.user.services.emacs = {
     enable = true;
