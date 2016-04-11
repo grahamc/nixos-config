@@ -5,9 +5,7 @@
 { config, pkgs, ... }:
 let
  mypkgs = import ./packages { inherit pkgs; };
-in
-
-{
+in {
   imports =
     [
       ./hardware-configuration.nix
