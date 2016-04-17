@@ -4,7 +4,7 @@
 
 { config, pkgs, ... }:
 let
- mypkgs = import ./packages { inherit pkgs; };
+  mypkgs = import ./packages { inherit pkgs; };
 in {
   imports =
     [
@@ -67,7 +67,7 @@ in {
      git
      chromium
      emacs24
-     spotify
+#     spotify # Temporarily broken
      dropbox
      scrot
      xclip
@@ -242,7 +242,7 @@ in {
 
   virtualisation.docker.enable = true;
   nix = {
-      useChroot = true;
+    useChroot = true;
   };
 
   nixpkgs.config.allowUnfree = true;
