@@ -117,10 +117,8 @@ in {
     Option "NoLogo" "TRUE"
 
     Option         "nvidiaXineramaInfoOrder" "DFP-5"
-    Option         "metamodes" "DP-2: 2880x1800 +0+0, DP-4: nvidia-auto-select +2880+0 {viewportin=5120x2880}; DP-2: nvidia-auto-select +0+0 {viewportin=1680x1050}, DP-4: nvidia-auto-select +0+0"
+    Option         "metamodes" "DP-2: 2880x1800 +0+0, DP-4: nvidia-auto-select +2880+0 {viewportin=5120x2880}; DP-2: nvidia-auto-select +0+0 {viewportin=1680x1050}"
   '';
-  #Option         "nvidiaXineramaInfoOrder" "DFP-5"
-  #    Option "metamodes" "2880x1800 +0+0; nvidia-auto-select +0+0 {viewportin=1680x1050}"
 
   services.xserver.synaptics = {
     enable = true;
