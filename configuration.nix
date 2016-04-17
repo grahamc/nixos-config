@@ -20,6 +20,11 @@ in {
   boot.loader.gummiboot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Use privacy-protecting IPv6 address generation
+  boot.kernel.sysctl = {
+    "net.ipv6.conf.all.use_tempaddr" = 2;
+  };
+
   boot.initrd.luks.devices = [
     {
 
