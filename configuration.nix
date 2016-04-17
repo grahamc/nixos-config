@@ -146,7 +146,7 @@ in {
     enable = true;
     latitude = "30.25";
     longitude = "-97.75";
-    temperature.night = 2500;
+    temperature.night = 1900;
   };
 
   fonts = {
