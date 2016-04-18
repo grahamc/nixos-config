@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }:
-{
+rec {
   environment.systemPackages = with pkgs; [
     i3status
     i3lock
@@ -192,48 +192,8 @@
     # Start i3bar to display a workspace bar (plus the system information i3status
     # finds out, if available)
     bar {
-            status_command ${pkgs.i3status}/bin/i3status
+            status_command ${pkgs.i3status}/bin/i3status -c ${./i3status.conf}
     }
     
-  '';
-
-  environment.etc."i3status/config".text = ''
-    general {
-            output_format = "i3bar"
-            colors = true
-            interval = 5
-    }
-    
-    order += "path_exists VPN"
-    order += "wireless wlp3s0"
-    order += "battery 0"
-    order += "tztime local"
-    
-    wireless wlp3s0 {
-            format_up = "W: (%quality at %essid, %bitrate) %ip"
-            format_down = "W: down"
-    }
-    
-    battery 0 {
-            format = "%status %percentage %remaining"
-            format_down = "No battery"
-            status_chr = "⚇ CHR"
-            status_bat = "⚡ BAT"
-            status_full = "☻ FULL"
-            path = "/sys/class/power_supply/BAT%d/uevent"
-            low_threshold = 10
-    }
-    
-    run_watch DHCP {
-            pidfile = "/var/run/dhclient*.pid"
-    }
-    
-    path_exists VPN {
-            path = "/proc/sys/net/ipv4/conf/tun0"
-    }
-    
-    tztime local {
-            format = "%Y-%m-%d %H:%M:%S"
-    }
   '';
 }
