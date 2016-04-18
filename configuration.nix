@@ -153,6 +153,8 @@ in {
     enableFontDir = true;
     fonts = with pkgs; [
       unifont
+      ttf_bitstream_vera
+      noto-fonts-emoji
     ];
   };
 
