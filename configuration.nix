@@ -203,13 +203,13 @@ in {
       fi
     '';
   };
-
   systemd.services.monitor-hotplug = {
     wantedBy = [ "multi-user.target" ];
     after = [ "multi-user.target" ];
     enable = true;
 
     environment = {
+        XAUTHORITY = "/home/grahamc/.Xauthority"; # Use %h and a user-service somehow
         DISPLAY = ":0";
     };
 
