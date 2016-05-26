@@ -67,7 +67,7 @@ in {
      git
      chromium
      emacs24
-#     spotify # Temporarily broken
+     spotify
      dropbox
      scrot
      xclip
