@@ -209,10 +209,12 @@ in {
       fi
     '';
   };
+  
   systemd.services.monitor-hotplug = {
-    wantedBy = [ "multi-user.target" ];
-    after = [ "multi-user.target" ];
+    wantedBy = [ "default.target" ];
+    after = [ "graphical.target" ];
     enable = true;
+    description = "Handle monitor hot-plugging";
 
     environment = {
         XAUTHORITY = "/home/grahamc/.Xauthority"; # Use %h and a user-service somehow
@@ -220,6 +222,7 @@ in {
     };
 
     serviceConfig = {
+      RestartSec = 5;
       ExecStart = "${mypkgs.monitor-hotplug}/bin/monitor-hotplug  --delay 15 --side right --primary DP-2";
     };
   };
