@@ -92,18 +92,36 @@ in {
     layout = "dvorak";
     xkbVariant = "mac";
     xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
-#    videoDrivers = [ "nvidia" ];
-    videoDrivers = [ "nouveau" "intel" ];
+    videoDrivers = [ "nvidia" ];
     vaapiDrivers = [ pkgs.vaapiIntel ];
-  };
-  #services.xserver.enable = true;
-  #services.xserver.autorun = true;
 
-  #services.xserver.layout = "dvorak";
-  #services.xserver.xkbVariant = "mac";
-  #services.xserver.xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
-  #services.xserver.videoDrivers = [ "nvidia" ];
-  #services.xserver.vaapiDrivers = [ pkgs.vaapiIntel ];
+    monitorSection = ''
+      DisplaySize 381 238
+    '';
+
+    screenSection = ''
+      Option "DPI" "192 x 192"
+      Option "NoLogo" "TRUE"
+    
+      Option         "nvidiaXineramaInfoOrder" "DFP-5"
+      Option         "metamodes" "DP-2: 2880x1800 +0+0, DP-4: nvidia-auto-select +2880+0 {viewportin=5120x2880}; DP-2: nvidia-auto-select +0+0 {viewportin=1680x1050}"
+    '';
+
+    synaptics = {
+      enable = true;
+      tapButtons = false;
+      fingersMap = [ 0 0 0 ];
+      buttonsMap = [ 1 3 2 ];
+      twoFingerScroll = true;
+      vertEdgeScroll = false;
+      accelFactor = "0.002";
+
+      additionalOptions = ''
+        Option "VertScrollDelta" "-100"
+        Option "HorizScrollDelta" "-100"
+      '';
+    };
+  };
 
   hardware.opengl.driSupport32Bit = true;
   hardware.pulseaudio.enable = true;
@@ -113,35 +131,6 @@ in {
 
   networking.networkmanager.enable = true;
 
-  services.xserver.monitorSection = ''
-    DisplaySize 381 238
-  '';
-
-  services.xserver.screenSection = ''
-    Option "DPI" "192 x 192"
-    Option "NoLogo" "TRUE"
-    
-
-    Option         "nvidiaXineramaInfoOrder" "DFP-5"
-    Option         "metamodes" "DP-2: 2880x1800 +0+0, DP-4: nvidia-auto-select +2880+0 {viewportin=5120x2880}; DP-2: nvidia-auto-select +0+0 {viewportin=1680x1050}"
-  '';
-
-  services.xserver.synaptics = {
-    enable = true;
-    tapButtons = false;
-    fingersMap = [ 0 0 0 ];
-    buttonsMap = [ 1 3 2 ];
-    twoFingerScroll = true;
-    vertEdgeScroll = false;
-    accelFactor = "0.002";
-
-#       Option "CoastingFriction" 99
-    additionalOptions = ''
-
-      Option "VertScrollDelta" "-100"
-      Option "HorizScrollDelta" "-100"
-    '';
-  };
 
   services.logind.extraConfig = ''
     HandlePowerKey=suspend
