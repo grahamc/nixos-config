@@ -92,7 +92,8 @@ in {
     layout = "dvorak";
     xkbVariant = "mac";
     xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
-    videoDrivers = [ "nvidia" ];
+#    videoDrivers = [ "nvidia" ];
+    videoDrivers = [ "nouveau" "intel" ];
     vaapiDrivers = [ pkgs.vaapiIntel ];
   };
   #services.xserver.enable = true;
@@ -112,9 +113,14 @@ in {
 
   networking.networkmanager.enable = true;
 
+  services.xserver.monitorSection = ''
+    DisplaySize 381 238
+  '';
+
   services.xserver.screenSection = ''
     Option "DPI" "192 x 192"
     Option "NoLogo" "TRUE"
+    
 
     Option         "nvidiaXineramaInfoOrder" "DFP-5"
     Option         "metamodes" "DP-2: 2880x1800 +0+0, DP-4: nvidia-auto-select +2880+0 {viewportin=5120x2880}; DP-2: nvidia-auto-select +0+0 {viewportin=1680x1050}"
