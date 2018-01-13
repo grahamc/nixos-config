@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PATH="@tpath@:@out@/bin"
+
+set -eu
+
+rebranch @oldstable@ --hard
+
+git cherry-pick -x "$@"
+git push origin @oldstable@

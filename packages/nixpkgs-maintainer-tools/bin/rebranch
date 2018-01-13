@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+PATH="@tpath@"
+branch="$1"
+
+if [ "x${2:-x}" == "x--hard" ]; then
+    git clean -dfx
+    git reset --hard
+    git rebase --abort || true
+    git am --abort || true
+fi
+
+git fetch origin
+git checkout $(git rev-parse HEAD)
+git branch -D "$branch"
+git checkout origin/"$branch"
+git checkout -b "$branch"

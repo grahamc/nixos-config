@@ -1,0 +1,25 @@
+IMAPAccount grahamc
+Host imap.gmail.com
+User graham@grahamc.com
+SSLType IMAPS
+SSLVersions TLSv1.2
+PassCmd "@kwallet@/bin/kwallet-query kdewallet -r 'grahamc.com mail'"
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+
+IMAPStore grahamc-remote
+Account grahamc
+
+MaildirStore grahamc-local
+# The trailing "/" is important
+Path ~/.mail/grahamc/
+Inbox ~/.mail/grahamc/Inbox
+
+Channel grahamc
+Master :grahamc-remote:
+Slave :grahamc-local:
+Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Save the synchronization state files in the relevant directory
+SyncState *

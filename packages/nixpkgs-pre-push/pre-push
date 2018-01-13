@@ -1,0 +1,95 @@
+#!@bash@/bin/bash
+#
+# This hook is called with the following parameters:
+#
+# $1 -- Name of the remote to which the push is being done
+# $2 -- URL to which the push is being done
+#
+# If pushing without using a named remote those arguments will be equal.
+
+PATH="@coreutils@/bin:@git@/bin"
+
+set -eu
+
+remote="$1"
+url="$2"
+
+z40=0000000000000000000000000000000000000000
+
+pass() {
+    echo "@";
+    exit 0
+}
+
+fail() {
+    echo "$@";
+    exit 1
+}
+
+debug() {
+    if [ "x${SAFE_MODE:-x}" != "xx" ]; then
+        echo "DEBUG: $@" >&2
+    fi
+}
+
+debug "Inputs:"
+debug " remote=$remote"
+debug " url=$url"
+
+if [ "x${SAFE_MODE:-x}" != "xx" ]; then
+    debug "Enabling safe-mode because SAFE_MODE is set"
+else
+    # Don't push new branches to NixOS/Nixpkgs
+    case "$url" in
+        *NixOS/nixpkgs.git)
+            debug "Safe mode activated."
+            ;;
+        *)
+            debug "$url doesn't appear to be upstream, go wild"
+            exit 0
+    esac
+fi
+
+
+while read local_ref local_sha remote_ref remote_sha
+do
+    debug "Handling:"
+    debug " local_ref=$local_ref"
+    debug " local_sha=$local_sha"
+    debug " remote_ref=$remote_ref"
+    debug " remote_sha=$remote_sha"
+    if [ "$local_sha" = $z40 ]
+    then
+        case "$remote_ref" in
+            'refs/heads/master')
+                fail "Refusing to delete master"
+                ;;
+            refs/heads/release-*)
+                fail "Don't delete releases!"
+                ;;
+            *)
+                pass "Delete permitted by fall-through"
+                ;;
+        esac
+    else
+	if [ "$remote_sha" = $z40 ]
+	then
+            fail "Don't create new branches upstream"
+	else
+	    # Update to existing branch, examine new commits
+	    range="$remote_sha..$local_sha"
+
+	    # Check for WIP commit
+	    commits=`git rev-list "$range"`
+            count=$(echo "$commits" | wc -l)
+            if [ "$count" -gt 1 ]; then
+                git log "$range"
+                echo "-----------------------------------"
+                echo "You tried to push ${count} commits."
+                echo "Please review the above diff, and if you still"
+                echo "want to push, run git push with --no-verify"
+                fail
+            fi
+        fi
+    fi
+done

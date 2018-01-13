@@ -1,0 +1,37 @@
+[advice]
+   statusHints = false
+
+[color]
+   branch = auto
+   diff = auto
+   interactive = auto
+   status = auto
+   ui = auto
+
+[core]
+   attributesfile = @gitattributes@
+   excludesfile = @gitignore@
+   whitespace = -blank-at-eof, tab-in-indent
+
+[help]
+   autocorrect = 1
+
+[user]
+   email = graham@grahamc.com
+   name = Graham Christensen
+   signingkey = FE918C3A98C1030F
+
+[transfer]
+   fsckObjects = true
+
+[fetch]
+   fsckObjects = true
+
+[receive]
+   fsckObjects = true
+
+[gpg]
+   program = @gnupg@/bin/gpg
+
+[commit]
+   gpgsign = true

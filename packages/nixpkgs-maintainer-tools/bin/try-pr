@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PATH="@tpath@:@out@/bin"
+
+set -eu
+
+git am-pr "$1"
+
+set +e
+
+logline=$(git log --pretty=oneline --abbrev-commit HEAD~1...HEAD | cut -d' ' -f2 | cut -d: -f1)
+
+nix-build . -A "${logline}"
+
+git log --pretty=oneline --abbrev-commit HEAD~1...HEAD | cat

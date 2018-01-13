@@ -1,0 +1,10 @@
+#!/bin/sh
+
+PATH="@tpath@"
+
+set -eu
+set -o pipefail
+
+for arg in "$@"; do
+    curl -L "${arg}.patch" | git am --no-gpg-sign -
+done

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -eu
+
+PATH="@tpath@:@out@/bin"
+rebranch "master" "$@"
