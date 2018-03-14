@@ -40,7 +40,7 @@ in {
   networking.hostName = "Morbo"; # Define your hostname.
   networking.networkmanager.enable = true;
   networking.extraHosts = ''
-    127.0.0.1 www.facebook.com facebook.com
+    # 127.0.0.1 www.facebook.com facebook.com
   '';
 
   hardware = {
