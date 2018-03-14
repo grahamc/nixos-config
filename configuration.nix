@@ -219,15 +219,16 @@ in {
     serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
   };
 
-    systemd.user.services.keybase = {
-      description = "Keybase service";
-      serviceConfig = {
-        ExecStart = ''
-          ${pkgs.keybase}/bin/keybase -d service --auto-forked
-        '';
-        Restart = "on-failure";
-        PrivateTmp = true;
-      };
-      wantedBy = [ "default.target" ];
-};
+  systemd.user.services.keybase = {
+    description = "Keybase service";
+    serviceConfig = {
+      ExecStart = ''
+        ${pkgs.keybase}/bin/keybase -d service --auto-forked
+      '';
+      Restart = "on-failure";
+      PrivateTmp = true;
+    };
+    wantedBy = [ "default.target" ];
+  };
+  programs.sysdig.enable = true;
 }
