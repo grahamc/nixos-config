@@ -118,6 +118,9 @@ in {
       enable = true;
       autorun = true;
       layout = "dvorak";
+
+      # videoDrivers = [ "nvidia" ]; # "intel" ];
+
       libinput = {
         enable = true;
         naturalScrolling = true;
@@ -143,7 +146,9 @@ in {
       ];
 
       monitorSection = ''
-        DisplaySize 406 228
+        Modeline "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync
+        Option "PreferredMode" "1920x1080_60.00"
+        DisplaySize 345 191
       '';
     };
   };
