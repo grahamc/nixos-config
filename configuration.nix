@@ -24,7 +24,8 @@ in {
     ];
 
   boot = {
-    initrd.preDeviceCommands = "cat ${pkgs.motd-massive}";
+    # Busted sometime
+    # initrd.preDeviceCommands = "cat ${pkgs.motd-massive}";
     kernelParams = [ "acpi_rev_override=5" ];
     kernel.sysctl = {
       "net.ipv6.conf.all.use_tempaddr" = 2;
