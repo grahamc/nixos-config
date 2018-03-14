@@ -214,6 +214,8 @@ in {
 
   systemd.services.autorandr = {
     path = [ pkgs.xorg.xrandr ];
+    # Sometimes I need to run this by hand, and I use:
+    # XDG_CONFIG_DIRS=/etc/xdg autorandr -c --force
     serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
   };
 
