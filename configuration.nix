@@ -87,6 +87,8 @@ in {
       custom-emacs
       ripgrep
       nixpkgs-maintainer-tools
+      pass
+      slack
       #latest.firefox-nightly-bin
 
      ];
