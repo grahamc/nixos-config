@@ -1,4 +1,4 @@
-{ emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5 }:
+{ emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5, hunspellWithDicts, hunspellDicts }:
 emacsPackagesNg.emacsWithPackages (epkgs: (
   (with epkgs.melpaPackages; [
     fill-column-indicator
@@ -14,6 +14,9 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     php-mode
     js2-mode
     json-mode
+    hcl-mode
+    go-mode
+    elixir-mode
     magit
     ghc
     flycheck
@@ -25,6 +28,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
       version = "1970-01-01";
       src = mutate ./default.el {
         inherit msmtp;
+        spelling = hunspellWithDicts ([hunspellDicts.en-us]);
 
         schemas = writeText "schemas.xml" ''
           <locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">

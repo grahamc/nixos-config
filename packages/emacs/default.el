@@ -3,7 +3,6 @@
 (global-set-key (kbd "<ESC> <ESC>") 'dabbrev-expand)
 (column-number-mode)
 
-
 (setq user-mail-address "graham@grahamc.com"
       user-full-name "Graham Christensen"
       message-directory "\"[Gmail]/.Drafts\""
@@ -13,7 +12,9 @@
       sendmail-program "@msmtp@/bin/msmtp")
 
 (setq-default sentence-end-double-space nil
-              indent-tabs-mode nil)
+              indent-tabs-mode nil
+              ispell-program-name "@spelling@/bin/hunspell"
+              )
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
