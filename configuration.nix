@@ -124,9 +124,9 @@ in {
         disableWhileTyping = true;
       };
 
-      displayManager.sddm.enable = true;
-      #displayManager.lightdm.enable = true;
-      desktopManager.plasma5.enable = true;
+      # displayManager.sddm.enable = true;
+      displayManager.lightdm.enable = true;
+      # desktopManager.plasma5.enable = true;
       windowManager.i3 = {
         enable = true;
         configFile = "/etc/i3/config";
