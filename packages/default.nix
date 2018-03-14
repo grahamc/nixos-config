@@ -3,6 +3,12 @@
     config = {
       allowUnfree = true;
       packageOverrides = pkgs: rec {
+        autorandr = pkgs.autorandr.overrideAttrs (x: {
+          patches = [ ./autorandr-configs/autorandr.patch ];
+        });
+
+        autorandr-configs = pkgs.callPackage ./autorandr-configs { };
+
         backlight = pkgs.callPackage ./backlight { };
 
         custom-emacs = pkgs.callPackage ./emacs { };

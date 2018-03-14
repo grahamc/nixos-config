@@ -1,0 +1,18 @@
+--- result/autorandr.py	1969-12-31 19:00:01.000000000 -0500
++++ autrandr.py	2018-02-21 17:43:20.638643173 -0500
+@@ -856,6 +856,7 @@ def dispatch_call_to_sessions(argv):
+             print("Running autorandr as %s for display %s" % (pwent.pw_name, display))
+             child_pid = os.fork()
+             if child_pid == 0:
++                orig_path = os.environ['PATH']
+                 # This will throw an exception if any of the privilege changes fails,
+                 # so it should be safe. Also, note that since the environment
+                 # is taken from a process owned by the user, reusing it should
+@@ -866,6 +867,7 @@ def dispatch_call_to_sessions(argv):
+                 os.chdir(pwent.pw_dir)
+                 os.environ.clear()
+                 os.environ.update(process_environ)
++                os.environ['PATH'] = orig_path
+                 os.execl(autorandr_binary, autorandr_binary, *argv[1:])
+                 os.exit(1)
+             os.waitpid(child_pid, 0)

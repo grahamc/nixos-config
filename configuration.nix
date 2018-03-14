@@ -94,8 +94,9 @@ in {
      ];
 
     etc."i3/config".source = pkgs.i3config;
+    etc."xdg/autorandr".source = pkgs.autorandr-configs;
     variables = {
-      GDK_SCALE = "2.5";
+      # GDK_SCALE = "2.5";
     };
   };
 
@@ -103,6 +104,9 @@ in {
   powerManagement.cpuFreqGovernor = "powersave";
 
   services = {
+    autorandr.enable = true;
+    # udev.packages = [ pkgs.android-udev-rules ];
+
     openssh = {
       enable = true;
     };
@@ -208,6 +212,10 @@ in {
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.09";
 
+  systemd.services.autorandr = {
+    path = [ pkgs.xorg.xrandr ];
+    serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
+  };
 
     systemd.user.services.keybase = {
       description = "Keybase service";
