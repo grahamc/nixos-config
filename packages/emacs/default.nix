@@ -1,6 +1,7 @@
-{ emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5, hunspellWithDicts, hunspellDicts }:
+{ emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5, graphviz, hunspellWithDicts, hunspellDicts }:
 emacsPackagesNg.emacsWithPackages (epkgs: (
   (with epkgs.melpaPackages; [
+    helm
     fill-column-indicator
     editorconfig
     elm-mode
@@ -20,6 +21,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     magit
     ghc
     flycheck
+    graphviz-dot-mode
   ])
   ++ [
     notmuch
@@ -27,7 +29,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
       pname = "grahams-mode";
       version = "1970-01-01";
       src = mutate ./default.el {
-        inherit msmtp;
+        inherit msmtp graphviz;
         spelling = hunspellWithDicts ([hunspellDicts.en-us]);
 
         schemas = writeText "schemas.xml" ''

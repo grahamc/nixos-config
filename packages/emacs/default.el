@@ -4,9 +4,13 @@
 (column-number-mode)
 
 (setq user-mail-address "graham@grahamc.com"
+      graphviz-dot-dot-program "@graphviz@/bin/dot"
+      graphviz-dot-view-command "@graphviz@/bin/dotty"
+      graphviz-dot-preview-extension "svg"
+      graphviz-dot-auto-preview-on-save t
       user-full-name "Graham Christensen"
-      message-directory "\"[Gmail]/.Drafts\""
-      notmuch-fcc-dirs "\"[Gmail]/.Sent Mail\""
+      message-directory "\"[Gmail]/Drafts\""
+      notmuch-fcc-dirs "\"[Gmail]/Sent Mail\""
       notmuch-crypto-process-mime t
       message-send-mail-function 'message-send-mail-with-sendmail
       sendmail-program "@msmtp@/bin/msmtp")
@@ -21,12 +25,6 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment 'utf-8)
-
-(require 'ido)
-(ido-mode t)
-(ido-mode 1)
-(setq-default ido-enable-flex-mode t
-              ido-everywhere t)
 
 (defvar backup-dir (expand-file-name "~/.emacs.d/backup/"))
 (defvar autosave-dir (expand-file-name "~/.emacs.d/autosave/"))
@@ -44,6 +42,11 @@
        (global-set-key (kbd "C-c m") `notmuch)
        (eval-after-load 'rng-loc
          '(add-to-list 'rng-schema-locating-files "@schemas@"))
+
+       (require 'helm-config)
+       (global-set-key (kbd "M-x") #'helm-M-x)
+       (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+       (global-set-key (kbd "C-x C-f") #'helm-find-files)
 )
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'after-init-hook #'loader-after-plugins)
