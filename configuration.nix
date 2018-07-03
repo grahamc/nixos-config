@@ -83,7 +83,7 @@ in {
     etc."xdg/autorandr".source = pkgs.autorandr-configs;
   };
 
-
+  powerManagement.powertop.enable = true;
   powerManagement.cpuFreqGovernor = "powersave";
 
   services = {
