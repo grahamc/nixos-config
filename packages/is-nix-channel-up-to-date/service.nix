@@ -4,15 +4,15 @@
 
 
   users = {
-    users.is-nix-channel-up-to-date = {
+    users.is-nix-up2date = {
       description = "Is-Nix-Channel-Up-To-Date";
       home = "/var/lib/is-nix-channel-up-to-date";
       createHome = true;
-      group = "is-nix-channel-up-to-date";
+      group = "is-nix-up2date";
       uid = 400;
     };
 
-    groups.is-nix-channel-up-to-date.gid = 400;
+    groups.is-nix-up2date.gid = 400;
   };
 
   systemd.services.is-nix-channel-up-to-date = {
@@ -21,12 +21,12 @@
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
 
-    environment.VERSION_LOCAL = config.system.nixosRevision;
+    environment.VERSION_LOCAL = config.system.nixos.version;
     path = with pkgs; [ curl coreutils ];
 
     serviceConfig = {
-      User = "is-nix-channel-up-to-date";
-      Group = "is-nix-channel-up-to-date";
+      User = "is-nix-up2date";
+      Group = "is-nix-up2date";
       PrivateTmp = true;
       WorkingDirectory = "/var/lib/is-nix-channel-up-to-date";
     };

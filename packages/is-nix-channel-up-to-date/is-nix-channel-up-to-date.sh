@@ -32,7 +32,7 @@ while true; do
 
     VERSION_CHAN=$(fetch_channel_version)
     if [ "$VERSION_CHAN" != "$VERSION_LOCAL" ]; then
-        printf "Channel changed to %s\n" "$VERSION_CHAN"
+        printf "Channel changed to %s\\n" "$VERSION_CHAN"
         remove_sentinal
     fi
 done
