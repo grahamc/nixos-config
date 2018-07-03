@@ -61,7 +61,7 @@ in {
     consoleKeyMap = "dvorak";
   };
 
-  time.timeZone = "America/New_York";
+  time.timeZone = secrets.timezone;
   security.pam.services.lightdm.enableKwallet = true;
 
   environment = {

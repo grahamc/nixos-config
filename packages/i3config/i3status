@@ -9,8 +9,8 @@ order += "wireless wlp2s0"
 order += "path_exists channel"
 order += "volume master"
 order += "battery 0"
-order += "tztime berlin"
-order += "tztime local"
+
+
 
 volume master {
         format = "🔊%volume"
@@ -42,11 +42,9 @@ battery 0 {
 	integer_battery_capacity = true
 }
 
+@remote_tzs@
+
 tztime local {
         format = "%Y-%m-%d %H:%M:%S %Z"
 }
-
-tztime berlin {
-        format = "%Y-%m-%d %H:%M:%S %Z"
-        timezone = "Europe/Berlin"
-}
+order += "tztime local"
