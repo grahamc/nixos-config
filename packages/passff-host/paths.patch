@@ -1,0 +1,27 @@
+diff --git a/src/passff.py b/src/passff.py
+index 1760707..d60a937 100755
+--- a/src/passff.py
++++ b/src/passff.py
+@@ -7,19 +7,16 @@
+
+ import os, sys, json, struct, subprocess
+
+-VERSION = "_VERSIONHOLDER_"
++VERSION = "@VERSION@"
+
+ ################################################################################
+ ######################## Begin preferences section #############################
+ ################################################################################
+-# Default command for MacOS:
+-#command = "/usr/local/bin/pass"
+-command     = "/usr/bin/pass"
++command     = "@PASS@"
+ commandArgs = []
+ commandEnv  = {
+     "TREE_CHARSET": "ISO-8859-1",
+-    # Default PATH for MacOS:
+-    #"PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
++    "PATH": "@PATH@",
+ }
+ charset     = "UTF-8"
+ ################################################################################
