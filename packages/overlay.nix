@@ -1,10 +1,5 @@
 self: super:
 {
-  # No longer applies on 18.03:
-  #autorandr = pkgs.autorandr.overrideAttrs (x: {
-  #  patches = [ ./autorandr-configs/autorandr.patch ];
-  #});
-
   autorandr-configs = self.callPackage ./autorandr-configs { };
 
   backlight = self.callPackage ./backlight { };
