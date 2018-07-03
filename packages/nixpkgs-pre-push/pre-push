@@ -44,6 +44,9 @@ else
         *NixOS/nixpkgs.git)
             debug "Safe mode activated."
             ;;
+        *NixOS/nix.git)
+            debug "Safe mode activated."
+            ;;
         *)
             debug "$url doesn't appear to be upstream, go wild"
             exit 0

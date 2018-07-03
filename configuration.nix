@@ -178,6 +178,7 @@ in {
       ".mozilla/native-messaging-hosts/passff.json" = "${pkgs.passff-host}/share/passff-host/passff.json";
     } // (if (builtins.pathExists "${home}/projects/nixpkgs") then {
       "projects/nixpkgs/.git/hooks/pre-push" = pkgs.nixpkgs-pre-push;
+      "projects/nix/.git/hooks/pre-push" = pkgs.nixpkgs-pre-push;
     } else {});
   };
 
