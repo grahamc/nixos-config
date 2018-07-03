@@ -65,7 +65,6 @@ in {
 
   time.timeZone = "America/New_York";
   security.pam.services.lightdm.enableKwallet = true;
-  security.pam.services.sddm.enableKwallet = true;
 
   environment = {
     systemPackages = with pkgs; [
@@ -73,12 +72,9 @@ in {
       terminator
       file
       gnupg
-      gitAndTools.hub
-      spotify
       firefox
       google-chrome
       xclip
-      enpass
       custom-emacs
       ripgrep
       nixpkgs-maintainer-tools
@@ -165,8 +161,6 @@ in {
     };
   };
 
-  virtualisation.virtualbox.host.enable = true;
-
   users.extraUsers.grahamc = rec {
     isNormalUser = true;
     uid = 1000;
@@ -205,17 +199,4 @@ in {
     # XDG_CONFIG_DIRS=/etc/xdg autorandr -c --force
     serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
   };
-
-  systemd.user.services.keybase = {
-    description = "Keybase service";
-    serviceConfig = {
-      ExecStart = ''
-        ${pkgs.keybase}/bin/keybase -d service --auto-forked
-      '';
-      Restart = "on-failure";
-      PrivateTmp = true;
-    };
-    wantedBy = [ "default.target" ];
-  };
-  programs.sysdig.enable = true;
 }
