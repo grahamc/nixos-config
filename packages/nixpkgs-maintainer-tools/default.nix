@@ -3,8 +3,8 @@ stdenv.mkDerivation {
   name = "nixpkgs-maintainer-tools";
   src = ./bin;
 
-  stable = "release-17.09";
-  oldstable = "release-16.03";
+  stable = "release-18.03";
+  oldstable = "release-17.09";
   tpath = "${curl}/bin:${git}/bin/:${coreutils}/bin:${nix}/bin";
 
   buildPhase = ''
