@@ -18,8 +18,6 @@ self: super:
 
   is-nix-channel-up-to-date = self.callPackage ./is-nix-channel-up-to-date { };
 
-  kitty-conf = ./kitty.conf;
-
   motd-massive = self.callPackage ./motd { };
 
   mutate = self.callPackage ./mutate { };
