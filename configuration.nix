@@ -47,13 +47,8 @@ in {
     pulseaudio = {
       enable = true;
       package = pkgs.pulseaudioFull;
-
-      #extraConfig = ''
-      #  load-module module-remap-sink master=alsa_output.pci-0000_00_1f.3.analog-stereo sink_name=mono sink_properties="device.description='Mono'" channels=2 channel_map=mono,mono
-      #'';
     };
     mcelog.enable = true;
-    # bumblebee.enable = true;
     bluetooth = {
       enable = true;
       extraConfig = ''
@@ -89,15 +84,10 @@ in {
       nixpkgs-maintainer-tools
       pass
       slack
-      #latest.firefox-nightly-bin
-
      ];
 
     etc."i3/config".source = pkgs.i3config;
     etc."xdg/autorandr".source = pkgs.autorandr-configs;
-    variables = {
-      # GDK_SCALE = "2.5";
-    };
   };
 
 
@@ -105,7 +95,6 @@ in {
 
   services = {
     autorandr.enable = true;
-    # udev.packages = [ pkgs.android-udev-rules ];
 
     openssh = {
       enable = true;
@@ -123,17 +112,15 @@ in {
       autorun = true;
       layout = "dvorak";
 
-      # videoDrivers = [ "nvidia" ]; # "intel" ];
-
       libinput = {
         enable = true;
         naturalScrolling = true;
         disableWhileTyping = true;
       };
 
-      # displayManager.sddm.enable = true;
+
       displayManager.lightdm.enable = true;
-      # desktopManager.plasma5.enable = true;
+
       windowManager.i3 = {
         enable = true;
         configFile = "/etc/i3/config";
