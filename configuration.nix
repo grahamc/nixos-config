@@ -5,15 +5,11 @@
 { config, pkgs, lib, ... }:
 let
   secrets = import ./secrets.nix;
-  mozillapkgs = import ./overlays/nixpkgs-mozilla/.nix { inherit pkgs; };
 in {
   nixpkgs = {
     config = {
       allowUnfree = true;
     };
-    #overlays = [
-    #  (import ./overlays/nixpkgs-mozilla/firefox-overlay.nix)
-    #];
   };
 
   imports =
