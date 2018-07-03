@@ -10,12 +10,14 @@ in {
     config = {
       allowUnfree = true;
     };
+    overlays = [
+      (import ./packages/overlay.nix)
+    ];
   };
 
   imports =
     [
       ./hardware-configuration.nix
-      ./packages
       ./packages/services.nix
     ];
 
