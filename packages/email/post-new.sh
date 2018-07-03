@@ -10,7 +10,7 @@ if [ "$(echo "@path@" | rev)" != "@htap@" ]; then
 fi
 
 cleanup() {
-  pushd '/home/grahamc/.mail/grahamc/[Gmail]/.All Mail/cur'
+  pushd '/home/grahamc/.mail/grahamc/[Gmail]/All Mail/cur'
 
   for uid in `ls | cut -d, -f2 | cut -d: -f1 | sort | uniq -d`; do
       for file in `find . -name '*,'$uid':*' | tail -n+2`; do
@@ -37,8 +37,8 @@ notmuch tag +ofborg -inbox -- "to:graham+ofborg@grahamc.com"
 notmuch tag +gocd -inbox -- "tag:inbox and to:go-cd@googlegroups.com"
 notmuch tag +nixpkgs -- "tag:inbox and (to:nix-dev@lists.science.uu.nl or to:nixpkgs@noreply.github.com or to:hydra@noreply.github.com)"
 notmuch tag +security -inbox -- "(to:debian-security-announce@lists.debian.org or to:oss-security@lists.openwall.com)"
-notmuch tag +draft 'path:[Gmail]/.Drafts/**'
-notmuch tag +spam 'path:[Gmail]/.Spam/**'
+notmuch tag +draft 'path:[Gmail]/Drafts/**'
+notmuch tag +spam 'path:[Gmail]/Spam/**'
 
 # USAA Withdrawal or Available Messages
 # if they're older than 1 day,
@@ -90,6 +90,7 @@ notmuch tag -inbox '
     or (from:pool.com subject:"Hotlist for ")
     or (from:"Hydra Build Daemon")
     or (from:"info@optiqueaustin.com")
+    or (to:"alphasheets-development/alphasheets")
     or (to:your_activity@noreply.github.com)
     or (to:nixpkgs@noreply.github.com and (not to:mention@noreply.github.com))
     or (to:nix@noreply.github.com and (not to:mention@noreply.github.com))
@@ -110,9 +111,10 @@ notmuch tag -inbox '
 
 '
 
+notmuch tag -inbox "tag:inbox and not folder:Inbox"
 notmuch search --output=files "folder:Inbox and not tag:inbox" \
-    | (grep -v ".All Mail/cur/" || true) \
-    | xargs -n1 -I{} mv {} '/home/grahamc/.mail/grahamc/[Gmail]/.All Mail/cur/'
+    | (grep -v "All Mail/cur/" || true) \
+    | xargs -n1 -I{} mv {} '/home/grahamc/.mail/grahamc/[Gmail]/All Mail/cur/'
 
 cleanup
 

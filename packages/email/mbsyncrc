@@ -14,6 +14,7 @@ MaildirStore grahamc-local
 # The trailing "/" is important
 Path ~/.mail/grahamc/
 Inbox ~/.mail/grahamc/Inbox
+SubFolders Verbatim
 
 Channel grahamc
 Master :grahamc-remote:
