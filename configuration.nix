@@ -42,6 +42,7 @@ in {
   '';
 
   hardware = {
+    u2f.enable = true;
     pulseaudio = {
       enable = true;
       package = pkgs.pulseaudioFull;
@@ -69,7 +70,7 @@ in {
       git
       file
       gnupg
-      firefox
+      (if true then firefox-devedition-bin else firefox)
       google-chrome
       xclip
       custom-emacs
