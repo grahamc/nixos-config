@@ -11,6 +11,8 @@ let
         echo "FAIL FAIL FAIL";
         echo "MUST COMMIT YOUR CHANGES! DIRTY TREE DETECTED!"
       fi
+
+      touch $out
     '';
 in
 {
