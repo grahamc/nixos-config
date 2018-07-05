@@ -3,7 +3,7 @@
 mutate ./config {
   inherit sakura i3status dropbox dmenu pulseaudioFull volume backlight dunst dunst_config;
   i3status_conf = let
-      location = (import ../../secrets.nix).location;
+      location = (import /etc/nixos/secrets.nix).location;
     in mutate ./i3status {
       remote_tzs = lib.lists.imap0 (i: tz: ''
         tztime remote${toString i} {
