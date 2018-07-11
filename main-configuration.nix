@@ -70,7 +70,7 @@ in {
       git
       file
       gnupg
-      (if false then firefox-devedition-bin else firefox)
+      (if true then firefox-devedition-bin else firefox)
       google-chrome
       xclip
       custom-emacs
