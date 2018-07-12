@@ -17,22 +17,20 @@ remove_sentinal() {
     exit 0
 }
 
-VERSION_CHAN=$(fetch_channel_version)
-echo "Channel starts at $VERSION_CHAN"
-echo "System is at $VERSION_LOCAL"
-
-if [ "$VERSION_CHAN" == "$VERSION_LOCAL" ]; then
-    touch "$SENTINAL"
-else
-    remove_sentinal
-fi
-
 while true; do
-    sleep "$DELAY"
-
     VERSION_CHAN=$(fetch_channel_version)
-    if [ "$VERSION_CHAN" != "$VERSION_LOCAL" ]; then
+
+    echo "Channel is at $VERSION_CHAN"
+    echo "System is at $VERSION_LOCAL"
+
+    if [ "$VERSION_CHAN" == "$VERSION_LOCAL" ]; then
+        touch "$SENTINAL"
+    elif [ "x$VERSION_CHAN" == "x" ]; then
+        echo "Bogus version"
+    elif [ "$VERSION_CHAN" != "$VERSION_LOCAL" ]; then
         printf "Channel changed to %s\\n" "$VERSION_CHAN"
         remove_sentinal
     fi
+
+    sleep "$DELAY"
 done
