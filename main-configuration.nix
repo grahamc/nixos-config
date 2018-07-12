@@ -188,6 +188,7 @@ in {
     distributedBuilds = true;
     buildMachines = secrets.buildMachines;
   };
+  programs.dconf.enable = true;
   services.dbus.packages = [ pkgs.gnome3.dconf ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
