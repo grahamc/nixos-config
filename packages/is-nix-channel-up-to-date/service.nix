@@ -21,7 +21,7 @@
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
 
-    environment.VERSION_LOCAL = config.system.nixos.version;
+    environment.VERSION_LOCAL = config.system.nixos.revision;
     path = with pkgs; [ curl coreutils ];
 
     serviceConfig = {
