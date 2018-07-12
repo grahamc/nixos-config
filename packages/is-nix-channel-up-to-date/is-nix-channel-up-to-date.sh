@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -eux
 
 CHAN=18.03
 DELAY=675
