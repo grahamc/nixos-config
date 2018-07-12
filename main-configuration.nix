@@ -168,6 +168,7 @@ in {
     shell = "/run/current-system/sw/bin/zsh";
     hashedPassword = secrets.hashedPassword;
     symlinks = {
+      ".background-image" = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/Gnome_Dark.png";
       ".mbsyncrc" = pkgs.email.mbsyncrc;
       ".msmtprc" = pkgs.email.msmtprc;
       ".notmuch-config" = pkgs.email.notmuch-config;
