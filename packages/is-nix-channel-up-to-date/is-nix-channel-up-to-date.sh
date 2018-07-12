@@ -2,7 +2,7 @@
 
 set -eu
 
-CHAN=17.09
+CHAN=18.03
 DELAY=675
 SENTINAL=/var/lib/is-nix-channel-up-to-date/up-to-date
 
