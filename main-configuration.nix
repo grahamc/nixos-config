@@ -45,16 +45,6 @@ in {
       --sports 32768:61000 -m multiport --dports 32768:61000 \
       -m comment --comment "Allow Chromecast UDP data (inbound)" \
       -j nixos-fw-accept
-    iptables -A nixos-fw -d ${CHROMECAST_IP}/32 -p udp -m multiport \
-      --sports 32768:61000 -m multiport --dports 32768:61000 \
-      -m comment --comment "Allow Chromecast UDP data (outbound)" \
-      -j nixos-fw-accept
-    iptables -A nixos-fw -d ${CHROMECAST_IP}/32 -p tcp -m multiport \
-      --dports 8008:8009 \
-      -m comment --comment "Allow Chromecast TCP data (outbound)" \
-      -j nixos-fw-accept
-    iptables -A nixos-fw -d 239.255.255.250/32 -p udp --dport 1900 \
-      -m comment --comment "Allow Chromecast SSDP" -j nixos-fw-accept
   '';
 
   hardware = {
