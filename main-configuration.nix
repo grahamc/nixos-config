@@ -40,8 +40,12 @@ in {
   networking.extraHosts = ''
     # 127.0.0.1 www.facebook.com facebook.com
   '';
-  networking.firewall.extraCommands = ''
-    iptables -I INPUT -p udp -m udp --dport 32768:60999 -j ACCEPT
+  networking.firewall.extraCommands = let CHROMECAST_IP = "10.5.4.100"; in ''
+    export CHROMECAST_IP=10.1.2.3 # Adjust to the Chromecast IP in your local network
+    iptables -A INPUT -s ${CHROMECAST_IP}/32 -p udp -m multiport --sports 32768:61000 -m multiport --dports 32768:61000 -m comment --comment "Allow Chromecast UDP data (inbound)" -j ACCEPT
+    iptables -A OUTPUT -d ${CHROMECAST_IP}/32 -p udp -m multiport --sports 32768:61000 -m multiport --dports 32768:61000 -m comment --comment "Allow Chromecast UDP data (outbound)" -j ACCEPT
+    iptables -A OUTPUT -d ${CHROMECAST_IP}/32 -p tcp -m multiport --dports 8008:8009 -m comment --comment "Allow Chromecast TCP data (outbound)" -j ACCEPT
+    iptables -A OUTPUT -d 239.255.255.250/32 -p udp --dport 1900 -m comment --comment "Allow Chromecast SSDP" -j ACCEPT
   '';
 
   hardware = {
