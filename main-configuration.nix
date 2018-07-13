@@ -40,6 +40,9 @@ in {
   networking.extraHosts = ''
     # 127.0.0.1 www.facebook.com facebook.com
   '';
+  networking.firewall.extraCommands = ''
+    iptables -I INPUT -p udp -m udp --dport 32768:60999 -j ACCEPT
+  '';
 
   hardware = {
     u2f.enable = true;
