@@ -67,6 +67,8 @@ in {
   security.pam.services.lightdm.enableKwallet = true;
 
   environment = {
+    etc.issue.source = pkgs.runCommand "figlet-test" { buildInputs = [ pkgs.figlet ]; } "figlet hi > $out";
+
     systemPackages = with pkgs; [
       git
       file
