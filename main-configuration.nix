@@ -37,14 +37,9 @@ in {
 
   networking.hostName = "Morbo"; # Define your hostname.
   networking.networkmanager.enable = true;
+  networking.firewall.allowedUDPPortRanges = [ { from = 32768; to = 61000; } ];
   networking.extraHosts = ''
     # 127.0.0.1 www.facebook.com facebook.com
-  '';
-  networking.firewall.extraCommands = let CHROMECAST_IP = "10.5.4.100"; in ''
-    iptables -A nixos-fw -s ${CHROMECAST_IP}/32 -p udp -m multiport \
-      --sports 32768:61000 -m multiport --dports 32768:61000 \
-      -m comment --comment "Allow Chromecast UDP data (inbound)" \
-      -j nixos-fw-accept
   '';
 
   hardware = {
