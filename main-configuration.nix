@@ -79,6 +79,7 @@ in {
       nixpkgs-maintainer-tools
       pass
       slack
+      ghc
      ];
 
     etc."i3/config".source = pkgs.i3config;
