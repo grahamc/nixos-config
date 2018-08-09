@@ -10,6 +10,8 @@ self: super:
 
   email = self.callPackage ./email { };
 
+  direnv-hook = self.callPackage ./direnv-hook { };
+
   gitconfig = self.callPackage ./gitconfig { };
 
   gnupgconfig = self.callPackage ./gnupgconfig { };
