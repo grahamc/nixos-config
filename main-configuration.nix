@@ -170,7 +170,7 @@ in {
     shell = "/run/current-system/sw/bin/zsh";
     hashedPassword = secrets.hashedPassword;
     symlinks = {
-      ".zshrc.local" = pkgs.direnv-hook;
+      ".zshrc" = pkgs.direnv-hook;
       ".background-image" = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/Gnome_Dark.png";
       ".mbsyncrc" = pkgs.email.mbsyncrc;
       ".msmtprc" = pkgs.email.msmtprc;
