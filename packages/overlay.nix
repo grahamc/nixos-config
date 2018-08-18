@@ -37,12 +37,12 @@ self: super:
   nix = super.nix.overrideAttrs (x: {
     patches = (x.patches or []) ++ [
       (self.fetchpatch {
-        url = "https://github.com/grahamc/nix/commit/6a7ede9b6c8f7c172ae8879f35bdb8cc4c258974.patch";
-        sha256 = "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73";
+        url = "https://github.com/grahamc/nix/commit/36d9a243f73c7b3c41a0f75a079731577cdb52c4.patch";
+        sha256 = "1a5rpb2wid6yfwz82wdz74w8lsjp6lxvhgdm2mf756a3s2qzgg7n";
       })
       (self.fetchpatch {
-        url = "https://github.com/grahamc/nix/commit/7d43d359.patch";
-        sha256 = "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1876wk11c9c73";
+        url = "https://github.com/grahamc/nix/commit/0fe3ea0b31557b068a536515fd1700871c0fe880.patch";
+        sha256 = "0r0bmvf5zdphabzrcffw8anrzvq6zjykp4sj057dx1xy3ykvjwx0";
       })
 
 
