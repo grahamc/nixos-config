@@ -204,5 +204,6 @@ in {
     # XDG_CONFIG_DIRS=/etc/xdg autorandr -c --force
     serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
   };
-  hardware.sensor.iio.enable = true;
+
+  virtualisation.virtualbox.host.enable = true;
 }
