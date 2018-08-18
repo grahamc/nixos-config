@@ -40,6 +40,12 @@ self: super:
         url = "https://github.com/grahamc/nix/commit/6a7ede9b6c8f7c172ae8879f35bdb8cc4c258974.patch";
         sha256 = "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73";
       })
+      (self.fetchpatch {
+        url = "https://github.com/grahamc/nix/commit/7d43d359.patch";
+        sha256 = "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1876wk11c9c73";
+      })
+
+
     ];
   });
 }
