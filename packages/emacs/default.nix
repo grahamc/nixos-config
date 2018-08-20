@@ -1,4 +1,5 @@
-{ emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5, graphviz, hunspellWithDicts, hunspellDicts }:
+{ emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5
+  , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub }:
 emacsPackagesNg.emacsWithPackages (epkgs: (
   (with epkgs.melpaPackages; [
     helm
@@ -6,7 +7,14 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     editorconfig
     elm-mode
     erlang
-    nix-mode
+    (nix-mode.overrideAttrs (x: {
+      src = fetchFromGitHub {
+        owner = "dustinlacewell";
+        repo = "nix-mode";
+        rev = "b0829d67c542e2befec5136dac75f4a5470c5f05";
+        sha256 = "1f1y4s5jzrkinkpafn6pjbfqfadar6mpqbpm0m964kdpiys8ywf5";
+      };
+    }))
     markdown-mode
     yaml-mode
     rust-mode
