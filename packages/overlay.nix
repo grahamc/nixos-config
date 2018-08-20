@@ -44,8 +44,8 @@ self: super:
         url = "https://github.com/grahamc/nix/commit/0fe3ea0b31557b068a536515fd1700871c0fe880.patch";
         sha256 = "0r0bmvf5zdphabzrcffw8anrzvq6zjykp4sj057dx1xy3ykvjwx0";
       })
-
-
     ];
   });
+
+  virtualbox = self.virtualboxWithExtpack;
 }
