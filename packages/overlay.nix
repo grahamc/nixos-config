@@ -46,6 +46,4 @@ self: super:
       })
     ];
   });
-
-  virtualbox = self.virtualboxWithExtpack;
 }
