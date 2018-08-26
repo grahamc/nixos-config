@@ -2,12 +2,11 @@
   , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub }:
 emacsPackagesNg.emacsWithPackages (epkgs: (
   (with epkgs.melpaPackages; [
-    helm
     fill-column-indicator
     editorconfig
     elm-mode
     erlang
-    (nix-mode.overrideAttrs (x: {
+    (nix-mode.overrideAttrs (x: if true then {} else {
       src = fetchFromGitHub {
         owner = "dustinlacewell";
         repo = "nix-mode";
@@ -30,6 +29,14 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     ghc
     flycheck
     graphviz-dot-mode
+
+
+    ivy
+    counsel
+    counsel-projectile
+    projectile
+    super-save
+    swiper
   ])
   ++ [
     notmuch

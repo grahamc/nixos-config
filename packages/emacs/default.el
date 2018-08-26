@@ -19,6 +19,7 @@
               indent-tabs-mode nil
               ispell-program-name "@spelling@/bin/hunspell"
               )
+
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -32,7 +33,6 @@
       auto-save-list-file-prefix autosave-dir
       auto-save-file-name-transforms `((".*" ,autosave-dir t)))
 
-
 (defun loader-after-plugins ()
        (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
        (global-fci-mode 1)
@@ -40,13 +40,26 @@
        (auto-fill-mode 1)
        (require 'notmuch)
        (global-set-key (kbd "C-c m") `notmuch)
+
+       (ivy-mode 1)
+       (counsel-mode 1)
+
        (eval-after-load 'rng-loc
          '(add-to-list 'rng-schema-locating-files "@schemas@"))
 
-       (require 'helm-config)
-       (global-set-key (kbd "M-x") #'helm-M-x)
-       (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-       (global-set-key (kbd "C-x C-f") #'helm-find-files)
-)
+
+       (global-set-key (kbd "C-s") 'swiper)
+       (global-set-key (kbd "M-x") 'counsel-M-x)
+       (global-set-key (kbd "C-x C-f") 'counsel-find-file) ;; 'counsel-projectile-find-file)
+       (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+       (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+       (global-set-key (kbd "<f1> l") 'counsel-find-library)
+       (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+       (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+
+       (setq ivy-use-virtual-buffers t
+             ivy-use-selectable-prompt t)
+       )
+
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'after-init-hook #'loader-after-plugins)
