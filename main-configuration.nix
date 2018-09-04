@@ -107,6 +107,7 @@ in {
       enable = true;
       autorun = true;
       layout = "dvorak";
+      videoDrivers = [ "nvidia" ];
 
       libinput = {
         enable = true;
