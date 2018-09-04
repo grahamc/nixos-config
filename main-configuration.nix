@@ -172,7 +172,7 @@ in {
     hashedPassword = secrets.hashedPassword;
     symlinks = {
       ".zshrc" = pkgs.direnv-hook;
-      ".background-image" = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/Gnome_Dark.png";
+      ".background-image" = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/nix-wallpaper-simple-dark-gray_bottom.png";
       ".mbsyncrc" = pkgs.email.mbsyncrc;
       ".msmtprc" = pkgs.email.msmtprc;
       ".notmuch-config" = pkgs.email.notmuch-config;
