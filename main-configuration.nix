@@ -22,13 +22,11 @@ in {
     ];
 
   boot = {
-    # Busted sometime
-    # initrd.preDeviceCommands = "cat ${pkgs.motd-massive}";
-    kernelParams = [ "acpi_rev_override=5" ];
+    kernelParams = [ "acpi_rev_override=5" ]; # "acpi_rev_override=1" "pcie_port_pm=off"];
     kernel.sysctl = {
       "net.ipv6.conf.all.use_tempaddr" = 2;
     };
-    kernelPackages = pkgs.linuxPackages_4_17;
+    kernelPackages = pkgs.linuxPackages_latest;
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -49,6 +47,7 @@ in {
       package = pkgs.pulseaudioFull;
     };
     mcelog.enable = true;
+    nvidiaOptimus.disable = true;
     bluetooth = {
       enable = true;
       extraConfig = ''
