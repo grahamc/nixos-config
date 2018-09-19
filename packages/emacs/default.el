@@ -41,6 +41,9 @@
        (require 'notmuch)
        (global-set-key (kbd "C-c m") `notmuch)
 
+       (require 'yasnippet)
+       (yas-global-mode 1)
+
        (ivy-mode 1)
        (counsel-mode 1)
 

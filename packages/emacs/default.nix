@@ -29,7 +29,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     ghc
     flycheck
     graphviz-dot-mode
-
+    yasnippet
 
     ivy
     counsel
