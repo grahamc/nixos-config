@@ -6,6 +6,14 @@ self: super:
 
   custom-emacs = self.callPackage ./emacs { };
 
+  cnijfilter2 = super.cnijfilter2.overrideAttrs (x: {
+    name = "cnijfilter2-5.60";
+    src = self.fetchzip {
+      url = "http://gdlp01.c-wss.com/gds/0/0100009490/01/cnijfilter2-source-5.60-1.tar.gz";
+      sha256 = "0yagz840g28kz0cyy3abbv4h2imw1pia1hzsqacjsmvz4wdhy14k";
+    };
+  });
+
   dunst_config = self.callPackage ./dunst { };
 
   email = self.callPackage ./email { };
