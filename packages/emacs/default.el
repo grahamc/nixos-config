@@ -62,6 +62,7 @@
 
        (setq ivy-use-virtual-buffers t
              ivy-use-selectable-prompt t)
+       (add-hook 'text-mode-hook 'artbollocks-mode)
        )
 
 (add-hook 'after-init-hook #'global-flycheck-mode)

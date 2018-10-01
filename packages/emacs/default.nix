@@ -2,6 +2,7 @@
   , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub }:
 emacsPackagesNg.emacsWithPackages (epkgs: (
   (with epkgs.melpaPackages; [
+    artbollocks-mode
     fill-column-indicator
     editorconfig
     elm-mode
