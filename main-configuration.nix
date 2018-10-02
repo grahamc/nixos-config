@@ -154,6 +154,17 @@ in {
 
   programs = {
     zsh.enable = true;
+    zsh.interactiveShellInit = ''
+      if [ "$(cat "''${XDG_CACHE_HOME:-$HOME/.cache}/hollorin/"* | wc -l)" -gt 0 ]; then
+           cat ${./warning}
+           for f in "''${XDG_CACHE_HOME:-$HOME/.cache}/hollorin/"*; do
+             printf "\n\n\n";
+             cat "$f";
+           done
+           printf "\n\n\n";
+           echo " ^^^ go fix those before your computer breaks ^^^"
+      fi
+    '';
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
