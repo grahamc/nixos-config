@@ -16,8 +16,8 @@
   };
 
   systemd.timers.is-nix-channel-up-to-date = {
-    description = "Update timer for locate database";
-    partOf      = [ "update-locatedb.service" ];
+    description = "Run the Nix Channel Update Check";
+    partOf      = [ "is-nix-channel-up-to-date.service" ];
     wantedBy    = [ "timers.target" ];
     timerConfig.OnCalendar = "*:0/7";
   };
