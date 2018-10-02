@@ -28,6 +28,8 @@ self: super:
 
   is-nix-channel-up-to-date = self.callPackage ./is-nix-channel-up-to-date { };
 
+  did-graham-commit-his-repos = self.callPackage ./did-graham-commit-his-repos { };
+
   motd-massive = self.callPackage ./motd { };
 
   mutate = self.callPackage ./mutate { };
