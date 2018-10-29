@@ -12,7 +12,6 @@ def trace(*args):
     print("%s:" % arg0, *args)
 
 def setup_signal(signal_handler):
-    global session_id
     bus = dbus.SystemBus()
     manager = bus.get_object("org.freedesktop.login1", "/org/freedesktop/login1")
     # yecch
@@ -46,15 +45,9 @@ def handler_external():
     os.spawnvp(os.P_NOWAIT, lock_command[0], lock_command)
 
 def main():
-    global arg0, lock_command, session_id
+    global arg0, lock_command
     arg0 = sys.argv[0].split("/")[-1]
     lock_command = sys.argv[1:] or ["--dbus"]
-    try:
-        session_id = os.environ["XDG_SESSION_ID"]
-    except KeyError:
-        print("error: $XDG_SESSION_ID not set; are you using pam_systemd?",
-              file=sys.stderr)
-        sys.exit(1)
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     if lock_command == ["--dbus"]:
         trace("using freedesktop.org DBus API")
@@ -62,7 +55,7 @@ def main():
     else:
         trace("using external command %r" % lock_command[0])
         setup_signal(handler_external)
-    trace("waiting for lock signals on session %s" % session_id)
+    trace("waiting for lock signals")
     try:
         loop = GLib.MainLoop()
         loop.run()
