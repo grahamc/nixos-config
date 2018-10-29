@@ -54,7 +54,8 @@ bindsym XF86MonBrightnessDown exec @backlight@ down
 bindsym XF86KbdBrightnessUp exec kbdlight up 20
 bindsym XF86KbdBrightnessDown exec kbdlight down 20
 
-
+# the F9/Find icon?
+bindsym XF86Search exec loginctl lock-session
 
 # change focus
 bindsym $mod+h focus left
