@@ -37,7 +37,7 @@ in {
   networking.networkmanager.enable = true;
   networking.firewall.allowedUDPPortRanges = [ { from = 32768; to = 61000; } ];
   networking.extraHosts = ''
-    # 127.0.0.1 www.facebook.com facebook.com
+    # 127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
   networking.useNetworkd = true;
 
