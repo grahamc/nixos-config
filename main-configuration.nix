@@ -156,9 +156,9 @@ in {
   programs = {
     zsh.enable = true;
     zsh.interactiveShellInit = ''
-      if [ "$(cat "''${XDG_CACHE_HOME:-$HOME/.cache}/hollorin/"* | wc -l)" -gt 0 ]; then
+      if [ "$(cat "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-shout/"* | wc -l)" -gt 0 ]; then
            cat ${./warning}
-           for f in "''${XDG_CACHE_HOME:-$HOME/.cache}/hollorin/"*; do
+           for f in "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-shout/"*; do
              printf "\n\n\n";
              cat "$f";
            done

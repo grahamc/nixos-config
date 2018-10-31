@@ -17,8 +17,8 @@
     };
 
     script = ''
-      mkdir -p "''${XDG_CACHE_HOME:-$HOME/.cache}/hollorin"
-      ${pkgs.did-graham-commit-his-repos} $HOME /etc/nixos >  "''${XDG_CACHE_HOME:-$HOME/.cache}/hollorin/git"
+      mkdir -p "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning"
+      ${pkgs.did-graham-commit-his-repos} $HOME /etc/nixos >  "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/git"
     '';
   };
 }
