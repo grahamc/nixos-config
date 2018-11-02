@@ -219,10 +219,10 @@ in {
   virtualisation.virtualbox.host.enable = true;
   virtualisation.docker.enable = true;
 
-  systemd.package = (import (pkgs.fetchFromGitHub {
-    owner = "andir";
-    repo = "nixpkgs";
-    rev = "5fd9f68276f7b91f2b2d2336c2d1cc5c5f232adc";
-    sha256 = "1bj3xql0fw0a1qbxvvl02lsfpxhacg844p1qswp1y5vwp98xn5la";
-    }) {}).systemd;
+#  systemd.package = (import (pkgs.fetchFromGitHub {
+#    owner = "andir";
+#    repo = "nixpkgs";
+#    rev = "5fd9f68276f7b91f2b2d2336c2d1cc5c5f232adc";
+#    sha256 = "1bj3xql0fw0a1qbxvvl02lsfpxhacg844p1qswp1y5vwp98xn5la";
+#    }) {}).systemd;
 }
