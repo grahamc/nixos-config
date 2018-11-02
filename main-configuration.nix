@@ -26,7 +26,7 @@ in {
     kernel.sysctl = {
       "net.ipv6.conf.all.use_tempaddr" = 2;
     };
-    #kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -35,7 +35,7 @@ in {
 
   networking.hostName = "Morbo"; # Define your hostname.
   networking.networkmanager.enable = true;
-  networking.firewall.allowedUDPPortRanges = [ { from = 32768; to = 61000; } ];
+  #networking.firewall.allowedUDPPortRanges = [ { from = 32768; to = 61000; } ];
   networking.extraHosts = ''
     # 127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
@@ -216,13 +216,6 @@ in {
     serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
   };
 
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.docker.enable = true;
-
-#  systemd.package = (import (pkgs.fetchFromGitHub {
-#    owner = "andir";
-#    repo = "nixpkgs";
-#    rev = "5fd9f68276f7b91f2b2d2336c2d1cc5c5f232adc";
-#    sha256 = "1bj3xql0fw0a1qbxvvl02lsfpxhacg844p1qswp1y5vwp98xn5la";
-#    }) {}).systemd;
+  #virtualisation.virtualbox.host.enable = true;
+  #virtualisation.docker.enable = true;
 }
