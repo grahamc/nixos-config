@@ -39,7 +39,7 @@ in {
   networking.extraHosts = ''
     # 127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
-  #networking.useNetworkd = true;
+  networking.useNetworkd = true;
 
   hardware = {
     u2f.enable = true;
