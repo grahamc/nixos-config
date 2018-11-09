@@ -34,12 +34,16 @@ in {
   };
 
   networking.hostName = "Morbo"; # Define your hostname.
+  #networking.wireless.enable = true;
   networking.networkmanager.enable = true;
+  #networking.useDHCP = lib.mkForce true; # networkmanager turns off dhcp, but usenetworkd needs it on..?
+  #systemd.network.networks."99-main".dhcpConfig.UseDomains = "yes";
+  networking.useNetworkd = true;
+
   #networking.firewall.allowedUDPPortRanges = [ { from = 32768; to = 61000; } ];
   networking.extraHosts = ''
     # 127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
-  networking.useNetworkd = true;
 
   hardware = {
     u2f.enable = true;
