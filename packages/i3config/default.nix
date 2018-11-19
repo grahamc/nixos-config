@@ -1,7 +1,8 @@
 { mutate, sakura, xorg, i3status, dropbox, dmenu, pulseaudioFull,
-  volume, backlight, dunst, dunst_config, lib }:
+  volume, backlight, dunst, dunst_config, lib, screenshot }:
 mutate ./config {
-  inherit sakura i3status dropbox dmenu pulseaudioFull volume backlight dunst dunst_config;
+  inherit sakura i3status dropbox dmenu pulseaudioFull volume
+  backlight dunst dunst_config screenshot;
   i3status_conf = let
       location = (import /etc/nixos/secrets.nix).location;
     in mutate ./i3status {

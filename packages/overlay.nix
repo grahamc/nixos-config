@@ -40,6 +40,8 @@ self: super:
 
   passff-host = self.callPackage ./passff-host { };
 
+  screenshot = self.callPackage ./screenshot { };
+
   systemd-lock-handler = self.callPackage ./systemd-lock-handler { };
 
   timeout_tcl = self.callPackage ./timeout { };
