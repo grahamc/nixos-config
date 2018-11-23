@@ -7,6 +7,7 @@ let
   secrets = import ./secrets-notsecret.nix;
 in {
   nixpkgs = {
+    system = "x86_64-linux";
     config = {
       allowUnfree = true;
     };
