@@ -11,4 +11,4 @@ let
   configuration = (import "${config}/main-configuration.nix");
     system = "x86_64-linux";
   };
-in (import "${config}/main-configuration.nix" {})
+in (import config {})
