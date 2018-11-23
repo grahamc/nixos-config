@@ -38,6 +38,8 @@ self: super:
 
   nixpkgs-pre-push = self.callPackage ./nixpkgs-pre-push { };
 
+  notmuch = super.notmuch.overrideAttrs (self.callPackage ./notmuch { });
+
   passff-host = self.callPackage ./passff-host { };
 
   screenshot = self.callPackage ./screenshot { };
