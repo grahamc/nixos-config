@@ -1,12 +1,12 @@
 { mutate, gnupg, coreutils, notmuch, isync, findutils, gnused,
-  gnugrep, lib, kdeFrameworks, timeout_tcl }:
+  gnugrep, lib, pass, timeout_tcl }:
 {
   mbsyncrc = mutate ./mbsyncrc {
-    kwallet = kdeFrameworks.kwallet.bin;
+    inherit pass;
   };
 
   msmtprc = mutate ./msmtprc {
-    kwallet = kdeFrameworks.kwallet.bin;
+    inherit pass;
   };
 
   notmuch-config = mutate ./notmuch-config {

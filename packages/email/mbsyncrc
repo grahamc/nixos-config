@@ -3,7 +3,7 @@ Host imap.gmail.com
 User graham@grahamc.com
 SSLType IMAPS
 SSLVersions TLSv1.2
-PassCmd "@kwallet@/bin/kwallet-query kdewallet -r 'grahamc.com mail'"
+PassCmd "@pass@/bin/pass graham-grahamc-gmail-mbsync"
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 
