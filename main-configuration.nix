@@ -84,6 +84,7 @@ in {
       pass
       slack
       ghc
+      notmuch
      ];
 
     etc."i3/config".source = pkgs.i3config;
