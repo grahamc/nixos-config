@@ -13,5 +13,6 @@ let
   myconfig = import "${nixpkgs}/nixos" {
     configuration = "${config}/main-configuration.nix";
     system = "x86_64-linux";
+    localSystem = "x86_64-linux";
   };
 in myconfig
