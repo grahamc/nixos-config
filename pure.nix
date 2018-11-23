@@ -1,8 +1,8 @@
 let
   nixpkgs = builtins.fetchGit {
-    url = "https://github.com/nixos/nixpkgs.git";
-    rev = "b37872d4268164614e3ecef6e1f730d48cf5a90f";
-    ref = "master";
+    url = "/home/grahamc/projects/nixpkgs";
+    rev = "e2b5d5311ba59b6ae4619f6e5d5905e52d74df40";
+    ref = "fixup-pure";
   };
 
   config = ./.;
