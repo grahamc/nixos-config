@@ -38,7 +38,7 @@ in {
   networking.networkmanager.enable = true;
   #networking.useDHCP = lib.mkForce true; # networkmanager turns off dhcp, but usenetworkd needs it on..?
   #systemd.network.networks."99-main".dhcpConfig.UseDomains = "yes";
-  networking.useNetworkd = true;
+  #networking.useNetworkd = true;
 
   #networking.firewall.allowedUDPPortRanges = [ { from = 32768; to = 61000; } ];
   networking.extraHosts = ''
