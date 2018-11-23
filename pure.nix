@@ -7,7 +7,7 @@ let
 
   config = builtins.fetchGit {
     url = "/etc/nixos";
-    rev ="9756fb30e072f5e5747e82012dc49a519f5c14d4";
+    rev ="b35f7798dbb5e2e234d1d21cb0f16aa60ce1f361";
   };
 
   myconfig = import "${nixpkgs}/nixos" {
