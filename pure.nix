@@ -8,7 +8,7 @@ let
   config = ./.;
 
   myconfig = import "${nixpkgs}/nixos" {
-    configuration = (import config + "/main-configuration.nix");
+    configuration = (import (config + "/main-configuration.nix"));
     system = "x86_64-linux";
   };
 in myconfig
