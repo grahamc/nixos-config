@@ -118,7 +118,7 @@ in {
       enable = true;
       autorun = true;
       layout = "dvorak";
-
+      xkbOptions = "compose:ralt";
       libinput = {
         enable = true;
         naturalScrolling = true;
