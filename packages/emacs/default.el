@@ -13,7 +13,9 @@
       notmuch-fcc-dirs "\"[Gmail]/Sent Mail\""
       notmuch-crypto-process-mime t
       message-send-mail-function 'message-send-mail-with-sendmail
-      sendmail-program "@msmtp@/bin/msmtp")
+      sendmail-program "@msmtp@/bin/msmtp"
+      nix-indent-function 'nix-indent-line
+      )
 
 (setq-default sentence-end-double-space nil
               indent-tabs-mode nil
