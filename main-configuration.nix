@@ -4,7 +4,7 @@
 
 { config, pkgs, lib, ... }:
 let
-  secrets = import ./secrets-notsecret.nix;
+  secrets = import ./secrets.nix;
 in {
   nixpkgs = {
     system = "x86_64-linux";
