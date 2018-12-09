@@ -102,6 +102,11 @@ in {
       enable = true;
     };
 
+    emacs = {
+      enable = true;
+      package = pkgs.custom-emacs;
+    };
+
     redshift = {
       enable = true;
       latitude = secrets.latitude;
@@ -214,6 +219,11 @@ in {
 
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.09";
+
+  # Only start emacs for actual users, lol
+  systemd.user.services.emacs.unitConfig = {
+    ConditionGroup = "users";
+  };
 
   systemd.services.autorandr = {
     path = [ pkgs.xorg.xrandr ];
