@@ -233,7 +233,7 @@ in {
   };
 
   #virtualisation.virtualbox.host.enable = true;
-  #virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
 
 
   services.printing.enable = true;
