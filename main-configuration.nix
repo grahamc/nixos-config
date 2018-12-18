@@ -154,13 +154,16 @@ in {
   fonts = {
     enableFontDir = true;
     fonts = with pkgs; [
-      unifont
-      ttf_bitstream_vera
+      powerline-fonts
+      source-code-pro
+      twemoji-color-font
+
+      # Consider just symbola instead of noto-*
       noto-fonts
+      noto-fonts-extra
       noto-fonts-emoji
-      fira
-      fira-mono
-      fira-code
+      noto-fonts-cjk
+
       helvetica
       vegur # the official NixOS font
     ];
