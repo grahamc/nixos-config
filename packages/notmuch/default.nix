@@ -1,6 +1,6 @@
 { fetchgit, fetchpatch }:
 oldAttrs: {
-  name = "notmuch-0.29-pre";
+  name = "notmuch-0.27.1";
   # 0.28 + patches for indexed headers
   src = fetchgit {
     url = "git://pivot.cs.unb.ca/notmuch.git";

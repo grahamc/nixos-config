@@ -1,5 +1,18 @@
 { secrets }: self: super:
-{
+let
+  upgrade = package: overrides:
+  let
+    upgraded = package.overrideAttrs overrides;
+    upgradedVersion = (builtins.parseDrvName upgraded.name).version;
+    originalVersion =(builtins.parseDrvName package.name).version;
+
+    isDowngrade = (builtins.compareVersions upgradedVersion originalVersion) == -1;
+
+    warn = builtins.trace
+      "Warning: ${package.name} downgraded by overlay with ${upgraded.name}.";
+    pass = x: x;
+  in (if isDowngrade then warn else pass) upgraded;
+in {
   autorandr-configs = self.callPackage ./autorandr-configs { };
 
   backlight = self.callPackage ./backlight { };
@@ -42,7 +55,7 @@
 
   nixpkgs-pre-push = self.callPackage ./nixpkgs-pre-push { };
 
-  notmuch = super.notmuch.overrideAttrs (self.callPackage ./notmuch { });
+  notmuch = upgrade super.notmuch (self.callPackage ./notmuch { });
 
   passff-host = self.callPackage ./passff-host { };
 
