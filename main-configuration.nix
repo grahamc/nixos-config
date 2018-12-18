@@ -161,6 +161,7 @@ in {
       fira
       fira-mono
       fira-code
+      helvetica
     ];
   };
 

@@ -24,6 +24,8 @@
 
   gnupgconfig = self.callPackage ./gnupgconfig { };
 
+  helvetica = self.callPackage ./helvetica { inherit secrets; };
+
   i3config = self.callPackage ./i3config { inherit secrets; };
 
   is-nix-channel-up-to-date = self.callPackage ./is-nix-channel-up-to-date { };
