@@ -162,6 +162,7 @@ in {
       fira-mono
       fira-code
       helvetica
+      vegur # the official NixOS font
     ];
   };
 
