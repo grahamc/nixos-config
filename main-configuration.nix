@@ -4,7 +4,7 @@
 
 { config, pkgs, lib, ... }:
 let
-  secrets = import ./secrets.nix;
+  secrets = import /etc/nixos/secrets.nix;
 in {
   nixpkgs = {
     system = "x86_64-linux";
@@ -12,7 +12,7 @@ in {
       allowUnfree = true;
     };
     overlays = [
-      (import ./packages/overlay.nix)
+      (import ./packages/overlay.nix { inherit secrets; })
     ];
   };
 

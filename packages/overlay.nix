@@ -1,4 +1,4 @@
-self: super:
+{ secrets }: self: super:
 {
   autorandr-configs = self.callPackage ./autorandr-configs { };
 
@@ -24,7 +24,7 @@ self: super:
 
   gnupgconfig = self.callPackage ./gnupgconfig { };
 
-  i3config = self.callPackage ./i3config { };
+  i3config = self.callPackage ./i3config { inherit secrets; };
 
   is-nix-channel-up-to-date = self.callPackage ./is-nix-channel-up-to-date { };
 

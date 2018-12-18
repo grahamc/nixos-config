@@ -1,11 +1,9 @@
 { mutate, sakura, xorg, i3status, dropbox, dmenu, pulseaudioFull,
-  volume, backlight, dunst, dunst_config, lib, screenshot }:
+  volume, backlight, dunst, dunst_config, lib, screenshot, secrets }:
 mutate ./config {
   inherit sakura i3status dropbox dmenu pulseaudioFull volume
   backlight dunst dunst_config screenshot;
-  i3status_conf = let
-      location = (import ../../secrets.nix).location;
-    in mutate ./i3status {
+  i3status_conf = mutate ./i3status {
       remote_tzs = lib.lists.imap0 (i: tz: ''
         tztime remote${toString i} {
           format = "-%d %H:%M:%S %Z"
@@ -13,6 +11,6 @@ mutate ./config {
         }
         order += "tztime remote${toString i}"
 
-      '') location.remote_timezones;
+      '') secrets.location.remote_timezones;
     };
 }
