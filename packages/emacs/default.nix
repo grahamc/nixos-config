@@ -7,7 +7,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     editorconfig
     elm-mode
     erlang
-(nix-mode.overrideAttrs (x: if true then {
+    (nix-mode.overrideAttrs (x: if true then {
     } else {
       src = fetchFromGitHub {
         owner = "dustinlacewell";
