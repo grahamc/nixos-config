@@ -171,7 +171,7 @@ in {
 
   programs = {
     zsh.enable = true;
-    zsh.interactiveShellInit = ''
+    bash.interactiveShellInit = ''
       if [ "$(cat "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"* | wc -l)" -gt 0 ]; then
            cat ${./warning}
            for f in "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"*; do
@@ -194,10 +194,9 @@ in {
     extraGroups = [ "wheel" "pcscd" "networkmanager" ];
     createHome = true;
     home = "/home/grahamc";
-    shell = "/run/current-system/sw/bin/zsh";
     hashedPassword = secrets.hashedPassword;
     symlinks = {
-      ".zshrc" = pkgs.direnv-hook;
+      ".bashrc" = pkgs.bash-config;
       ".background-image" = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/nix-wallpaper-simple-dark-gray_bottom.png";
       ".mbsyncrc" = pkgs.email.mbsyncrc;
       ".msmtprc" = pkgs.email.msmtprc;

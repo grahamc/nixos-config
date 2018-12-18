@@ -4,6 +4,8 @@
 
   backlight = self.callPackage ./backlight { };
 
+  bash-config = self.callPackage ./bash-config { };
+
   custom-emacs = self.callPackage ./emacs { };
 
   cnijfilter2 = super.cnijfilter2.overrideAttrs (x: {

@@ -1,0 +1,2 @@
+{ mutate }:
+mutate ./bashrc {}
