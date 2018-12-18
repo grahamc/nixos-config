@@ -38,7 +38,7 @@ in {
   networking.networkmanager.enable = true;
 
   networking.extraHosts = ''
-    # 127.0.0.1 www.facebook.com facebook.com x.facebook.com
+    127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
 
   hardware = {
