@@ -166,7 +166,7 @@ in {
 
   programs = {
     zsh.enable = true;
-    bash.interactiveShellInit = ''
+    zsh.interactiveShellInit = ''
       if [ "$(cat "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"* | wc -l)" -gt 0 ]; then
            cat ${./warning}
            for f in "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"*; do
@@ -189,6 +189,7 @@ in {
     extraGroups = [ "wheel" "pcscd" "networkmanager" ];
     createHome = true;
     home = "/home/grahamc";
+    shell = "/run/current-system/sw/bin/zsh";
     hashedPassword = secrets.hashedPassword;
     symlinks = {
       ".bashrc" = pkgs.bash-config;
