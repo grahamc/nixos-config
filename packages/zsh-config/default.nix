@@ -1,0 +1,2 @@
+{ mutate }:
+mutate ./zshrc {}

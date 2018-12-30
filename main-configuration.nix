@@ -193,6 +193,7 @@ in {
     hashedPassword = secrets.hashedPassword;
     symlinks = {
       ".bashrc" = pkgs.bash-config;
+      ".zshrc" = pkgs.zsh-config;
       ".background-image" = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/nix-wallpaper-simple-dark-gray_bottom.png";
       ".mbsyncrc" = pkgs.email.mbsyncrc;
       ".msmtprc" = pkgs.email.msmtprc;

@@ -66,4 +66,6 @@ in {
   timeout_tcl = self.callPackage ./timeout { };
 
   volume = self.callPackage ./volume { };
+
+  zsh-config = self.callPackage ./zsh-config { };
 }
