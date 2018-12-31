@@ -4,44 +4,60 @@
 { config, lib, pkgs, ... }:
 
 {
-  hardware.enableRedistributableFirmware = lib.mkDefault true;
+  imports =
+    [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+    ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/3aa72460-7d05-4bd4-861f-6ef8b82082dc";
-      fsType = "ext4";
-    };
-
   boot.initrd.luks.devices = {
     cryptkey = {
-      device = "/dev/disk/by-uuid/aaaa545f-b1f7-4861-8591-63812f28b31b";
+      device = "/dev/disk/by-uuid/0c1e8ef4-4b84-404f-a7c8-0871017aa086";
     };
+
     cryptroot = {
-      device = "/dev/disk/by-uuid/70fcf3f7-a862-422c-94bd-85ac1445768e";
+      device = "/dev/disk/by-uuid/9782f25f-d655-4718-9b37-d96a932dd10a";
       keyFile = "/dev/mapper/cryptkey";
     };
+
     cryptswap = {
-      device = "/dev/disk/by-uuid/b2775928-e8cf-41ba-9fa7-be24e64e4579";
+      device = "/dev/disk/by-uuid/eedde382-4b96-420e-8489-c581b6af1eac";
       keyFile = "/dev/mapper/cryptkey";
     };
   };
 
+  fileSystems."/" =
+    { device = "rpool/root";
+      fsType = "zfs";
+    };
+
+  fileSystems."/nix" =
+    { device = "rpool/nix";
+      fsType = "zfs";
+    };
+
+  fileSystems."/home" =
+    { device = "rpool/home";
+      fsType = "zfs";
+    };
+
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/2D03-B634";
+    { device = "/dev/disk/by-uuid/55DE-4951";
       fsType = "vfat";
-  };
+    };
+
+  swapDevices =
+    [ { device = "/dev/disk/by-uuid/cef80b32-0d52-48bd-9957-add0a948d1fa"; }
+    ];
+
+  nix.maxJobs = lib.mkDefault 8;
+  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  networking.hostId = "e9d9c1f1";
 
   boot.initrd.postMountCommands = ''
     # Don't keep the cryptkey available all the time
     cryptsetup close /dev/mapper/cryptkey
   '';
-
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/102799bd-d9d2-4ef6-936f-6ba9b59f168e"; }
-    ];
-
-  nix.maxJobs = lib.mkDefault 8;
 }

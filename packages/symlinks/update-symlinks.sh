@@ -1,5 +1,5 @@
 
-scratch=$(mktemp -d -t tmp.XXXXXXXXXX)
+scratch=$(mktemp -d -t tmp.XXXXXXXXXX);
 update_symlink() {
     local SRC
     local DEST

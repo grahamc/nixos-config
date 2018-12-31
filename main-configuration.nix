@@ -183,7 +183,10 @@ in {
     };
   };
 
-  users.extraUsers.grahamc = rec {
+  users.mutableUsers = false;
+  users.users.root.hashedPassword = secrets.hashedPassword;
+
+  users.users.grahamc = rec {
     isNormalUser = true;
     uid = 1000;
     extraGroups = [ "wheel" "pcscd" "networkmanager" ];
