@@ -221,6 +221,20 @@ in {
   programs.dconf.enable = true;
   services.dbus.packages = [ pkgs.gnome3.dconf ];
 
+  programs.zsh.promptInit = ''
+    # Lifted from programs.bash.promptInit
+    # Provide a nice prompt if the terminal supports it.
+    if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
+      PROMPT_COLOR="red"
+      let $UID && PROMPT_COLOR="green"
+
+      PS1=$'\n'"%B%F{$PROMPT_COLOR}[%n@%m:%~]$%f%b "
+      if test "$TERM" = "xterm"; then
+        PS1="$'\n'[%n@%m:%~]$ "
+      fi
+    fi
+  '';
+
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.09";
 
