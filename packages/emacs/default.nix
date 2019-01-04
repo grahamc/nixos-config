@@ -1,5 +1,41 @@
 { emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5
-  , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub }:
+  , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub
+  , fetchpatch }:
+
+let
+  nix-mode-overrides = {
+    none = x: {};
+
+    master-floating = oldAttrs: {
+      src = builtins.fetchGit {
+        url = "https://github.com/nixos/nix-mode.git";
+        ref = "master";
+      };
+    };
+
+    master-2019-01-03 = oldAttrs: {
+      src = builtins.fetchGit {
+        url = "https://github.com/nixos/nix-mode.git";
+        ref = "master";
+        rev = "6445ebfad696bdfd1d7bc8ddd463772ba61763e8";
+      };
+    };
+
+    ldlwork = oldAttrs: {
+      src = builtins.getchGit {
+        url = "https://github.com/dustinlacewell/nix-mode.git";
+        rev = "b0829d67c542e2befec5136dac75f4a5470c5f05";
+      };
+    };
+
+    etu-master-floating = oldAttrs: {
+      src = builtins.fetchGit {
+        url = "https://github.com/etu/nix-mode.git";
+        ref = "master";
+      };
+    };
+  };
+in
 emacsPackagesNg.emacsWithPackages (epkgs: (
   (with epkgs.melpaPackages; [
     artbollocks-mode
@@ -7,15 +43,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     editorconfig
     elm-mode
     erlang
-    (nix-mode.overrideAttrs (x: if true then {
-    } else {
-      src = fetchFromGitHub {
-        owner = "dustinlacewell";
-        repo = "nix-mode";
-        rev = "b0829d67c542e2befec5136dac75f4a5470c5f05";
-        sha256 = "1f1y4s5jzrkinkpafn6pjbfqfadar6mpqbpm0m964kdpiys8ywf5";
-      };
-    }))
+    (nix-mode.overrideAttrs nix-mode-overrides.master-2019-01-03)
     markdown-mode
     yaml-mode
     rust-mode
