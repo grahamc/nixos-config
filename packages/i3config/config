@@ -173,5 +173,4 @@ bar {
 }
 
 
-exec @dropbox@/bin/dropbox
 exec @dunst@/bin/dunst -config @dunst_config@
