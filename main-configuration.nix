@@ -32,6 +32,8 @@ in {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+
+    cleanTmpDir = true;
   };
 
   networking.hostName = "Morbo"; # Define your hostname.
