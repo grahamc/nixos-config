@@ -258,4 +258,8 @@ in {
 
   services.printing.enable = true;
   services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin ];
+
+  services.zfs.autoScrub.enable = true;
+  services.zfs.autoScrub.interval = "weekly";
+  systemd.services.zfs-scrub.ConditionACPower = true;
 }
