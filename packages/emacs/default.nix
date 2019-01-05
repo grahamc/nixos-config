@@ -86,7 +86,6 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
             <typeId id="DocBook" uri="${docbook5}/xml/rng/docbook/docbookxi.rnc" />
           </locatingRules>
         '';
-
       };
     })
   ]
