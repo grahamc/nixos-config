@@ -237,8 +237,8 @@ in {
     fi
   '';
 
-  # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "16.09";
+  # The NixOS release to be compatible w/ for stateful data such
+  system.stateVersion = "18.09";
 
   # Only start emacs for actual users, lol
   systemd.user.services.emacs.unitConfig = {
