@@ -4,13 +4,10 @@ general {
         interval = 5
 }
 
-order += "ipv6"
 order += "wireless wlp2s0"
 order += "path_exists channel"
 order += "volume master"
 order += "battery 0"
-
-
 
 volume master {
         format = "🔊%volume"
