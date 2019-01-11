@@ -30,7 +30,7 @@
   };
 
   fileSystems."/" =
-    { device = "rpool/root";
+    { device = "rpool/danger-root";
       fsType = "zfs";
     };
 
@@ -56,6 +56,10 @@
   nix.maxJobs = lib.mkDefault 8;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   networking.hostId = "e9d9c1f1";
+
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    zfs rollback rpool/danger-root@blank
+  '';
 
   boot.initrd.postMountCommands = ''
     # Don't keep the cryptkey available all the time
