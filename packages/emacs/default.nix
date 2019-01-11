@@ -6,6 +6,10 @@ let
   nix-mode-overrides = {
     none = x: {};
 
+    local-clone = oldAttrs: {
+      src = /home/grahamc/projects/nixos/nix-mode;
+    };
+
     master-floating = oldAttrs: {
       src = builtins.fetchGit {
         url = "https://github.com/nixos/nix-mode.git";
@@ -18,6 +22,14 @@ let
         url = "https://github.com/nixos/nix-mode.git";
         ref = "master";
         rev = "6445ebfad696bdfd1d7bc8ddd463772ba61763e8";
+      };
+    };
+
+    master-2019-01-07 = oldAttrs: {
+      src = builtins.fetchGit {
+        url = "https://github.com/nixos/nix-mode.git";
+        ref = "master";
+        rev = "54ef83310095689443c2371a312cc8687af6cbb9";
       };
     };
 
@@ -43,7 +55,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     editorconfig
     elm-mode
     erlang
-    (nix-mode.overrideAttrs nix-mode-overrides.master-2019-01-03)
+    (nix-mode.overrideAttrs nix-mode-overrides.local-clone)#.master-2019-01-07)
     markdown-mode
     yaml-mode
     rust-mode
