@@ -126,8 +126,9 @@ in {
       };
 
 
-      displayManager.lightdm.enable = true;
 
+      displayManager.lightdm.enable = true;
+      desktopManager.default = "none";
       windowManager.default = "i3";
       windowManager.i3 = {
         enable = true;
