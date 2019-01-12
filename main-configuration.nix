@@ -128,6 +128,7 @@ in {
 
       displayManager.lightdm.enable = true;
 
+      windowManager.default = "i3";
       windowManager.i3 = {
         enable = true;
         configFile = "/etc/i3/config";
