@@ -87,6 +87,9 @@ in {
 
     etc."i3/config".source = pkgs.i3config;
     etc."xdg/autorandr".source = pkgs.autorandr-configs;
+
+    # Wacky erase-root-on-every-boot stuff.
+    etc."NetworkManager/system-connections".source = "/rpool/persist/etc/NetworkManager/system-connections/";
   };
 
   powerManagement.powertop.enable = true;
