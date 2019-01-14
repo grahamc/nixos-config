@@ -4,7 +4,8 @@
 
 { config, pkgs, lib, ... }:
 let
-  secrets = import /etc/nixos/secrets.nix;
+  root = /home/grahamc/projects/grahamc/nixos-config;
+  secrets = import "${root}/secrets.nix";
 in {
   nixpkgs = {
     system = "x86_64-linux";
@@ -229,6 +230,10 @@ in {
     useSandbox = true;
     distributedBuilds = true;
     buildMachines = secrets.buildMachines;
+    nixPath = [
+      "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+      "nixos-config=${toString root}/configuration.nix"
+    ];
   };
   programs.dconf.enable = true;
   services.dbus.packages = [ pkgs.gnome3.dconf ];
