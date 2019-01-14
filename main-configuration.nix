@@ -234,7 +234,14 @@ in {
       "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
       "nixos-config=${toString root}/configuration.nix"
     ];
+
+    gc = {
+      automatic = true;
+      dates = "*:0/10";
+    };
   };
+  systemd.services.nix-gc.unitConfig.ConditionACPower = true;
+
   programs.dconf.enable = true;
   services.dbus.packages = [ pkgs.gnome3.dconf ];
 
