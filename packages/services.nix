@@ -1,9 +1,14 @@
 {
+  disabledModules = [
+    "system/boot/loader/systemd-boot/systemd-boot.nix"
+  ];
+
   imports = [
     ./nitrokey/service.nix
     ./symlinks/service.nix
     ./is-nix-channel-up-to-date/service.nix
     ./did-graham-commit-his-repos/service.nix
     ./systemd-lock-handler/service.nix
+    ./systemd-boot/systemd-boot.nix
   ];
 }

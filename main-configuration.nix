@@ -29,7 +29,12 @@ in {
     };
     kernelPackages = pkgs.linuxPackages_latest;
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+        signed = true;
+        signing-key = secrets.secure-boot.key;
+        signing-certificate = secrets.secure-boot.certificate;
+      };
       efi.canTouchEfiVariables = true;
     };
 
