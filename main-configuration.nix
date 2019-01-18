@@ -75,6 +75,9 @@ in {
   security.pam.services.lightdm.enableKwallet = true;
 
   environment = {
+    variables = {
+      EDITOR = "emacs -nw";
+    };
     systemPackages = with pkgs; [
       git
       file
