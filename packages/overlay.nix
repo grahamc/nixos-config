@@ -35,6 +35,8 @@ in {
 
   direnv-hook = self.callPackage ./direnv-hook { };
 
+  font-b612 = self.callPackage ./b612-font { };
+
   gitconfig = self.callPackage ./gitconfig { };
 
   gnupgconfig = self.callPackage ./gnupgconfig { };

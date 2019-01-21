@@ -177,6 +177,7 @@ in {
 
       helvetica
       vegur # the official NixOS font
+      font-b612
     ];
   };
 
