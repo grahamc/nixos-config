@@ -1,8 +1,4 @@
 {
-  disabledModules = [
-    "system/boot/loader/systemd-boot/systemd-boot.nix"
-  ];
-
   imports = [
     ./nitrokey/service.nix
     ./symlinks/service.nix

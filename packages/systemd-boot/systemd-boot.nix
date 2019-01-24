@@ -33,6 +33,9 @@ let
     signingCertificate = if cfg.signed then cfg.signing-certificate else "/no-signing-crt";
   };
 in {
+  disabledModules = [
+    "system/boot/loader/systemd-boot/systemd-boot.nix"
+  ];
 
   # disabledModules doesn't remove imports, so comment it out here.
   #

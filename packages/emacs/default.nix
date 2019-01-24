@@ -51,34 +51,33 @@ in
 emacsPackagesNg.emacsWithPackages (epkgs: (
   (with epkgs.melpaPackages; [
     artbollocks-mode
-    fill-column-indicator
-    editorconfig
-    elm-mode
-    erlang
-    (nix-mode.overrideAttrs nix-mode-overrides.local-clone)#.master-2019-01-07)
-    markdown-mode
-    yaml-mode
-    rust-mode
-    diff-hl
-    python-mode
-    php-mode
-    js2-mode
-    json-mode
-    hcl-mode
-    go-mode
-    elixir-mode
-    magit
-    ghc
-    flycheck
-    graphviz-dot-mode
-    yasnippet
-
-    ivy
     counsel
     counsel-projectile
+    diff-hl
+    editorconfig
+    elixir-mode
+    elm-mode
+    erlang
+    fill-column-indicator
+    flycheck
+    ghc
+    go-mode
+    graphviz-dot-mode
+    hcl-mode
+    ivy
+    js2-mode
+    json-mode
+    magit
+    markdown-mode
+    (nix-mode.overrideAttrs nix-mode-overrides.local-clone)#.master-2019-01-07)
+    php-mode
     projectile
+    python-mode
+    rust-mode
     super-save
     swiper
+    yaml-mode
+    yasnippet
   ])
   ++ [
     notmuch
