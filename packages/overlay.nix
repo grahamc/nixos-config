@@ -53,6 +53,8 @@ in {
 
   mutate = self.callPackage ./mutate { };
 
+  nixosUnstablePkgs = self.callPackage ./nixos-unstable-packages { };
+
   nixpkgs-maintainer-tools = self.callPackage ./nixpkgs-maintainer-tools { };
 
   nixpkgs-pre-push = self.callPackage ./nixpkgs-pre-push { };
