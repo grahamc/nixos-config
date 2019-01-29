@@ -41,6 +41,8 @@ in {
 
   gnupgconfig = self.callPackage ./gnupgconfig { };
 
+  h = self.callPackage ./h { };
+
   helvetica = self.callPackage ./helvetica { inherit secrets; };
 
   i3config = self.callPackage ./i3config { inherit secrets; };
