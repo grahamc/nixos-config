@@ -17,34 +17,11 @@ let
       };
     };
 
-    master-2019-01-03 = oldAttrs: {
-      src = builtins.fetchGit {
-        url = "https://github.com/nixos/nix-mode.git";
-        ref = "master";
-        rev = "6445ebfad696bdfd1d7bc8ddd463772ba61763e8";
-      };
-    };
-
-    master-2019-01-07 = oldAttrs: {
-      src = builtins.fetchGit {
-        url = "https://github.com/nixos/nix-mode.git";
-        ref = "master";
-        rev = "54ef83310095689443c2371a312cc8687af6cbb9";
-      };
-    };
-
     master-2019-01-29 = oldAttrs: {
       src = builtins.fetchGit {
         url = "https://github.com/nixos/nix-mode.git";
         ref = "master";
         rev = "1e53bed4d47c526c71113569f592c82845a17784";
-      };
-    };
-
-    ldlwork = oldAttrs: {
-      src = builtins.getchGit {
-        url = "https://github.com/dustinlacewell/nix-mode.git";
-        rev = "b0829d67c542e2befec5136dac75f4a5470c5f05";
       };
     };
 
