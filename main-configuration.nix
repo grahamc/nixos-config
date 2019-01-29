@@ -90,7 +90,6 @@ in {
       nixpkgs-maintainer-tools
       pass
       slack
-      ghc
       notmuch
      ];
 
