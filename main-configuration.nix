@@ -91,6 +91,7 @@ in {
       pass
       slack
       notmuch
+      h
      ];
 
     etc."i3/config".source = pkgs.i3config;
