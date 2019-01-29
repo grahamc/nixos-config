@@ -40,6 +40,7 @@
        (global-fci-mode 1)
        (editorconfig-mode 1)
        (auto-fill-mode 1)
+       (require 'direnv)
        (require 'notmuch)
        (global-set-key (kbd "C-c m") `notmuch)
 

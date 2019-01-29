@@ -54,6 +54,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     counsel
     counsel-projectile
     diff-hl
+    direnv
     editorconfig
     elixir-mode
     elm-mode
