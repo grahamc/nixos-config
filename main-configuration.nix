@@ -295,4 +295,5 @@ in {
   services.zfs.autoScrub.enable = true;
   services.zfs.autoScrub.interval = "weekly";
   systemd.services.zfs-scrub.unitConfig.ConditionACPower = true;
+  hardware.cpu.intel.updateMicrocode = true;
 }
