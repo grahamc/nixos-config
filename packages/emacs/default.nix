@@ -33,6 +33,14 @@ let
       };
     };
 
+    master-2019-01-29 = oldAttrs: {
+      src = builtins.fetchGit {
+        url = "https://github.com/nixos/nix-mode.git";
+        ref = "master";
+        rev = "1e53bed4d47c526c71113569f592c82845a17784";
+      };
+    };
+
     ldlwork = oldAttrs: {
       src = builtins.getchGit {
         url = "https://github.com/dustinlacewell/nix-mode.git";
@@ -70,7 +78,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     json-mode
     magit
     markdown-mode
-    (nix-mode.overrideAttrs nix-mode-overrides.local-clone)#.master-2019-01-07)
+    (nix-mode.overrideAttrs nix-mode-overrides.master-2019-01-29)
     php-mode
     projectile
     python-mode
