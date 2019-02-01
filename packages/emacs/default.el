@@ -41,6 +41,8 @@
        (editorconfig-mode 1)
        (auto-fill-mode 1)
        (require 'direnv)
+       (direnv-mode)
+
        (require 'notmuch)
        (global-set-key (kbd "C-c m") `notmuch)
 
