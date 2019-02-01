@@ -31,6 +31,17 @@ in {
 
   dunst_config = self.callPackage ./dunst { };
 
+  direnv = upgrade super.direnv (oldAttrs: {
+    name = "direnv-2.19.1";
+    version = "2.19.1";
+    src = self.fetchFromGitHub {
+      owner = "direnv";
+      repo = "direnv";
+      rev = "v2.19.1";
+      sha256 = "12k9bp5s3gl1rkcsk31biwvkvd3cl50zsmiadm4kv7qy6xb3260s";
+    };
+  });
+
   email = self.callPackage ./email { };
 
   direnv-hook = self.callPackage ./direnv-hook { };
