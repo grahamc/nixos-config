@@ -90,6 +90,7 @@ in {
       nixpkgs-maintainer-tools
       pass
       slack
+      direnv
       h
      ];
 
