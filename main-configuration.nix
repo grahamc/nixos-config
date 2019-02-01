@@ -191,6 +191,7 @@ in {
   programs = {
     zsh.enable = true;
     zsh.interactiveShellInit = ''
+      eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
       if [ "$(cat "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"* | wc -l)" -gt 0 ]; then
            cat ${./warning}
            for f in "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"*; do
