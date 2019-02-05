@@ -32,13 +32,13 @@ in {
   dunst_config = self.callPackage ./dunst { };
 
   direnv = upgrade super.direnv (oldAttrs: {
-    name = "direnv-2.19.1";
-    version = "2.19.1";
+    name = "direnv-2.19.2";
+    version = "2.19.2";
     src = self.fetchFromGitHub {
       owner = "direnv";
       repo = "direnv";
-      rev = "v2.19.1";
-      sha256 = "12k9bp5s3gl1rkcsk31biwvkvd3cl50zsmiadm4kv7qy6xb3260s";
+      rev = "v2.19.2";
+      sha256 = "1iq9wmc63x1c7g1ixdhd6q3w1sx8xl8kf1bprxwq26n9zpd0g13g";
     };
   });
 
