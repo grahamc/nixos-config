@@ -152,6 +152,13 @@ in {
           Driver "libinput"
           Option "DisableWhileTyping" "true"
         ''
+
+        ''
+          Identifier "yubikey"
+          MatchIsKeyboard "on"
+          MatchProduct "Yubikey"
+          Option "XkbLayout" "us"
+        ''
       ];
 
       monitorSection = ''
