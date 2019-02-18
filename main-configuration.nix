@@ -92,7 +92,7 @@ in {
       slack
       direnv
       h
-     ];
+    ];
 
     etc."i3/config".source = pkgs.i3config;
     etc."xdg/autorandr".source = pkgs.autorandr-configs;
@@ -133,8 +133,6 @@ in {
         naturalScrolling = true;
         disableWhileTyping = true;
       };
-
-
 
       displayManager.lightdm.enable = true;
       desktopManager.default = "none";
