@@ -279,7 +279,7 @@ in {
     serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
   };
 
-  #virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enable = true;
   virtualisation.docker.enable = true;
 
 
