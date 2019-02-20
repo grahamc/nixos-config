@@ -1,5 +1,6 @@
 {
   imports = [
+    ./aenea/service.nix
     ./autorandr-configs/service.nix
     ./nitrokey/service.nix
     ./symlinks/service.nix
