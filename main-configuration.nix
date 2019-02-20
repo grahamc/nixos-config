@@ -90,7 +90,6 @@ in {
       nixpkgs-maintainer-tools
       pass
       slack
-      notmuch
       h
      ];
 
@@ -223,14 +222,9 @@ in {
       ".bashrc" = pkgs.bash-config;
       ".zshrc" = pkgs.zsh-config;
       ".background-image" = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/nix-wallpaper-simple-dark-gray_bottom.png";
-      ".mbsyncrc" = pkgs.email.mbsyncrc;
-      ".msmtprc" = pkgs.email.msmtprc;
-      ".notmuch-config" = pkgs.email.notmuch-config;
       ".gitconfig" = pkgs.gitconfig;
       ".gnupg/gpg.conf" = pkgs.gnupgconfig.gpgconf;
       ".gnupg/scdaemon.conf" = pkgs.gnupgconfig.scdaemonconf;
-      ".mail/grahamc/.notmuch/hooks/pre-new" = pkgs.email.pre-new;
-      ".mail/grahamc/.notmuch/hooks/post-new" = pkgs.email.post-new;
       ".mozilla/native-messaging-hosts/passff.json" = "${pkgs.passff-host}/share/passff-host/passff.json";
     } // (if (builtins.pathExists "${home}/projects/nixpkgs") then {
       "projects/nixpkgs/.git/hooks/pre-push" = pkgs.nixpkgs-pre-push;

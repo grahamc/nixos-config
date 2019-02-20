@@ -9,11 +9,6 @@
       graphviz-dot-preview-extension "svg"
       graphviz-dot-auto-preview-on-save t
       user-full-name "Graham Christensen"
-      message-directory "\"[Gmail]/Drafts\""
-      notmuch-fcc-dirs "\"[Gmail]/Sent Mail\""
-      notmuch-crypto-process-mime t
-      message-send-mail-function 'message-send-mail-with-sendmail
-      sendmail-program "@msmtp@/bin/msmtp"
       nix-indent-function 'nix-indent-line
       )
 
@@ -42,9 +37,6 @@
        (auto-fill-mode 1)
        (require 'direnv)
        (direnv-mode)
-
-       (require 'notmuch)
-       (global-set-key (kbd "C-c m") `notmuch)
 
        (require 'yasnippet)
        (yas-global-mode 1)

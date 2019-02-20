@@ -42,8 +42,6 @@ in {
     };
   });
 
-  email = self.callPackage ./email { };
-
   direnv-hook = self.callPackage ./direnv-hook { };
 
   font-b612 = self.callPackage ./b612-font { };
@@ -71,8 +69,6 @@ in {
   nixpkgs-maintainer-tools = self.callPackage ./nixpkgs-maintainer-tools { };
 
   nixpkgs-pre-push = self.callPackage ./nixpkgs-pre-push { };
-
-  notmuch = upgrade super.notmuch (self.callPackage ./notmuch { });
 
   passff-host = self.callPackage ./passff-host { };
 

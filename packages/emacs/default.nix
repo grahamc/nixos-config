@@ -1,4 +1,4 @@
-{ emacsPackagesNg, notmuch, mutate, msmtp, writeText, docbook5
+{ emacsPackagesNg, mutate, msmtp, writeText, docbook5
   , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub
   , fetchpatch, nixosUnstablePkgs }:
 
@@ -70,7 +70,6 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     lsp-ui
   ])
   ++ [
-    notmuch
     (emacsPackagesNg.trivialBuild {
       pname = "grahams-mode";
       version = "1970-01-01";
