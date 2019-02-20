@@ -13,14 +13,14 @@ in {
       allowUnfree = true;
     };
     overlays = [
-      (import ./packages/overlay.nix { inherit secrets; })
+      (import ../../packages/overlay.nix { inherit secrets; })
     ];
   };
 
   imports =
     [
       ./hardware-configuration.nix
-      ./packages/services.nix
+      ../../packages/services.nix
     ];
 
   boot = {
@@ -191,7 +191,7 @@ in {
     zsh.interactiveShellInit = ''
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
       if [ "$(cat "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"* | wc -l)" -gt 0 ]; then
-           cat ${./warning}
+           cat ${../../warning}
            for f in "''${XDG_CACHE_HOME:-$HOME/.cache}/shell-warning/"*; do
              printf "\n\n\n";
              cat "$f";
@@ -237,7 +237,7 @@ in {
     buildMachines = secrets.buildMachines;
     nixPath = [
       "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
-      "nixos-config=${toString root}/configuration.nix"
+      "nixos-config=${toString root}/devices/morbo/configuration.nix"
     ];
 
     gc = {
