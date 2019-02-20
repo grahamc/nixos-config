@@ -269,9 +269,8 @@ in {
     ConditionGroup = "users";
   };
 
-  #virtualisation.virtualbox.host.enable = true;
-  virtualisation.docker.enable = true;
-
+  virtualisation.virtualbox.host.enable = true;
+  #virtualisation.docker.enable = true;
 
   services.printing.enable = true;
   services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin ];
