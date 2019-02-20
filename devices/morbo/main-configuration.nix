@@ -95,7 +95,6 @@ in {
     ];
 
     etc."i3/config".source = pkgs.i3config;
-    etc."xdg/autorandr".source = pkgs.autorandr-configs;
 
     # Wacky erase-root-on-every-boot stuff.
     etc."NetworkManager/system-connections".source = "/rpool/persist/etc/NetworkManager/system-connections/";
@@ -105,8 +104,6 @@ in {
   powerManagement.cpuFreqGovernor = "powersave";
 
   services = {
-    autorandr.enable = true;
-
     openssh = {
       enable = true;
     };
@@ -270,13 +267,6 @@ in {
   # Only start emacs for actual users, lol
   systemd.user.services.emacs.unitConfig = {
     ConditionGroup = "users";
-  };
-
-  systemd.services.autorandr = {
-    path = [ pkgs.xorg.xrandr ];
-    # Sometimes I need to run this by hand, and I use:
-    # XDG_CONFIG_DIRS=/etc/xdg autorandr -c --force
-    serviceConfig.Environment = "XDG_CONFIG_DIRS=/etc/xdg";
   };
 
   virtualisation.virtualbox.host.enable = true;
