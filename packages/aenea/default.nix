@@ -1,5 +1,5 @@
 { stdenv, fetchFromGitHub, python2, makeWrapper, buildEnv, xdotool,
-  xsel, xprop }:
+  xsel, xprop, libnotify }:
 let
   python = python2.withPackages (p: [
     p.jsonrpclib
@@ -11,6 +11,7 @@ let
       xprop
       xdotool
       xsel
+      libnotify
     ];
   };
 
@@ -43,7 +44,9 @@ in stdenv.mkDerivation {
   installPhase = ''
     mkdir $out
     mv ./* $out/
-    wrapProgram $out/server/linux_x11/server_x11.py --prefix PATH : "${binpath}/bin"
+    wrapProgram $out/server/linux_x11/server_x11.py \
+      --prefix PATH : "${binpath}/bin" \
+      --set LANG en_US.UTF-8
     cp $out/server/linux_x11/config.py.example  $out/server/linux_x11/config.py
 
     ln -s $out/server/linux_x11/server_x11.py $out/server.py
