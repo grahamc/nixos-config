@@ -234,7 +234,7 @@ in {
     buildMachines = secrets.buildMachines;
     nixPath = [
       "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
-      "nixos-config=${toString root}/configuration.nix"
+      "nixos-config=${toString root}/devices/petunia/configuration.nix"
     ];
 
     gc = {
