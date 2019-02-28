@@ -8,6 +8,9 @@
    status = auto
    ui = auto
 
+[diff]
+  algorithm = patience
+
 [core]
    attributesfile = @gitattributes@
    excludesfile = @gitignore@

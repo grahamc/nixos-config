@@ -64,7 +64,7 @@
        (require 'lsp-ui)
        (require 'lsp-mode)
        (add-hook 'lsp-mode-hook #'lsp-ui-mode)
-       (add-hook 'rust-mode-hook #'lsp)
+       ;; (add-hook 'rust-mode-hook #'lsp)
        )
 
 (add-hook 'after-init-hook #'global-flycheck-mode)

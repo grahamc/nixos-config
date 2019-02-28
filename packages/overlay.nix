@@ -13,6 +13,8 @@ let
     pass = x: x;
   in (if isDowngrade then warn else pass) upgraded;
 in {
+  aenea = self.callPackage ./aenea { };
+
   autorandr-configs = self.callPackage ./autorandr-configs { };
 
   backlight = self.callPackage ./backlight { };

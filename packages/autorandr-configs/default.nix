@@ -2,35 +2,23 @@
 let
   generated = ./generated-configs;
 
-  prime-resolutions = mutate ./scripts/prime-resolutions.sh {
-    inherit (xorg) xrandr;
-  };
   move-frames = mutate ./scripts/move-frames.sh {
     binpath = lib.makeBinPath [
       i3 jq coreutils
     ];
   };
 in runCommand "autorandr-merged-configs" {
-    preswitch_scripts = [
-      prime-resolutions
-    ];
     postswitch_scripts = [
       move-frames
     ];
   }
   ''
-  mkdir $out
-  cp -r ${generated}/* $out
+  mkdir -p $out/autorandr
+  cp -r ${generated}/* $out/autorandr
 
-  mkdir $out/preswitch.d
-  for script in $preswitch_scripts; do
-    cp -r $script $out/preswitch.d
-  done
-  chmod +x $out/preswitch.d/* || true
-
-  mkdir $out/postswitch.d
+  mkdir $out/autorandr/postswitch.d
   for script in $postswitch_scripts; do
-    cp -r $script $out/postswitch.d
+    cp -r $script $out/autorandr/postswitch.d
   done
-  chmod +x $out/postswitch.d/* || true
+  chmod +x $out/autorandr/postswitch.d/*
 ''
