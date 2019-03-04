@@ -8,7 +8,7 @@ export PATH=@binpath@
 function external_space() {
     i3-msg -t get_outputs \
         | jq -r '.[]
-            | select((.name == "HDMI1" or .name == "DP1-1") and .active == true)
+            | select((.name != "eDP1") and .active == true)
             | .current_workspace'
 }
 
