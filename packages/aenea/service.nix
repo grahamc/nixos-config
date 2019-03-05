@@ -3,7 +3,7 @@
     description = "DNS Aenea";
 
     serviceConfig = {
-      ExecStart = "${pkgs.ip2unix}/bin/ip2unix -r in,path=$XDG_RUNTIME_DIR/aenea.sock ${pkgs.aenea}/server.py";
+      ExecStart = ''${pkgs.ip2unix}/bin/ip2unix -r in,path=''${XDG_RUNTIME_DIR}/aenea.sock ${pkgs.aenea}/server.py'';
     };
   };
 
