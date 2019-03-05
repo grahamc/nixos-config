@@ -24,6 +24,7 @@ in {
     ];
 
   boot = {
+    zfs.enableUnstable = true;
     kernelParams = [ "acpi_rev_override=5" ]; # "acpi_rev_override=1" "pcie_port_pm=off"
     kernel.sysctl = {
       "net.ipv6.conf.all.use_tempaddr" = 2;
