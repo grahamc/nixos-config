@@ -44,10 +44,13 @@ in stdenv.mkDerivation {
   installPhase = ''
     mkdir $out
     mv ./* $out/
+    find $out -name '*.pyc' -delete
     wrapProgram $out/server/linux_x11/server_x11.py \
       --prefix PATH : "${binpath}/bin" \
       --set LANG en_US.UTF-8
     cp $out/server/linux_x11/config.py.example  $out/server/linux_x11/config.py
+    echo "HOST = \"255.255.255.255\" " >> $out/server/linux_x11/config.py
+
 
     ln -s $out/server/linux_x11/server_x11.py $out/server.py
   '';
