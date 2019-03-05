@@ -58,6 +58,19 @@ in {
 
   i3config = self.callPackage ./i3config { inherit secrets; };
 
+  ifd = src: drv:
+    # pretty bad but works on what I've used it for
+    self.runCommand "${drv.name}-ifd" {
+      inherit src;
+      inp = drv;
+      buildInputs = with self; [ findutils ];
+    }
+    ''
+      mkdir -p $out
+      find $inp -maxdepth 1 -print0 | xargs -0 -I {} ln -s {} $out/
+      ln -s $src $out/ifd-src
+    '';
+
   is-nix-channel-up-to-date = self.callPackage ./is-nix-channel-up-to-date { };
 
   did-graham-commit-his-repos = self.callPackage ./did-graham-commit-his-repos { };

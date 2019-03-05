@@ -1,4 +1,5 @@
-{ fetchFromGitHub, ruby, stdenv }:
+
+{ fetchFromGitHub, ruby, stdenv, ifd }:
 let
   src = fetchFromGitHub {
     owner = "zimbatm";
@@ -6,4 +7,4 @@ let
     rev = "62895d3d9abc35dd1b142f4053c4b1d6eab90259";
     sha256 = "0bkybrgd5hkr87d6hfwl92iwqk9jb3fqgagn12gy5qyvz5la7mvm";
   };
-in import src { pkgs = { inherit ruby stdenv; }; }
+in ifd src (import src { pkgs = { inherit ruby stdenv; }; })
