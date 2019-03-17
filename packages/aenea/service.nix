@@ -10,7 +10,7 @@
   systemd.user.services."dragon" = {
     description = "DNS";
 
-    path = with pkgs; [ qemu cdrkit netcat ];
+    path = with pkgs; [ qemu cdrkit netcat python2 ];
 
     script = let
         opts = [
@@ -21,12 +21,17 @@
           "guestfwd=tcp:10.0.2.43:8240-cmd:nc -N -U $XDG_RUNTIME_DIR/aenea.sock"
         ];
       in ''
+        #export QEMU_AUDIO_ADC_FIXED_FREQ=48000
+        #export QEMU_AUDIO_ADC_FIXED_CHANNELS=2
+        #export QEMU_AUDIO_ADC_FIXED_FMT=S16
         export QEMU_AUDIO_DRV="pa"
+        export QEMU_PA_SAMPLES=1024
 
         (
             rm -rf /tmp/cdr
             cp -r ~/windows10 /tmp/cdr
             cd /tmp/cdr
+            find . -name '*.pyc' -delete
             genisoimage -v -J -r -V CONFIG -o /tmp/config.iso .
         )
 
