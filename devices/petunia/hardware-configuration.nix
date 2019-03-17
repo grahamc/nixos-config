@@ -30,6 +30,11 @@
     };
   };
 
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    zfs rollback rpool@blank
+  '';
+
+
   boot.initrd.postMountCommands = ''
     # Don't keep the cryptkey available all the time.
     cryptsetup close /dev/mapper/cryptkey
