@@ -40,7 +40,6 @@ in {
     };
 
     cleanTmpDir = true;
-    zfs.enableUnstable = true;
   };
 
   networking.hostName = "Petunia"; # Define your hostname.
