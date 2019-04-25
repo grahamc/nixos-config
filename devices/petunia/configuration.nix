@@ -49,6 +49,8 @@ in {
     127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
 
+  networking.wireguard.interfaces.wg0 = secrets.wireguard;
+
   hardware = {
     u2f.enable = true;
     pulseaudio = {
