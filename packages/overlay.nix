@@ -95,6 +95,8 @@ in {
 
   swayconfig = self.callPackage ./swayconfig { inherit secrets; };
 
+  recognize-thunderbolt = self.callPackage ./recognize-thunderbolt { };
+
   redshift = super.redshift.overrideAttrs (old: {
     name = "redshift-wayland";
     src = self.fetchFromGitHub {

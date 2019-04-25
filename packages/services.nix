@@ -1,5 +1,6 @@
 {
   imports = [
+    ./recognize-thunderbolt/service.nix
     ./aenea/service.nix
     ./autorandr-configs/service.nix
     ./nitrokey/service.nix

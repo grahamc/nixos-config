@@ -1,0 +1,128 @@
+#!/bin/sh
+
+PATH=@coreutils@/bin:@openssl@/bin:@findutils@/bin:@diffutils@/bin
+set -euo pipefail
+
+cache=/rpool/persist/private/thunderbolt
+mkdir --mode 0700 -p $cache
+
+sleep 2
+
+interactive() (
+    tty -s
+)
+
+cachekey() (
+    echo "$1" | sha256sum | cut -d' ' -f1
+)
+
+description_file() (
+    id=$(cachekey "$1")
+    echo "$cache/$id.description"
+)
+
+description_file_scratch() (
+    id=$(cachekey "$1")
+    echo "$cache/$id.description.scratch"
+)
+
+key_generate() (
+    id=$(cachekey "$1")
+    key=$(openssl rand -hex 32)
+    echo -n "$id" > "$cache/$id"
+)
+
+key_exists() (
+    id=$(cachekey "$1")
+    if [ -f "$cache/$id" ]; then
+        return 0
+    else
+        return 1
+    fi
+)
+
+key_fetch() (
+    id=$(cachekey "$1")
+    if [ ! -f "$cache/$id" ]; then
+        echo "No cache key for $1"
+        exit 1
+    fi
+    cat "$cache/$id"
+)
+
+describe_device() (
+    cd "$1"
+    cat <<EOF
+       Vendor: $(cat vendor_name) ($(cat vendor))
+       Device: $(cat device_name) ($(cat device))
+    Unique ID: $(cat unique_id)
+  NVM Version: $(cat nvm_version)
+EOF
+)
+
+new_authorizations=0
+for d in $(find /sys/bus/thunderbolt/devices/ -name '*-*'); do
+    echo "$d"
+    id="$(cat "$d/unique_id")"
+    description_scratch="$(description_file_scratch "$id")"
+
+    if [ "$(cat "$d/authorized")" -eq 1 ]; then
+        echo "$d: already authorized"
+        continue
+    fi
+
+    describe_device "$d" > "$description_scratch"
+
+    if ! key_exists "$id"; then
+        echo "New device:"
+        cat "$description_scratch"
+
+        echo ""
+
+        if interactive; then
+            echo -n "Authorize? [y/N]: "
+            read x
+            if [ "$x" = "y" ]; then
+                key_generate "$id"
+                mv "$(description_file_scratch "$id")" "$(description_file "$id")"
+
+                key_fetch "$id" | tee "$d/key" > /dev/null
+                echo 1 | tee "$d/authorized" > /dev/null
+                new_authorizations=1
+            fi
+        fi
+    else
+        if ! diff -q "$(description_file "$id")" "$(description_file_scratch "$id")"; then
+            echo "device description for $d changed:"
+            diff "$(description_file "$id")" "$(description_file_scratch "$id")"
+
+            if interactive; then
+                echo -n "Update our cached description and attempt to authorize? [y/N]: "
+                read x
+                if [ "$x" = "y" ]; then
+                    mv "$(description_file_scratch "$id")" "$(description_file "$id")"
+                else
+                    continue
+                fi
+            else
+                continue
+            fi
+        fi
+
+        echo "Attempting to authorize $d"
+        key_fetch "$id" | tee "$d/key" > /dev/null
+        echo 2 | tee "$d/authorized" > /dev/null
+        new_authorizations=1
+    fi
+done
+
+if [ "$new_authorizations" -eq 0 ] && interactive; then
+    echo "no new authorizations."
+    echo -n "unload, reload thunderbolt, and try again? [y/N]: "
+    read x
+    if [ "$x" = "y" ]; then
+        modprobe -r thunderbolt
+        modprobe thunderbolt
+        "$0"
+    fi
+fi
