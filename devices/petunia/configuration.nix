@@ -76,12 +76,13 @@ in {
   environment = {
     variables = {
       EDITOR = "emacs -nw";
+      MOZ_ENABLE_WAYLAND = "1";
     };
     systemPackages = with pkgs; [
       git
       file
       gnupg
-      (if false then firefox-devedition-bin else firefox)
+      firefox
       google-chrome
       xclip
       custom-emacs
@@ -93,7 +94,7 @@ in {
       h
     ];
 
-    etc."i3/config".source = pkgs.i3config;
+    etc."sway/config".source = lib.mkForce pkgs.swayconfig;
 
     # Wacky erase-root-on-every-boot stuff.
     etc."NetworkManager/system-connections".source = "/rpool/persist/etc/NetworkManager/system-connections/";
@@ -117,51 +118,10 @@ in {
       latitude = secrets.latitude;
       longitude = secrets.longitude;
       temperature.night = 3400;
-    };
-
-    xserver = {
-      enable = true;
-      autorun = true;
-      layout = "dvorak";
-      xkbOptions = "compose:ralt";
-      libinput = {
-        enable = true;
-        naturalScrolling = true;
-        disableWhileTyping = true;
-      };
-
-      displayManager.lightdm.enable = true;
-      desktopManager.default = "none";
-      windowManager.default = "i3";
-      windowManager.i3 = {
-        enable = true;
-        configFile = "/etc/i3/config";
-      };
-
-      inputClassSections = [
-        ''
-          Identifier "libinput touchscreen catchall"
-          MatchIsTouchscreen "on"
-          MatchDevicePath "/dev/input/event*"
-          Driver "libinput"
-          Option "DisableWhileTyping" "true"
-        ''
-
-        ''
-          Identifier "yubikey"
-          MatchIsKeyboard "on"
-          MatchProduct "Yubikey"
-          Option "XkbLayout" "us"
-        ''
-      ];
-
-      monitorSection = ''
-        Modeline "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync
-        Option "PreferredMode" "1920x1080_60.00"
-        DisplaySize 345 191
-      '';
+      extraOptions = [ "-m" "wayland" ];
     };
   };
+
 
   fonts = {
     enableFontDir = true;
@@ -183,6 +143,8 @@ in {
   };
 
   programs = {
+    light.enable = true;
+    sway.enable = true;
     zsh.enable = true;
     zsh.interactiveShellInit = ''
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
@@ -208,7 +170,7 @@ in {
   users.users.grahamc = rec {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" "pcscd" "networkmanager" ];
+    extraGroups = [ "wheel" "pcscd" "networkmanager" "video" ];
     createHome = true;
     home = "/home/grahamc";
     shell = "/run/current-system/sw/bin/zsh";
@@ -241,6 +203,25 @@ in {
       dates = "*:0/10";
     };
   };
+
+  systemd.user.services.swayidle = {
+    enable = true;
+    description = "swayidle locking";
+    unitConfig = {
+      PartOf = [ "graphical-session.target" ];
+      ConditionGroup = "users";
+    };
+
+    path = with pkgs; [ bash strace swayidle swaylock sway ];
+    script = ''
+      swayidle -w \
+         timeout 150 'swaylock -elfF' \
+         timeout 300 'swaymsg "output * dpms off"' \
+         resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -elfF'
+    '';
+  };
+
   systemd.services.nix-gc.unitConfig.ConditionACPower = true;
 
   programs.dconf.enable = true;

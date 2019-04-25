@@ -2,9 +2,9 @@
 
 set -eu
 
-PATH="@xbacklight@/bin/:@bc@/bin/"
+PATH="@light@/bin/:@bc@/bin/"
 
-CURPCT=$(xbacklight)
+CURPCT=$(light)
 echo "CUR: $CURPCT"
 
 if [ "$1" = "up" ]; then
@@ -32,8 +32,8 @@ echo "protected incr: $incr"
 
 if [ "$1" = "up" ]; then
     echo "inc"
-    xbacklight -inc $incr;
+    light -A $incr;
 else
     echo "dec"
-    xbacklight -dec $incr;
+    light -U $incr;
 fi

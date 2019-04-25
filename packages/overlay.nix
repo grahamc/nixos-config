@@ -87,6 +87,24 @@ in {
 
   passff-host = self.callPackage ./passff-host { };
 
+  sway = super.sway.overrideAttrs (old: {
+    patches = (old.patches or []) ++ [
+      ./sway/0001-24-32.patch
+    ];
+  });
+
+  swayconfig = self.callPackage ./swayconfig { inherit secrets; };
+
+  redshift = super.redshift.overrideAttrs (old: {
+    name = "redshift-wayland";
+    src = self.fetchFromGitHub {
+      owner = "minus7";
+      repo = "redshift";
+      rev = "420d0d534c9f03abc4d634a7d3d7629caf29b4b6";
+      sha256 = "12dwb96i4pbny5s64k6k4f8k936xa41zvcjhv54wv0ax471ymls7";
+    };
+  });
+
   screenshot = self.callPackage ./screenshot { };
 
   systemd-lock-handler = self.callPackage ./systemd-lock-handler { };

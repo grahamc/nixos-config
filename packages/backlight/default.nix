@@ -1,5 +1,4 @@
-{ mutate, xorg, bc }:
+{ mutate, light, bc }:
 mutate ./backlight.sh {
-  inherit bc;
-  inherit (xorg) xbacklight;
+  inherit bc light;
 }
