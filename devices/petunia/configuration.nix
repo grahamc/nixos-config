@@ -209,6 +209,7 @@ in {
   systemd.user.services.swayidle = {
     enable = true;
     description = "swayidle locking";
+    requiredBy = [ "graphical-session.target" ];
     unitConfig = {
       PartOf = [ "graphical-session.target" ];
       ConditionGroup = "users";
