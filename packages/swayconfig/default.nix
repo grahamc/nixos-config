@@ -1,7 +1,7 @@
-{ mutate, sakura, xorg, i3status, dmenu, pulseaudioFull,
+{ mutate, alacritty, xorg, i3status, dmenu, pulseaudioFull,
   volume, backlight, mako, lib, screenshot, secrets }:
 mutate ./config {
-  inherit sakura i3status dmenu pulseaudioFull volume
+  inherit alacritty i3status dmenu pulseaudioFull volume
   backlight mako screenshot;
   i3status_conf = mutate ./i3status {
     remote_tzs = lib.lists.imap0 (i: tz: ''

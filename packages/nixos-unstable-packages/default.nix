@@ -2,6 +2,6 @@
 import
   (builtins.fetchGit {
     url = "https://github.com/NixOS/nixpkgs-channels.git";
-    rev = "bc41317e24317b0f506287f2d5bab00140b9b50e"; # nixos-unstable as of 2019-01-24
+    rev = "190727db4ea7e0d083e7dbcb66ced11f31b340f0"; # nixos-unstable as of 2019-01-24
   })
   {}

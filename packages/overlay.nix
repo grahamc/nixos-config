@@ -1,6 +1,6 @@
 { secrets }: self: super:
 let
-  upgrade = package: overrides:
+  upgradeOverride = package: overrides:
   let
     upgraded = package.overrideAttrs overrides;
     upgradedVersion = (builtins.parseDrvName upgraded.name).version;
@@ -12,8 +12,26 @@ let
       "Warning: ${package.name} downgraded by overlay with ${upgraded.name}.";
     pass = x: x;
   in (if isDowngrade then warn else pass) upgraded;
+
+  upgradeReplace = package: upgraded:
+  let
+    upgradedVersion = (builtins.parseDrvName upgraded.name).version;
+    originalVersion =(builtins.parseDrvName package.name).version;
+
+    isDowngrade = (builtins.compareVersions upgradedVersion originalVersion) == -1;
+
+    warn = builtins.trace
+      "Warning: ${package.name} downgraded by overlay with ${upgraded.name}.";
+    pass = x: x;
+  in (if isDowngrade then warn else pass) upgraded;
 in {
   aenea = self.callPackage ./aenea { };
+
+  alacritty = upgradeReplace super.alacritty (self.nixosUnstablePkgs.callPackage ./alacritty {
+    inherit (super.xorg) libXcursor libXxf86vm libXi;
+    inherit (super.darwin) cf-private;
+    inherit (super.darwin.apple_sdk.frameworks) AppKit CoreFoundation CoreGraphics CoreServices CoreText Foundation OpenGL;
+  });
 
   autorandr-configs = self.callPackage ./autorandr-configs { };
 
@@ -33,7 +51,7 @@ in {
 
   dunst_config = self.callPackage ./dunst { };
 
-  direnv = upgrade super.direnv (oldAttrs: {
+  direnv = upgradeOverride super.direnv (oldAttrs: {
     name = "direnv-2.19.2";
     version = "2.19.2";
     src = self.fetchFromGitHub {
