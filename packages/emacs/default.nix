@@ -1,6 +1,6 @@
 { emacsPackagesNg, mutate, msmtp, writeText, docbook5
   , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub
-  , fetchpatch, nixosUnstablePkgs }:
+  , fetchpatch }:
 
 let
   nix-mode-overrides = {
@@ -65,7 +65,7 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     yaml-mode
     yasnippet
   ])
-  ++ (with (nixosUnstablePkgs.emacsPackagesNgFor emacsPackagesNg.emacs); [
+  ++ (with emacsPackagesNg; [
     lsp-mode
     lsp-ui
   ])
