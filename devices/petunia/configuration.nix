@@ -216,7 +216,7 @@ in {
   users.users.grahamc = rec {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" "pcscd" "networkmanager" "video" ];
+    extraGroups = [ "wheel" "pcscd" "networkmanager" "video" "vboxusers" ];
     createHome = true;
     home = "/home/grahamc";
     shell = "/run/current-system/sw/bin/zsh";
@@ -297,7 +297,8 @@ in {
   };
 
   virtualisation.virtualbox.host.enable = true;
-  #virtualisation.docker.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.docker.enable = true;
 
   services.printing.enable = true;
   services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin ];
