@@ -99,6 +99,7 @@ in {
     variables = {
       EDITOR = "emacs -nw";
       MOZ_ENABLE_WAYLAND = "1";
+      XCURSOR_PATH = [ "${pkgs.gnome3.adwaita-icon-theme}/share/icons" ];
     };
     systemPackages = with pkgs; [
       git
