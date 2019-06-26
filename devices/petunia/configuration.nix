@@ -128,6 +128,26 @@ in {
   powerManagement.cpuFreqGovernor = "powersave";
 
   services = {
+    avahi = {
+      enable = true;
+    };
+    znapzend = {
+      enable = true;
+      autoCreation = true;
+      pure = true;
+      zetup.rpool = {
+        enable = true;
+        plan = "1d=>1h,1m=>1d,1y=>1m";
+        recursive = true;
+        timestampFormat = "%Y-%m-%d--%H%M%SZ";
+        mbuffer.enable = true;
+        destinations.ogden = {
+          host = "ogden";
+          dataset = "mass/${config.networking.hostName}";
+        };
+      };
+    };
+
     gnome3.evolution-data-server.enable = true;
     gnome3.gnome-keyring.enable = true; # for Evolution
     openssh = {
