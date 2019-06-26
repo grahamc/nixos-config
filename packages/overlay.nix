@@ -134,4 +134,10 @@ in {
   volume = self.callPackage ./volume { };
 
   zsh-config = self.callPackage ./zsh-config { };
+
+  #nix = super.nix.overrideAttrs (old: {
+  ##  patches = (old.patches or []) ++ [
+  #    ./nix/2931.patch
+  #  ];
+  #});
 }

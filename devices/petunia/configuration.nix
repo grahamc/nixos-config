@@ -243,6 +243,30 @@ in {
       "nixos-config=${toString root}/devices/petunia/configuration.nix"
     ];
 
+    extraOptions = let
+      diffWrapper = pkgs.writeScript "diff-wrapper"
+            ''
+              #! ${pkgs.stdenv.shell}
+              exec >&2
+
+              ls -la "$1"
+              ls -la "$2"
+              ls -la "$3"
+              ls -la "$4"
+              ls -la /nix
+              ${pkgs.utillinux}/bin/mount
+              ${pkgs.coreutils}/bin/whoami
+              ${pkgs.coreutils}/bin/groups
+
+              echo "For derivation $3:"
+              ${pkgs.diffutils}/bin/diff -r "$1" "$2"
+              exit 0
+            '';
+    in ''
+      diff-hook = ${diffWrapper}
+      run-diff-hook = true
+    '';
+
     gc = {
       automatic = true;
       dates = "*:0/10";
