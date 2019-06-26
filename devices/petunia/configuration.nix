@@ -218,10 +218,10 @@ in {
     path = with pkgs; [ bash strace swayidle swaylock sway ];
     script = ''
       swayidle -w \
-         timeout 150 'swaylock -elfF' \
+         timeout 150 'swaylock -elfF -s fill -i ${../../nixos-nineish.png}' \
          timeout 300 'swaymsg "output * dpms off"' \
          resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -elfF'
+         before-sleep 'swaylock -elfF -s fill -i ${../../nixos-nineish.png}'
     '';
   };
 

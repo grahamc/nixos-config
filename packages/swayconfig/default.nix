@@ -13,4 +13,5 @@ mutate ./config {
 
       '') secrets.location.remote_timezones;
   };
+  bgimage = ../../nixos-nineish.png;
 }
