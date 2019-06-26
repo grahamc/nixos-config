@@ -65,6 +65,7 @@ in {
   }];
 
   networking.extraHosts = ''
+    10.10.2.15 ogden # wireguard now
     127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
 
