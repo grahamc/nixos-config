@@ -44,6 +44,25 @@ in {
 
   networking.hostName = "Petunia"; # Define your hostname.
   networking.networkmanager.enable = true;
+  networking.networkmanager.dispatcherScripts = [{
+    source = pkgs.writeScript "up-fix-wireguard" ''
+      #!/bin/sh
+
+      PATH=$PATH:${pkgs.wireguard}/bin
+
+      if [ "$2" != "up" ]; then
+        exit
+      fi
+
+      if [ "$CONNECTION_ID" = "Bearrocscir" ]; then
+        echo "internal"
+        wg set wg0 peer gNU592zxr8y+kuaH3+aGuwEhRmwA+FFoBckOATFr7U0= endpoint 10.5.3.105:41741
+      else
+        echo "external"
+        wg set wg0 peer gNU592zxr8y+kuaH3+aGuwEhRmwA+FFoBckOATFr7U0= endpoint lord-nibbler.gsc.io:41741
+      fi
+    '';
+  }];
 
   networking.extraHosts = ''
     127.0.0.1 www.facebook.com facebook.com x.facebook.com
