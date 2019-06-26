@@ -90,6 +90,7 @@ in {
   i18n = {
     consoleFont = "latarcyrheb-sun32";
     consoleKeyMap = "dvorak";
+    defaultLocale = "fr_FR.UTF-8";
   };
 
   time.timeZone = secrets.timezone;
