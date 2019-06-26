@@ -113,6 +113,7 @@ in {
       slack
       direnv
       h
+      gnome3.evolution
     ];
 
     etc."sway/config".source = lib.mkForce pkgs.swayconfig;
@@ -125,6 +126,8 @@ in {
   powerManagement.cpuFreqGovernor = "powersave";
 
   services = {
+    gnome3.evolution-data-server.enable = true;
+    gnome3.gnome-keyring.enable = true; # for Evolution
     openssh = {
       enable = true;
     };
