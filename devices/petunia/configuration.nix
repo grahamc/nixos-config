@@ -72,6 +72,10 @@ in {
   networking.wireguard.interfaces.wg0 = secrets.wireguard;
 
   hardware = {
+    opengl = {
+      enable = true;
+      # extraPackages = [ pkgs.libGL ];
+    };
     u2f.enable = true;
     pulseaudio = {
       enable = true;
@@ -90,7 +94,7 @@ in {
   i18n = {
     consoleFont = "latarcyrheb-sun32";
     consoleKeyMap = "dvorak";
-    defaultLocale = "fr_FR.UTF-8";
+    # defaultLocale = "fr_FR.UTF-8";
   };
 
   time.timeZone = secrets.timezone;
@@ -320,9 +324,9 @@ in {
     ConditionGroup = "users";
   };
 
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
-  virtualisation.docker.enable = true;
+  #virtualisation.virtualbox.host.enable = true;
+  #virtualisation.virtualbox.host.enableExtensionPack = true;
+  #virtualisation.docker.enable = true;
 
   services.printing.enable = true;
   services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin ];
