@@ -135,9 +135,13 @@ in {
 
   zsh-config = self.callPackage ./zsh-config { };
 
-  #nix = super.nix.overrideAttrs (old: {
-  ##  patches = (old.patches or []) ++ [
-  #    ./nix/2931.patch
-  #  ];
-  #});
+  /*
+  nix = super.nix.overrideAttrs (old: {
+    patches = (old.patches or []) ++ [
+      ./nix/0001-Add-a-post-build-hook.patch
+      ./nix/0002-fixup-Add-a-post-build-hook.patch
+      ./nix/0001-pipe-stdout-stderr-to-the-user.patch
+      ./nix/0001-use-a-stderr-sink-too.patch
+      ];
+  });*/
 }

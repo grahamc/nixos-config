@@ -83,6 +83,7 @@ in buildRustPackage rec {
   postPatch = ''
     substituteInPlace alacritty_terminal/src/config/mod.rs \
       --replace xdg-open ${xdg_utils}/bin/xdg-open
+    grep -ri xdg-open .
   '';
   postBuild = lib.optionalString stdenv.isDarwin "make app";
 

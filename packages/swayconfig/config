@@ -5,6 +5,10 @@ input * {
       xkb_options compose:ralt
 }
 
+input 1149:8257:Kensington_Kensington_Slimblade_Trackball {
+      natural_scroll off
+}
+
 input '1267:10543:ELAN292F:00_04F3:292F' {
        map_to_output eDP-1
 }

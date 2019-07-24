@@ -212,11 +212,30 @@ in {
       enable = true;
       enableSSHSupport = true;
     };
+    ssh.extraConfig = ''
+      Host rpi1-0
+      User root
+      HostName 10.5.5.106
+      ProxyCommand ssh grahamc@10.5.3.1 nc %h %p
+      IdentitiesOnly yes
+      IdentityFile /rpool/persist/private/root/rpi
+
+      Host rpi1-1
+      User root
+      HostName 10.5.5.107
+      ProxyCommand ssh grahamc@10.5.3.1 nc %h %p
+      IdentitiesOnly yes
+      IdentityFile /rpool/persist/private/root/rpi
+
+    '';
   };
 
   users.mutableUsers = false;
   users.users.root.hashedPassword = secrets.hashedPassword;
 
+  users.users.root.symlinks = {
+    ".aws" = "/rpool/persist/private/root/aws";
+  };
   users.users.grahamc = rec {
     isNormalUser = true;
     uid = 1000;
@@ -267,17 +286,28 @@ in {
               ${pkgs.diffutils}/bin/diff -r "$1" "$2"
               exit 0
             '';
-    in ''
-      diff-hook = ${diffWrapper}
-      run-diff-hook = true
-    '';
+    in ""; /*''
+      #diff-hook = ${diffWrapper}
+      #run-diff-hook = true
+      #post-build-hook = ${./upload-to-cache.sh}
+    '';*/
 
+    binaryCaches = [
+      https://cache.nixos.org/
+      s3://example-nix-cache?region=eu-west-2
+    ];
+    binaryCachePublicKeys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "example-nix-cache:1/cKDz3QCCOmwcztD2eV6Coggp6rqc9DGjWv7C0G+rM=" # 2019-07-10
+      "example-nix-cache:GnyIc3QRFKI417xj663gaw0HpctZN/ghBjz//b6qrBs=" # 2019-07-14
+    ];
     gc = {
       automatic = true;
       dates = "*:0/10";
     };
   };
 
+  systemd.coredump.enable = true;
   systemd.user.services.swayidle = {
     enable = true;
     description = "swayidle locking";
@@ -329,7 +359,7 @@ in {
   #virtualisation.docker.enable = true;
 
   services.printing.enable = true;
-  services.printing.drivers = [ pkgs.gutenprint pkgs.gutenprintBin ];
+  services.printing.drivers = [ pkgs.hplip ];
 
   services.zfs.autoScrub.enable = true;
   services.zfs.autoScrub.interval = "weekly";

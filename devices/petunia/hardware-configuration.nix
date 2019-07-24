@@ -35,8 +35,12 @@
     cryptsetup close /dev/mapper/cryptkey
   '';
 
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    zfs rollback -r rpool/blank-root@blank
+  '';
+
   fileSystems."/" =
-    { device = "rpool/root";
+    { device = "rpool/blank-root";
       fsType = "zfs";
     };
 
