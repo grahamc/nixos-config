@@ -72,6 +72,10 @@ in {
   networking.wireguard.interfaces.wg0 = secrets.wireguard;
 
   hardware = {
+    kevin.console-font = {
+      fontfile = ../../ComicSans.otf;
+      ptSize = 16;
+    };
     opengl = {
       enable = true;
       # extraPackages = [ pkgs.libGL ];
@@ -92,7 +96,7 @@ in {
   };
 
   i18n = {
-    consoleFont = "latarcyrheb-sun32";
+    # consoleFont = "latarcyrheb-sun32";
     consoleKeyMap = "dvorak";
     # defaultLocale = "fr_FR.UTF-8";
   };

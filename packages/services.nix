@@ -9,5 +9,6 @@
     ./did-graham-commit-his-repos/service.nix
     ./systemd-lock-handler/service.nix
     ./systemd-boot/systemd-boot.nix
+    ./ttf-console-font/service.nix
   ];
 }

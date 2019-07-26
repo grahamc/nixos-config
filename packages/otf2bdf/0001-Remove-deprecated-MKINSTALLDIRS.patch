@@ -1,0 +1,33 @@
+From 8d490c410de5b760e8af218633783627e6f359f6 Mon Sep 17 00:00:00 2001
+From: Andrew Childs <lorne@cons.org.nz>
+Date: Sat, 3 Feb 2018 01:45:51 +0900
+Subject: [PATCH 1/2] Remove deprecated MKINSTALLDIRS
+
+---
+ Makefile.in | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 5e8b6fd..fc7adc5 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -22,7 +22,6 @@
+ 
+ RM = @RM@
+ CP = @CP@
+-MKINSTALLDIRS = ./mkinstalldirs
+ 
+ CC = @CC@
+ CFLAGS = @XX_CFLAGS@ @CFLAGS@
+@@ -60,7 +59,7 @@ distclean: clean
+ 	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+ 
+ install: otf2bdf
+-	$(MKINSTALLDIRS) $(bindir) $(mandir)/man1
++	mkdir -p $(bindir) $(mandir)/man1
+ 	$(CP) otf2bdf $(bindir)/otf2bdf
+ 	$(CP) otf2bdf.man $(mandir)/man1/otf2bdf.1
+ 
+-- 
+2.16.1
+

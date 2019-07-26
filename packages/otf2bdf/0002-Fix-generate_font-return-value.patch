@@ -1,0 +1,31 @@
+From 7720ca0da2550141afcf452c83257c80dc250274 Mon Sep 17 00:00:00 2001
+From: Andrew Childs <lorne@cons.org.nz>
+Date: Sat, 3 Feb 2018 01:46:03 +0900
+Subject: [PATCH 2/2] Fix generate_font return value
+
+---
+ otf2bdf.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/otf2bdf.c b/otf2bdf.c
+index 9f1cb0c..463f924 100644
+--- a/otf2bdf.c
++++ b/otf2bdf.c
+@@ -1102,8 +1102,13 @@ generate_font(FILE *out, char *iname, char *oname)
+      * End the font and do memory cleanup on the glyph and raster structures.
+      */
+     eof = fprintf(out, "ENDFONT\n");
++    if (eof < 0) {
++        fprintf(stderr, "%s: problem writing to output file '%s'.\n",
++                prog, oname);
++        return -1;
++    }
+ 
+-    return eof;
++    return 0;
+ }
+ 
+ static int
+-- 
+2.16.1
+

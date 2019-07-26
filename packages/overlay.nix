@@ -131,6 +131,9 @@ in {
 
   timeout_tcl = self.callPackage ./timeout { };
 
+  ttf-console-font = self.callPackage ./ttf-console-font { };
+  otf2bdf = self.callPackage ./otf2bdf { };
+
   volume = self.callPackage ./volume { };
 
   zsh-config = self.callPackage ./zsh-config { };
