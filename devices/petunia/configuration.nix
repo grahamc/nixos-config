@@ -127,7 +127,6 @@ in {
       gnome3.evolution
     ];
 
-    etc."i3/config".source = pkgs.i3config;
     etc."sway/config".source = lib.mkForce pkgs.swayconfig;
 
     # Wacky erase-root-on-every-boot stuff.
@@ -138,25 +137,6 @@ in {
   powerManagement.cpuFreqGovernor = "powersave";
 
   services = {
-    # Enable the X11 windowing system.
-    xserver = {
-      enable = true;
-      # Enable touchpad support.
-      libinput.enable = true;
-      layout = "us";
-      xkbVariant = "dvorak-alt-intl";
-      dpi = 300;
-      windowManager.i3 = {
-        enable = true;
-        configFile = "/etc/i3/config";
-        extraPackages = with pkgs; [dmenu i3lock i3status];
-      };
-      displayManager.lightdm.enable = true;
-      windowManager.default = "i3";
-    };
-
-
-
     avahi = {
       enable = true;
     };
