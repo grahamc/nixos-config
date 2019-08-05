@@ -1,8 +1,10 @@
 { mutate, alacritty, xorg, i3status, dmenu, pulseaudioFull,
-  volume, backlight, mako, lib, screenshot, secrets }:
+  volume, backlight, mako, lib, screenshot, sway-cycle-workspace, secrets }:
 mutate ./config {
   inherit alacritty i3status dmenu pulseaudioFull volume
   backlight mako screenshot;
+
+  sway_cycle_workspace = sway-cycle-workspace;
   i3status_conf = mutate ./i3status {
     remote_tzs = lib.lists.imap0 (i: tz: ''
         tztime remote${toString i} {

@@ -135,6 +135,9 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
+# move a workspace to another workspace (corresponds to the alt of F8)
+bindsym $mod+l exec --no-startup-id @sway_cycle_workspace@
+
 # focus the child container
 #bindsym $mod+d focus child
 

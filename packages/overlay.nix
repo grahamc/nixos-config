@@ -113,6 +113,8 @@ in {
 
   swayconfig = self.callPackage ./swayconfig { inherit secrets; };
 
+  sway-cycle-workspace = self.callPackage ./sway-cycle-workspace { };
+
   recognize-thunderbolt = self.callPackage ./recognize-thunderbolt { };
 
   redshift = super.redshift.overrideAttrs (old: {
