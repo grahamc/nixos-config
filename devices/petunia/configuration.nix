@@ -4,7 +4,7 @@
 
 { config, pkgs, lib, ... }:
 let
-  root = /home/grahamc/projects/grahamc/nixos-config;
+  root = ../..;
   secrets = import "${root}/secrets.nix";
 in {
   nixpkgs = {
