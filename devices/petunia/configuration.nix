@@ -21,6 +21,7 @@ in {
     [
       ./hardware-configuration.nix
       ../../packages/services.nix
+      (import ./wireguard-ensure.nix { inherit secrets; })
     ];
 
   boot = {
@@ -66,11 +67,10 @@ in {
   }];
 
   networking.extraHosts = ''
-    10.10.2.15 ogden # wireguard now
     127.0.0.1 www.facebook.com facebook.com x.facebook.com
   '';
 
-  networking.wireguard.interfaces.wg0 = secrets.wireguard;
+  networking.nameservers = [ "4.2.2.2" "4.2.2.3" ];
 
   hardware = {
     kevin.console-font = {
