@@ -145,12 +145,11 @@ in {
       enable = true;
       autoCreation = true;
       pure = true;
-      zetup.rpool = {
+      zetup."rpool/safe" = {
         enable = true;
         plan = "1d=>1h,1m=>1d,1y=>1m";
         recursive = true;
         timestampFormat = "%Y-%m-%d--%H%M%SZ";
-        mbuffer.enable = true;
         destinations.ogden = {
           host = "ogden";
           dataset = "mass/${config.networking.hostName}";
