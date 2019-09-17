@@ -53,17 +53,6 @@ in {
 
   dunst_config = self.callPackage ./dunst { };
 
-  direnv = upgradeOverride super.direnv (oldAttrs: {
-    name = "direnv-2.19.2";
-    version = "2.19.2";
-    src = self.fetchFromGitHub {
-      owner = "direnv";
-      repo = "direnv";
-      rev = "v2.19.2";
-      sha256 = "1iq9wmc63x1c7g1ixdhd6q3w1sx8xl8kf1bprxwq26n9zpd0g13g";
-    };
-  });
-
   direnv-hook = self.callPackage ./direnv-hook { };
 
   font-b612 = self.callPackage ./b612-font { };
@@ -106,12 +95,6 @@ in {
   nixpkgs-pre-push = self.callPackage ./nixpkgs-pre-push { };
 
   passff-host = self.callPackage ./passff-host { };
-
-  sway = super.sway.overrideAttrs (old: {
-    patches = (old.patches or []) ++ [
-      ./sway/0001-24-32.patch
-    ];
-  });
 
   swayconfig = self.callPackage ./swayconfig { inherit secrets; };
 
