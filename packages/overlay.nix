@@ -27,10 +27,12 @@ let
 in {
   aenea = self.callPackage ./aenea { };
 
-  alacritty = upgradeReplace super.alacritty (self.nixosUnstablePkgs.callPackage ./alacritty {
-    inherit (super.xorg) libXcursor libXxf86vm libXi;
-    inherit (super.darwin) cf-private;
-    inherit (super.darwin.apple_sdk.frameworks) AppKit CoreFoundation CoreGraphics CoreServices CoreText Foundation OpenGL;
+
+  alacritty = super.alacritty.overrideAttrs (x: {
+    postPatch = ''
+      substituteInPlace alacritty_terminal/src/config/mouse.rs \
+        --replace xdg-open ${self.xdg_utils}/bin/xdg-open
+    '';
   });
 
   autorandr-configs = self.callPackage ./autorandr-configs { };
