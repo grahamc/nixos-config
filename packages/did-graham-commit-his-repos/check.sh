@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Redirect all stdout output to stderr
 # but create a third pipe which lets us print to stdout
