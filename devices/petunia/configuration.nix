@@ -145,15 +145,31 @@ in {
       enable = true;
       autoCreation = true;
       pure = true;
-      zetup."rpool/safe" = {
-        enable = true;
-        plan = "1d=>1h,1m=>1d,1y=>1m";
-        recursive = true;
-        timestampFormat = "%Y-%m-%d--%H%M%SZ";
-        destinations.ogden = {
-          host = "ogden";
-          dataset = "mass/${config.networking.hostName}";
+      zetup = let
+        localOnlyNotRecursive = {
+          enable = true;
+          plan = "1hour=>15min,1day=>1hour,4day=>1day,1month=>1week";
+          timestampFormat = "%Y-%m-%d--%H%M%SZ";
         };
+      in {
+        "rpool/safe" = {
+          enable = true;
+          plan = "15min=>5min,4hour=>15min,2day=>1hour,4day=>1day,3week=>1week";
+          recursive = true;
+          timestampFormat = "%Y-%m-%d--%H%M%SZ";
+          destinations.ogden = {
+            plan = "1hour=>5min,4day=>1hour,1week=>1day,1year=>1week,10year=>1month";
+            host = "ogden";
+            dataset = "mass/${config.networking.hostName}";
+          };
+        };
+
+        # less robust snapshot techniques
+        "rpool/windows10" = localOnlyNotRecursive;
+        "rpool/windows10fresh" = localOnlyNotRecursive;
+        "rpool/persist" = localOnlyNotRecursive;
+        "rpool" = localOnlyNotRecursive;
+        "rpool/local" = localOnlyNotRecursive // { recursive = true; };
       };
     };
 
