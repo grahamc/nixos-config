@@ -216,22 +216,32 @@ in {
       enable = true;
       enableSSHSupport = true;
     };
-    ssh.extraConfig = ''
-      Host rpi1-0
-      User root
-      HostName 10.5.5.106
-      ProxyCommand ssh grahamc@10.5.3.1 nc %h %p
-      IdentitiesOnly yes
-      IdentityFile /rpool/persist/private/root/rpi
+    ssh = {
+      knownHosts.ogden = {
+        hostNames = [ "ogden" "10.10.2.15" ];
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHICIvUL8AAPDjwP0wUdYADwWSWBieS8iTgNPVa+fynN";
+      };
+      extraConfig = ''
+        Host ogden
+        User root
+        IdentitiesOnly yes
+        IdentityFile /rpool/persist/private/root/ogden
 
-      Host rpi1-1
-      User root
-      HostName 10.5.5.107
-      ProxyCommand ssh grahamc@10.5.3.1 nc %h %p
-      IdentitiesOnly yes
-      IdentityFile /rpool/persist/private/root/rpi
+        Host rpi1-0
+        User root
+        HostName 10.5.5.106
+        ProxyCommand ssh grahamc@10.5.3.1 nc %h %p
+        IdentitiesOnly yes
+        IdentityFile /rpool/persist/private/root/rpi
 
-    '';
+        Host rpi1-1
+        User root
+        HostName 10.5.5.107
+        ProxyCommand ssh grahamc@10.5.3.1 nc %h %p
+        IdentitiesOnly yes
+        IdentityFile /rpool/persist/private/root/rpi
+      '';
+    };
   };
 
   users.mutableUsers = false;
