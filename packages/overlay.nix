@@ -113,6 +113,16 @@ in {
   });
   passff-host = self.callPackage ./passff-host { };
 
+  slack = super.slack.overrideAttrs ({ buildCommand ? null, ... }:
+  if buildCommand == null then {} else {
+    buildCommand = ''
+      ${buildCommand}
+      makeWrapper $out/lib/slack/slack $out/bin/slack \
+        --prefix XDG_DATA_DIRS : $GSETTINGS_SCHEMAS_PATH \
+        --prefix PATH : ${self.xdg_utils}/bin
+    '';
+  });
+
   swayconfig = self.callPackage ./swayconfig { inherit secrets; };
 
   sway-cycle-workspace = self.callPackage ./sway-cycle-workspace { };
