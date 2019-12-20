@@ -94,6 +94,23 @@ in {
 
   nixpkgs-pre-push = self.callPackage ./nixpkgs-pre-push { };
 
+  pass = upgradeOverride super.pass ({ postFixup, ... }: {
+    version = "1.7.4";
+    src = self.fetchgit {
+      url = "https://git.zx2c4.com/password-store.git";
+      rev = "88936b11aff49e48f79842e4628c55620e0ad736";
+      sha256 = "0hjb0zh94mda4xq20srba40mh3iww3gg45w3vaqyvplxiw08hqrq";
+    };
+    patches = [
+      ./pass-0001-clip-support-single-binary-coreutils.patch
+    ];
+    postFixup = ''
+      ${postFixup}
+
+      wrapProgram $out/bin/pass \
+        --prefix PATH : "${self.wl-clipboard}/bin"
+    '';
+  });
   passff-host = self.callPackage ./passff-host { };
 
   swayconfig = self.callPackage ./swayconfig { inherit secrets; };
