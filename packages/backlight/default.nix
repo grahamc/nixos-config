@@ -1,4 +1,5 @@
-{ mutate, light, bc }:
-mutate ./backlight.sh {
-  inherit bc light;
+{ resholve, mutate, light, bc, coreutils }:
+resholve {
+  src = ./backlight.sh;
+  inputs = [ bc light coreutils ];
 }

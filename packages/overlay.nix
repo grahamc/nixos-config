@@ -25,6 +25,19 @@ let
     pass = x: x;
   in (if isDowngrade then warn else pass) upgraded;
 in {
+
+  abathur-resholved = self.callPackage ./abathur-resholved { };
+  resholve = { src, inputs }: self.runCommand
+    "${builtins.baseNameOf src}-resholved"
+    {
+      nativeBuildInputs = [ self.abathur-resholved ];
+      SHELL_RUNTIME_DEPENDENCY_PATH = "${self.lib.makeBinPath inputs}";
+    }
+    ''
+      resholver < ${src} > $out
+    '';
+
+
   aenea = self.callPackage ./aenea { };
 
 

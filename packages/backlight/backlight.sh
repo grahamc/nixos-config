@@ -2,7 +2,7 @@
 
 set -eu
 
-PATH="@light@/bin/:@bc@/bin/"
+PATH=":"
 
 CURPCT=$(light)
 echo "CUR: $CURPCT"
