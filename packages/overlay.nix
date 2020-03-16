@@ -163,6 +163,20 @@ in {
 
   volume = self.callPackage ./volume { };
 
+  vault-plugin-secrets-oauthapp = self.callPackage ./vault-plugin-secrets-oauthapp {};
+  vault-plugin-secrets-packet = self.buildGoModule {
+    name = "vault-plugin-secrets-packet";
+    version = "0.0.1";
+    src = self.fetchFromGitHub {
+      owner = "packethost";
+      repo = "vault-plugin-secrets-packet";
+      rev = "98287087cc5310b0cf9391769c84378d1e78a654";
+      sha256 = "0mi22vb9s07x25w6kkljr811b8vv7hjfas9g4c8xncssd81s4z0s";
+    };
+    modSha256 = "1q8ba5krq8a920gyvhdq4k7g15wnvchdyk1k4pl470xmxbsxcmji";
+    subPackages = [ "cmd/vault-plugin-secrets-packet" ];
+  };
+
   zsh-config = self.callPackage ./zsh-config { };
 
   /*
