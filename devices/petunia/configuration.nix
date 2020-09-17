@@ -24,7 +24,6 @@ in
       ../../packages/services.nix
       (import ./wireguard-ensure.nix { inherit secrets; })
       ./vault.nix
-      ./tink.nix
     ];
 
   console = {
