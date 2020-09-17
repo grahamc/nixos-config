@@ -1,0 +1,301 @@
+diff --git a/doc/manual/advanced-topics/advanced-topics.xml b/doc/manual/advanced-topics/advanced-topics.xml
+index c304367a..1b8841ad 100644
+--- a/doc/manual/advanced-topics/advanced-topics.xml
++++ b/doc/manual/advanced-topics/advanced-topics.xml
+@@ -8,5 +8,6 @@
+ 
+ <xi:include href="distributed-builds.xml" />
+ <xi:include href="diff-hook.xml" />
++<xi:include href="post-build-hook.xml" />
+ 
+ </part>
+diff --git a/doc/manual/advanced-topics/post-build-hook.xml b/doc/manual/advanced-topics/post-build-hook.xml
+new file mode 100644
+index 00000000..645184e9
+--- /dev/null
++++ b/doc/manual/advanced-topics/post-build-hook.xml
+@@ -0,0 +1,143 @@
++<chapter xmlns="http://docbook.org/ns/docbook"
++      xmlns:xlink="http://www.w3.org/1999/xlink"
++      xmlns:xi="http://www.w3.org/2001/XInclude"
++      xml:id="chap-post-build-hook"
++      version="5.0"
++      >
++<!--
++TODO:
++ - tell the client that they're running a post-build-hook
++ - even better: Stream the output to the user's TTY
++-->
++<title>Using the <xref linkend="conf-post-build-hook" /></title>
++<subtitle>Uploading to an S3-compatible binary cache after each build</subtitle>
++
++
++<section>
++  <title>Implementation Caveats</title>
++  <para>Here we set up a post-build hook to upload to a binary cache.
++  This is a simple and working example, but it is not suitable for all
++  use cases.</para>
++
++  <para>The post build hook program runs after each executed build,
++  and blocks the build loop. If the hook program fails, the build loop
++  is canceled.</para>
++
++  <para>Concretely, using this example implementation in scenarios
++  where the internet is slow or unreliable will make Nix slow or
++  unusable.</para>
++
++  <para>More advanced implementations might pass the store paths a
++  user-supplied daemon or queue for processing the store paths outside
++  of the hot path of the build.</para>
++</section>
++
++<section>
++  <title>Prerequisites</title>
++
++  <para>
++    This tutorial assumes you have configured an S3-compatible binary cache
++    according to the instructions at
++    <xref linkend="ssec-s3-substituter-authenticated-writes" />, and
++    the <literal>root</literal> user's default AWS profile can upload
++    to the bucket.
++  </para>
++</section>
++
++<section>
++  <title>Set up a Signing Key</title>
++  <screen>
++# nix-store --generate-binary-cache-key example-nix-cache /etc/nix/key.secret /etc/nix/key.public
++# cat /etc/nix/key.public
++example-nix-cache:1/cKDz3QCCOmwcztD2eV6Coggp6rqc9DGjWv7C0G+rM=
++</screen>
++
++<para>and add the public key and your cache URL to your nix.conf's
++<xref linkend="conf-trusted-public-keys" /> and
++<xref linkend="conf-substituters" /> like:</para>
++
++<programlisting>
++substituters = https://cache.nixos.org/ s3://example-nix-cache
++trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= example-nix-cache:1/cKDz3QCCOmwcztD2eV6Coggp6rqc9DGjWv7C0G+rM=
++</programlisting>
++
++<para>and restart your Nix daemon.</para>
++</section>
++
++<section>
++  <title>Implementing the build hook</title>
++  <para>Write the following script to
++  <filename>/etc/nix/upload-to-cache.sh</filename> and make sure it is
++  executable by the <literal>root</literal> user.
++  </para>
++
++  <programlisting>
++#!/bin/sh
++
++set -eu
++
++# Shift off arguments to the hook until the only remaining arguments
++# are output paths
++while [ "${1:---}" != "--" ]; do
++  shift
++done
++shift # pop off the "--"
++
++echo "Signing paths" "$@"
++nix sign-paths --key-file /etc/nix/key.secret "$@"
++echo "Uploading paths" "$@"
++exec nix copy --to 's3://example-nix-cache' "$@"
++</programlisting>
++
++  <para>The hook ignores all the informational arguments, skipping to
++  the output path arguments, and passes the output path arguments to
++  <command>nix copy</command>.</para>
++</section>
++
++<section>
++  <title>Updating Nix Configuration</title>
++
++  <para>Edit <filename>/etc/nix/nix.conf</filename> to use this hook,
++  by adding the following configuration snippet at the end:</para>
++
++  <programlisting>
++post-build-hook = /etc/nix/upload-to-cache.sh
++</programlisting>
++
++  <para>Then, restart the <command>nix-daemon</command>.</para>
++</section>
++
++<section>
++  <title>Testing</title>
++
++  <para>Build any derivation, for example:</para>
++
++  <screen>
++$ nix-build -E '(import &lt;nixpkgs&gt; {}).writeText "example" (builtins.toString builtins.currentTime)'
++these derivations will be built:
++  /nix/store/i1q1386s557i50p3k991cqlqvkb9bybg-example.drv
++building '/nix/store/i1q1386s557i50p3k991cqlqvkb9bybg-example.drv'...
++/nix/store/m8bmqwrch6l3h8s0k3d673xpmipcdpsa-example
++</screen>
++
++  <para>Then delete the path from the store, and try substituting it from the binary cache:</para>
++  <screen>
++$ rm ./result
++$ nix-store --delete /nix/store/m8bmqwrch6l3h8s0k3d673xpmipcdpsa-example
++</screen>
++
++<para>Now, copy the path back from the cache:</para>
++<screen>
++$ nix store --realize /nix/store/m8bmqwrch6l3h8s0k3d673xpmipcdpsa-example
++copying path '/nix/store/m8bmqwrch6l3h8s0k3d673xpmipcdpsa-example from 's3://example-nix-cache'...
++warning: you did not specify '--add-root'; the result might be removed by the garbage collector
++/nix/store/m8bmqwrch6l3h8s0k3d673xpmipcdpsa-example
++</screen>
++
++<para>Looking in the Nix daemon's log, we can see the upload command's output:</para>
++<screen>
++Jul 11 18:58:38 Petunia nix-daemon[17117]: Signing paths /nix/store/m8bmqwrch6l3h8s0k3d673xpmipcdpsa-example
++Jul 11 18:58:38 Petunia nix-daemon[17117]: Uploading paths /nix/store/m8bmqwrch6l3h8s0k3d673xpmipcdpsa-example
++</screen>
++</section>
++</chapter>
+diff --git a/doc/manual/command-ref/conf-file.xml b/doc/manual/command-ref/conf-file.xml
+index 09aad2e0..337cfb32 100644
+--- a/doc/manual/command-ref/conf-file.xml
++++ b/doc/manual/command-ref/conf-file.xml
+@@ -656,6 +656,72 @@ password <replaceable>my-password</replaceable>
+ 
+   </varlistentry>
+ 
++  <varlistentry xml:id="conf-post-build-hook">
++    <term><literal>post-build-hook</literal></term>
++    <listitem>
++      <para>Optional. The path to a program which is executed after
++      each build.</para>
++
++      <para>This option can only be set in the nix.conf, or by trusted
++      users.</para>
++
++      <para>If the nix-daemon is used, the daemon executes
++      the hook. If the nix-daemon is not involved, the hook runs as
++      the user executing the nix-build.</para>
++
++      <itemizedlist>
++        <listitem><para>The hook is called after building during evaluation.</para></listitem>
++        <listitem><para>The hook is not called if a build is substituted.</para></listitem>
++        <listitem><para>If using the Nix daemon, the hook's output goes to the daemon's log.</para></listitem>
++        <listitem><para>If the hook fails, the build succeeds but no further builds execute.</para></listitem>
++      </itemizedlist>
++
++      <warning><para>If the nix-daemon performs the build, the
++      <option>post-build-hook</option> program executes as root.
++      </para></warning>
++
++      <para>The program is executed with the following arguments:</para>
++
++      <variablelist>
++        <varlistentry>
++          <term>derivation</term>
++          <listitem>
++            <para>The derivation which was built.</para>
++          </listitem>
++        </varlistentry>
++
++        <varlistentry>
++          <term><literal>--</literal></term>
++          <listitem>
++            <para>A literal <literal>--</literal>.</para>
++            <note><para>Hooks must iterate through the arguments to
++            find the <literal>--</literal> argument, to support
++            possible improvements to the hook interface.</para>
++
++            <para>In the future, Nix may pass additional arguments
++            before the <literal>--</literal>. Nix guarantees the order
++            of arguments before the <literal>--</literal> will never
++            change, however new arguments may be added.
++            </para>
++          </note>
++          </listitem>
++        </varlistentry>
++
++        <varlistentry>
++          <term>output paths</term>
++          <listitem>
++            <para>All remaining arguments to the hook are output
++            paths of the built derivation.</para>
++          </listitem>
++        </varlistentry>
++      </variablelist>
++
++      <para>See <xref linkend="chap-post-build-hook" /> for an example
++      implementation.</para>
++
++    </listitem>
++  </varlistentry>
++
+   <varlistentry xml:id="conf-repeat"><term><literal>repeat</literal></term>
+ 
+     <listitem><para>How many times to repeat builds to check whether
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index 350ac409..0d62c096 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -1629,6 +1629,38 @@ void DerivationGoal::buildDone()
+            being valid. */
+         registerOutputs();
+ 
++        if (settings.postBuildHook != "") {
++            printError(format("executing post-build hook '%1%'")
++                % settings.postBuildHook);
++
++            Pipe postBuildHookOutput;
++            postBuildHookOutput.create();
++
++            Pid postBuildHookRunner = startProcess([&]() {
++                auto outputPaths = drv->outputPaths();
++                Strings args;
++                for (auto outputPath: outputPaths)
++                    args.push_front(outputPath);
++                args.push_front("--");
++                args.push_front(drvPath);
++
++
++                RunOptions opts(settings.postBuildHook, args);
++                auto sink = FdSink(postBuildHookOutput.writeSide.get());
++                opts.standardOut = &sink;
++                runProgram2(opts);
++
++                         });
++
++            string msg;
++            while (true) {
++                string s = readLine(postBuildHookOutput.readSide.get());
++                s += "\n";
++
++                writeToStderr(s);
++            }
++        }
++
+         if (buildMode == bmCheck) {
+             done(BuildResult::Built);
+             return;
+@@ -2363,6 +2395,7 @@ void DerivationGoal::startBuilder()
+         }
+         debug(msg);
+     }
++
+ }
+ 
+ 
+diff --git a/src/libstore/globals.hh b/src/libstore/globals.hh
+index 0af8215d..391a5989 100644
+--- a/src/libstore/globals.hh
++++ b/src/libstore/globals.hh
+@@ -315,6 +315,8 @@ public:
+         "pre-build-hook",
+         "A program to run just before a build to set derivation-specific build settings."};
+ 
++    Setting<std::string> postBuildHook{this, "", "post-build-hook", "TODO"};
++
+     Setting<std::string> netrcFile{this, fmt("%s/%s", nixConfDir, "netrc"), "netrc-file",
+         "Path to the netrc file used to obtain usernames/passwords for downloads."};
+ 

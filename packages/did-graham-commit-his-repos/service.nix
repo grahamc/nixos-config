@@ -4,7 +4,7 @@
     description = "Check if graham is being lazy about committing";
     partOf      = [ "did-graham-commit-his-repos.service" ];
     wantedBy    = [ "graphical-session.target" ];
-    timerConfig.OnCalendar = "*:0/3";
+    timerConfig.OnCalendar = "*:0/20";
   };
 
   systemd.user.services.did-graham-commit-his-repos = {

@@ -1,0 +1,49 @@
+From ff6867ab94cbe9ddcb4ba18d68a4a2dcb79b865d Mon Sep 17 00:00:00 2001
+From: Daiderd Jordan <daiderd@gmail.com>
+Date: Sun, 12 May 2019 15:53:40 +0200
+Subject: [PATCH 1/6] build: move needsHashRewrite initialization to
+ startBuilder
+
+The value of useChroot is not set yet in the constructor, resulting in
+hash rewriting being enabled in certain cases where it should not be.
+
+Fixes #2801
+---
+ src/libstore/build.cc | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index 91eb97df..30825add 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -997,13 +997,6 @@ DerivationGoal::DerivationGoal(const Path & drvPath, const StringSet & wantedOut
+     , wantedOutputs(wantedOutputs)
+     , buildMode(buildMode)
+ {
+-#if __linux__
+-    needsHashRewrite = !useChroot;
+-#else
+-    /* Darwin requires hash rewriting even when sandboxing is enabled. */
+-    needsHashRewrite = true;
+-#endif
+-
+     state = &DerivationGoal::getDerivation;
+     name = (format("building of '%1%'") % drvPath).str();
+     trace("created");
+@@ -1852,6 +1845,13 @@ void DerivationGoal::startBuilder()
+         #endif
+     }
+ 
++#if __linux__
++    needsHashRewrite = !useChroot;
++#else
++    /* Darwin requires hash rewriting even when sandboxing is enabled. */
++    needsHashRewrite = true;
++#endif
++
+     /* If `build-users-group' is not empty, then we have to build as
+        one of the members of that group. */
+     if (settings.buildUsersGroup != "" && getuid() == 0) {
+-- 
+2.19.2
+

@@ -1,0 +1,39 @@
+From 89a2189cc98c55ae50f8b41cdf23e870de8427fb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?F=C3=A9lix=20Baylac-Jacqu=C3=A9?= <felix@alternativebit.fr>
+Date: Sat, 8 Jun 2019 00:41:19 +0200
+Subject: [PATCH] Daemon: warn when an untrusted user cannot override a setting
+
+In daemon-based Nix setup, some options cannot be overridden by a
+client unless the client's user is considered as trusted.
+
+Currently, if an untrusted user tries to override one of those
+options, we are silently ignoring it.
+
+This can be pretty confusing in certain situations.
+
+e.g. a user thinks he disabled the sandbox when in reality he did not.
+
+We are now sending a warning message letting know the user some options
+have been ignored.
+
+Related to #1761.
+---
+ src/nix-daemon/nix-daemon.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/nix-daemon/nix-daemon.cc b/src/nix-daemon/nix-daemon.cc
+index 8368c326..4a1b3e54 100644
+--- a/src/nix-daemon/nix-daemon.cc
++++ b/src/nix-daemon/nix-daemon.cc
+@@ -566,7 +566,7 @@ static void performOp(TunnelLogger * logger, ref<Store> store,
+                 else if (setSubstituters(settings.extraSubstituters))
+                     ;
+                 else
+-                    debug("ignoring untrusted setting '%s'", name);
++                    warn("ignoring the user-specified setting '%s', because it is a restricted setting and you are not a trusted user.", name);
+             } catch (UsageError & e) {
+                 warn(e.what());
+             }
+-- 
+2.18.1
+

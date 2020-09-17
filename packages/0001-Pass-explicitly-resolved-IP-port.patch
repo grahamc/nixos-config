@@ -1,0 +1,73 @@
+From a643e06168a848c452e0879cee414930bebd5802 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Mon, 13 Jul 2020 14:45:34 -0400
+Subject: [PATCH] Pass explicitly resolved IP/port
+
+---
+ src/nm-openconnect-service.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/src/nm-openconnect-service.c b/src/nm-openconnect-service.c
+index 348c19a..af05815 100644
+--- a/src/nm-openconnect-service.c
++++ b/src/nm-openconnect-service.c
+@@ -394,7 +394,9 @@ nm_openconnect_start_openconnect_binary (NMOpenconnectPlugin *plugin,
+ 	GSource *openconnect_watch;
+ 	gint stdin_fd;
+ 	char csd_user_arg[60];
+-	const char *props_vpn_gw, *props_cookie, *props_cacert, *props_mtu, *props_gwcert, *props_proxy;
++	char resolved_arg[1024]; // totally made up this number obviously
++	char *gw_ip, *gw_ip_pos;
++	const char *props_vpn_resolved_gw, *props_vpn_original_gw, *props_cookie, *props_cacert, *props_mtu, *props_gwcert, *props_proxy;
+ 	const char *props_csd_enable, *props_csd_wrapper;
+ 	const char *protocol;
+ 
+@@ -415,10 +417,12 @@ nm_openconnect_start_openconnect_binary (NMOpenconnectPlugin *plugin,
+ 		return -1;
+ 	}
+ 
++	props_vpn_original_gw = nm_setting_vpn_get_data_item (s_vpn, NM_OPENCONNECT_KEY_GATEWAY);
++
+ 	/* The actual gateway to use (after redirection) comes from the auth
+ 	   dialog, so it's in the secrets hash not the properties */
+-	props_vpn_gw = nm_setting_vpn_get_secret (s_vpn, NM_OPENCONNECT_KEY_GATEWAY);
+-	if (!props_vpn_gw || !strlen (props_vpn_gw) ) {
++	props_vpn_resolved_gw = nm_setting_vpn_get_secret (s_vpn, NM_OPENCONNECT_KEY_GATEWAY);
++	if (!props_vpn_resolved_gw || !strlen (props_vpn_resolved_gw) ) {
+ 		g_set_error (error,
+ 		             NM_VPN_PLUGIN_ERROR,
+ 		             NM_VPN_PLUGIN_ERROR_LAUNCH_FAILED,
+@@ -460,7 +464,9 @@ nm_openconnect_start_openconnect_binary (NMOpenconnectPlugin *plugin,
+ 	if (props_gwcert && strlen(props_gwcert)) {
+ 		g_ptr_array_add (openconnect_argv, (gpointer) "--servercert");
+ 		g_ptr_array_add (openconnect_argv, (gpointer) props_gwcert);
+-	} else if (props_cacert && strlen(props_cacert)) {
++	}
++
++	if (props_cacert && strlen(props_cacert)) {
+ 		g_ptr_array_add (openconnect_argv, (gpointer) "--cafile");
+ 		g_ptr_array_add (openconnect_argv, (gpointer) props_cacert);
+ 	}
+@@ -510,7 +516,18 @@ nm_openconnect_start_openconnect_binary (NMOpenconnectPlugin *plugin,
+ 		}
+ 	}
+ 
+-	g_ptr_array_add (openconnect_argv, (gpointer) props_vpn_gw);
++	g_ptr_array_add (openconnect_argv, (gpointer) "--resolve");
++	gw_ip = strdup(props_vpn_resolved_gw);
++	gw_ip_pos = strchr(gw_ip, ':');
++	if (!gw_ip_pos) {
++		_LOGW ("openconnect didn't find a colon in the vpn-secrets gateway data");
++		return -1;
++	}
++	*gw_ip_pos = 0;
++
++	g_ptr_array_add (openconnect_argv, (gpointer) nm_sprintf_buf (resolved_arg, "%s:%s", props_vpn_original_gw, gw_ip));
++
++	g_ptr_array_add (openconnect_argv, (gpointer) props_vpn_original_gw);
+ 
+ 	if (gl.log_level >= LOG_INFO) {
+ 		g_ptr_array_add (openconnect_argv, (gpointer) "--verbose");
+-- 
+2.25.4
+

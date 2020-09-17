@@ -1,0 +1,66 @@
+From cbb8f289d9fbc7a1f0eeab3f0f5bb2ac5134feaa Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Tue, 16 Jul 2019 16:14:28 -0400
+Subject: [PATCH] pipe stdout / stderr to the user
+
+---
+ src/libstore/build.cc | 38 ++++++++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index c5a7dfd6..0d62c096 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -1630,16 +1630,35 @@ void DerivationGoal::buildDone()
+         registerOutputs();
+ 
+         if (settings.postBuildHook != "") {
+-            printMsg(lvlChatty, format("executing post-build hook '%1%'")
++            printError(format("executing post-build hook '%1%'")
+                 % settings.postBuildHook);
+-            auto outputPaths = drv->outputPaths();
+-            Strings args;
+-            for (auto outputPath: outputPaths)
+-                args.push_front(outputPath);
+-            args.push_front("--");
+-            args.push_front(drvPath);
+-            RunOptions opts(settings.postBuildHook, args);
+-            runProgram2(opts);
++
++            Pipe postBuildHookOutput;
++            postBuildHookOutput.create();
++
++            Pid postBuildHookRunner = startProcess([&]() {
++                auto outputPaths = drv->outputPaths();
++                Strings args;
++                for (auto outputPath: outputPaths)
++                    args.push_front(outputPath);
++                args.push_front("--");
++                args.push_front(drvPath);
++
++
++                RunOptions opts(settings.postBuildHook, args);
++                auto sink = FdSink(postBuildHookOutput.writeSide.get());
++                opts.standardOut = &sink;
++                runProgram2(opts);
++
++                         });
++
++            string msg;
++            while (true) {
++                string s = readLine(postBuildHookOutput.readSide.get());
++                s += "\n";
++
++                writeToStderr(s);
++            }
+         }
+ 
+         if (buildMode == bmCheck) {
+@@ -4645,4 +4664,3 @@ void LocalStore::repairPath(const Path & path)
+ 
+ 
+ }
+-
+-- 
+2.19.2
+

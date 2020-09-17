@@ -1,0 +1,95 @@
+From f4e311b30f78a8580f9395f0d0802c79201ce3c4 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Sun, 7 Jun 2020 10:47:56 -0400
+Subject: [PATCH] swaynag: allow specifying more buttons which execute and
+ dismiss
+
+I don't love -z / -Z, but I figure this patch is far from being
+accepted for other reasons too.
+---
+ include/swaynag/swaynag.h |  1 +
+ swaynag/config.c          | 12 +++++++++++-
+ swaynag/swaynag.c         |  5 +++++
+ 3 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/include/swaynag/swaynag.h b/include/swaynag/swaynag.h
+index 496e883a..9e39e716 100644
+--- a/include/swaynag/swaynag.h
++++ b/include/swaynag/swaynag.h
+@@ -53,6 +53,7 @@ struct swaynag_button {
+ 	int width;
+ 	int height;
+ 	bool terminal;
++	bool dismiss;
+ };
+ 
+ struct swaynag_details {
+diff --git a/swaynag/config.c b/swaynag/config.c
+index f1161b39..d702cc95 100644
+--- a/swaynag/config.c
++++ b/swaynag/config.c
+@@ -52,6 +52,8 @@ int swaynag_parse_options(int argc, char **argv, struct swaynag *swaynag,
+ 	static struct option opts[] = {
+ 		{"button", required_argument, NULL, 'b'},
+ 		{"button-no-terminal", required_argument, NULL, 'B'},
++		{"button-dismiss", required_argument, NULL, 'z'},
++		{"button-dismiss-no-terminal", required_argument, NULL, 'Z'},
+ 		{"config", required_argument, NULL, 'c'},
+ 		{"debug", no_argument, NULL, 'd'},
+ 		{"edge", required_argument, NULL, 'e'},
+@@ -90,6 +92,11 @@ int swaynag_parse_options(int argc, char **argv, struct swaynag *swaynag,
+ 			"be defined.\n"
+ 		"  -B, --button-no-terminal <text> <action>  Like --button, but does"
+ 			"not run the action in a terminal.\n"
++		"  -z, --button-dismiss <text> <action>  Create a button with text that "
++			"dismisses swaynag, and executes action in a terminal when pressed. "
++			"Multiple buttons can be defined.\n"
++		"  -Z, --button-dismiss-no-terminal <text> <action>  Like "
++			"--button-dismiss, but does not run the action in a terminal.\n"
+ 		"  -c, --config <path>           Path to config file.\n"
+ 		"  -d, --debug                   Enable debugging.\n"
+ 		"  -e, --edge top|bottom         Set the edge to use.\n"
+@@ -120,13 +127,15 @@ int swaynag_parse_options(int argc, char **argv, struct swaynag *swaynag,
+ 
+ 	optind = 1;
+ 	while (1) {
+-		int c = getopt_long(argc, argv, "b:B:c:de:f:hlL:m:o:s:t:v", opts, NULL);
++		int c = getopt_long(argc, argv, "b:B:z:Z:c:de:f:hlL:m:o:s:t:v", opts, NULL);
+ 		if (c == -1) {
+ 			break;
+ 		}
+ 		switch (c) {
+ 		case 'b': // Button
+ 		case 'B': // Button (No Terminal)
++		case 'z': // Button (Dismiss)
++		case 'Z': // Button (Dismiss, No Terminal)
+ 			if (swaynag) {
+ 				if (optind >= argc) {
+ 					fprintf(stderr, "Missing action for button %s\n", optarg);
+@@ -138,6 +147,7 @@ int swaynag_parse_options(int argc, char **argv, struct swaynag *swaynag,
+ 				button->type = SWAYNAG_ACTION_COMMAND;
+ 				button->action = strdup(argv[optind]);
+ 				button->terminal = c == 'b';
++				button->dismiss = c == 'z' || c == 'Z';
+ 				list_add(swaynag->buttons, button);
+ 			}
+ 			optind++;
+diff --git a/swaynag/swaynag.c b/swaynag/swaynag.c
+index 4e692b14..6c326ca8 100644
+--- a/swaynag/swaynag.c
++++ b/swaynag/swaynag.c
+@@ -76,6 +76,11 @@ static void swaynag_button_execute(struct swaynag *swaynag,
+ 			}
+ 			_exit(EXIT_SUCCESS);
+ 		}
++
++		if (button->dismiss) {
++			swaynag->run_display = false;
++		}
++
+ 		if (waitpid(pid, NULL, 0) < 0) {
+ 			sway_log_errno(SWAY_DEBUG, "waitpid failed");
+ 		}
+-- 
+2.25.4
+

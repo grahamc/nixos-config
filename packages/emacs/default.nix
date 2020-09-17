@@ -1,4 +1,4 @@
-{ emacsPackagesNg, mutate, msmtp, writeText, docbook5
+{ lib, emacsPackagesNg, mutate, msmtp, writeText, docbook5
   , graphviz, hunspellWithDicts, hunspellDicts, fetchFromGitHub
   , fetchpatch }:
 
@@ -33,8 +33,9 @@ let
     };
   };
 in
-emacsPackagesNg.emacsWithPackages (epkgs: (
-  (with epkgs.melpaPackages; [
+emacsPackagesNg.emacsWithPackages (epkgs: ( []
+  ++ (lib.optionals true (with epkgs.melpaPackages; [
+    (nix-mode.overrideAttrs nix-mode-overrides.master-2019-01-29)
     artbollocks-mode
     counsel
     counsel-projectile
@@ -55,7 +56,6 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     json-mode
     magit
     markdown-mode
-    (nix-mode.overrideAttrs nix-mode-overrides.master-2019-01-29)
     php-mode
     projectile
     python-mode
@@ -64,12 +64,13 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
     swiper
     yaml-mode
     yasnippet
-  ])
-  ++ (with emacsPackagesNg; [
+  ]))
+  ++ (lib.optionals (true) (with emacsPackagesNg; [
     lsp-mode
     lsp-ui
-  ])
-  ++ [
+    wsd-mode
+  ]))
+  ++ (lib.optionals (true) [
     (emacsPackagesNg.trivialBuild {
       pname = "grahams-mode";
       version = "1970-01-01";
@@ -88,5 +89,5 @@ emacsPackagesNg.emacsWithPackages (epkgs: (
         '';
       };
     })
-  ]
+  ])
 ))

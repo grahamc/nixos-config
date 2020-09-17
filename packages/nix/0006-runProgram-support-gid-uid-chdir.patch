@@ -1,0 +1,116 @@
+From a8e5bf80712c09c41430d790615db6e14a211754 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Sat, 11 May 2019 16:35:53 -0400
+Subject: [PATCH 6/6] runProgram: support gid, uid, chdir
+
+---
+ src/libstore/build.cc | 32 ++++++++++++++------------------
+ src/libutil/util.cc   | 15 +++++++++++++--
+ src/libutil/util.hh   |  5 +++--
+ 3 files changed, 30 insertions(+), 22 deletions(-)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index c2cc6f87..27254a69 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -465,26 +465,22 @@ void handleDiffHook(bool allowVfork, uid_t uid, uid_t gid, Path tryA, Path tryB,
+ {
+     auto diffHook = settings.diffHook;
+     if (diffHook != "" && settings.runDiffHook) {
+-        auto wrapper = [&]() {
+-            if (chdir("/") == -1)
+-                throw SysError("chdir / failed");
+-            if (setgid(gid) == -1)
+-                throw SysError("setgid failed");
+-            if (setgroups(0, 0) == -1)
+-                throw SysError("setgroups failed");
+-            if (setuid(uid) == -1)
+-                throw SysError("setuid failed");
++        try {
++            RunOptions diffHookOptions(diffHook,{tryA, tryB, drvPath, tmpDir});
++            diffHookOptions.searchPath = true;
++            diffHookOptions.uid = uid;
++            diffHookOptions.gid = gid;
++            diffHookOptions.chdir = "/";
+
+-            try {
+-                auto diff = runProgram(diffHook, true, {tryA, tryB, drvPath, tmpDir});
+-                if (diff != "")
+-                    printError(chomp(diff));
+-            } catch (Error & error) {
+-                printError("diff hook execution failed: %s", error.what());
+-            }
+-        };
++            auto diffRes = runProgram(diffHookOptions);
++            if (!statusOk(diffRes.first))
++                throw ExecError(diffRes.first, fmt("diff-hook program '%1%' %2%", diffHook, statusToString(diffRes.first)));
+
+-        doFork(allowVfork, wrapper);
++            if (diffRes.second != "")
++                printError(chomp(diffRes.second));
++        } catch (Error & error) {
++            printError("diff hook execution failed: %s", error.what());
++        }
+     }
+ }
+
+diff --git a/src/libutil/util.cc b/src/libutil/util.cc
+index 0f4d3d92..55b9144f 100644
+--- a/src/libutil/util.cc
++++ b/src/libutil/util.cc
+@@ -16,6 +16,7 @@
+ #include <future>
+
+ #include <fcntl.h>
++#include <grp.h>
+ #include <limits.h>
+ #include <pwd.h>
+ #include <sys/ioctl.h>
+@@ -914,8 +915,8 @@ void killUser(uid_t uid)
+
+ /* Wrapper around vfork to prevent the child process from clobbering
+    the caller's stack frame in the parent. */
+-pid_t doFork(bool allowVfork, std::function<void()> fun) __attribute__((noinline));
+-pid_t doFork(bool allowVfork, std::function<void()> fun)
++static pid_t doFork(bool allowVfork, std::function<void()> fun) __attribute__((noinline));
++static pid_t doFork(bool allowVfork, std::function<void()> fun)
+ {
+ #ifdef __linux__
+     pid_t pid = allowVfork ? vfork() : fork();
+@@ -1025,6 +1026,16 @@ void runProgram2(const RunOptions & options)
+         if (source && dup2(in.readSide.get(), STDIN_FILENO) == -1)
+             throw SysError("dupping stdin");
+
++        if (options.chdir && chdir((*options.chdir).c_str()) == -1)
++            throw SysError("chdir failed");
++        if (options.gid && setgid(*options.gid) == -1)
++            throw SysError("setgid failed");
++        /* Drop all other groups if we're setgid. */
++        if (options.gid && setgroups(0, 0) == -1)
++            throw SysError("setgroups failed");
++        if (options.uid && setuid(*options.uid) == -1)
++            throw SysError("setuid failed");
++
+         Strings args_(options.args);
+         args_.push_front(options.program);
+
+diff --git a/src/libutil/util.hh b/src/libutil/util.hh
+index 824a35b9..7c57d0af 100644
+--- a/src/libutil/util.hh
++++ b/src/libutil/util.hh
+@@ -265,10 +265,11 @@ string runProgram(Path program, bool searchPath = false,
+     const Strings & args = Strings(),
+     const std::optional<std::string> & input = {});
+
+-pid_t doFork(bool allowVfork, std::function<void()> fun);
+-
+ struct RunOptions
+ {
++    std::optional<uid_t> uid;
++    std::optional<uid_t> gid;
++    std::optional<Path> chdir;
+     Path program;
+     bool searchPath = true;
+     Strings args;
+--
+2.19.2

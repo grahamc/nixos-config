@@ -1,0 +1,184 @@
+From 4fce8498f5d69537878b7e4fb764d607c092f430 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Fri, 10 May 2019 20:59:39 -0400
+Subject: [PATCH 3/5] diff hook: execute as the build user, and pass the temp
+ dir
+
+---
+ doc/manual/advanced-topics/diff-hook.xml | 12 +++----
+ doc/manual/command-ref/conf-file.xml     | 20 ++++++++----
+ src/libstore/build.cc                    | 41 +++++++++++++++++-------
+ src/libutil/util.cc                      |  4 +--
+ src/libutil/util.hh                      |  2 ++
+ 5 files changed, 51 insertions(+), 28 deletions(-)
+
+diff --git a/doc/manual/advanced-topics/diff-hook.xml b/doc/manual/advanced-topics/diff-hook.xml
+index d2613f6d..fb4bf819 100644
+--- a/doc/manual/advanced-topics/diff-hook.xml
++++ b/doc/manual/advanced-topics/diff-hook.xml
+@@ -46,17 +46,15 @@ file containing:
+ #!/bin/sh
+ exec &gt;&amp;2
+ echo "For derivation $3:"
+-/run/current-system/sw/bin/runuser -u nobody -- /run/current-system/sw/bin/diff -r "$1" "$2"
++/run/current-system/sw/bin/diff -r "$1" "$2"
+ </programlisting>
+ 
+-<warning>
+-  <para>The diff hook can be run as root. Take care to run as little
+-  as possible as root, for this example we use <command>runuser</command>
+-  to drop privileges.
+-  </para>
+-</warning>
+ </para>
+ 
++<para>The diff hook is executed by the same user and group who ran the
++build. However, the diff hook does not have write access to the store
++path just built.</para>
++
+ <section>
+   <title>
+     Spot-Checking Build Determinism
+diff --git a/doc/manual/command-ref/conf-file.xml b/doc/manual/command-ref/conf-file.xml
+index a1a5d6e1..c5f90481 100644
+--- a/doc/manual/command-ref/conf-file.xml
++++ b/doc/manual/command-ref/conf-file.xml
+@@ -252,13 +252,11 @@ false</literal>.</para>
+       same.
+     </para>
+ 
+-    <warning>
+-      <para>
+-        The root user executes the diff hook in a daemonised
+-        installation. See <xref linkend="chap-diff-hook" /> for
+-        information on using the diff hook safely.
+-      </para>
+-    </warning>
++    <para>
++      The diff hook is executed by the same user and group who ran the
++      build. However, the diff hook does not have write access to the
++      store path just built.
++    </para>
+ 
+     <para>The diff hook program receives three parameters:</para>
+ 
+@@ -280,6 +278,14 @@ false</literal>.</para>
+           The path to the build's derivation
+         </para>
+       </listitem>
++
++      <listitem>
++        <para>
++          The path to the build's scratch directory. This directory
++          will exist only if the build was run with
++          <option>--keep-failed</option>.
++        </para>
++      </listitem>
+     </orderedlist>
+ 
+     <para>The diff hook should not print data to stderr or stdout, as
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index e2e67764..8c0a58c1 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -461,17 +461,26 @@ static void commonChildInit(Pipe & logPipe)
+     close(fdDevNull);
+ }
+ 
+-void handleDiffHook(Path tryA, Path tryB, Path drvPath)
++void handleDiffHook(bool allowVfork, uid_t uid, uid_t gid, Path tryA, Path tryB, Path drvPath, Path tmpDir)
+ {
+     auto diffHook = settings.diffHook;
+     if (diffHook != "" && settings.runDiffHook) {
+-        try {
+-            auto diff = runProgram(diffHook, true, {tryA, tryB, drvPath});
+-            if (diff != "")
+-                printError(chomp(diff));
+-        } catch (Error & error) {
+-            printError("diff hook execution failed: %s", error.what());
+-        }
++        auto wrapper = [&]() {
++            if (setgid(gid) == -1)
++                throw SysError("setgid failed");
++            if (setuid(uid) == -1)
++                throw SysError("setuid failed");
++
++            try {
++                auto diff = runProgram(diffHook, true, {tryA, tryB, drvPath, tmpDir});
++                if (diff != "")
++                    printError(chomp(diff));
++            } catch (Error & error) {
++                printError("diff hook execution failed: %s", error.what());
++            }
++        };
++
++        doFork(allowVfork, wrapper);
+     }
+ }
+ 
+@@ -3200,14 +3209,18 @@ void DerivationGoal::registerOutputs()
+             if (!worker.store.isValidPath(path)) continue;
+             auto info = *worker.store.queryPathInfo(path);
+             if (hash.first != info.narHash) {
+-                handleDiffHook(path, actualPath, drvPath);
+-
+-                if (settings.keepFailed) {
++                if (settings.runDiffHook || settings.keepFailed) {
+                     Path dst = worker.store.toRealPath(path + checkSuffix);
+                     deletePath(dst);
+                     if (rename(actualPath.c_str(), dst.c_str()))
+                         throw SysError(format("renaming '%1%' to '%2%'") % actualPath % dst);
+ 
++                    handleDiffHook(
++                        !buildUser && !drv->isBuiltin(),
++                        buildUser ? buildUser->getUID() : getuid(),
++                        buildUser ? buildUser->getGID() : getgid(),
++                        path, dst, drvPath, tmpDir);
++
+                     throw Error(format("derivation '%1%' may not be deterministic: output '%2%' differs from '%3%'")
+                         % drvPath % path % dst);
+                 } else
+@@ -3272,7 +3285,11 @@ void DerivationGoal::registerOutputs()
+                     ? fmt("output '%1%' of '%2%' differs from '%3%' from previous round", i->second.path, drvPath, prev)
+                     : fmt("output '%1%' of '%2%' differs from previous round", i->second.path, drvPath);
+ 
+-                handleDiffHook(prev, i->second.path, drvPath);
++                handleDiffHook(
++                    !buildUser && !drv->isBuiltin(),
++                    buildUser ? buildUser->getUID() : getuid(),
++                    buildUser ? buildUser->getGID() : getgid(),
++                    prev, i->second.path, drvPath, tmpDir);
+ 
+                 if (settings.enforceDeterminism)
+                     throw NotDeterministic(msg);
+diff --git a/src/libutil/util.cc b/src/libutil/util.cc
+index a7170566..0f4d3d92 100644
+--- a/src/libutil/util.cc
++++ b/src/libutil/util.cc
+@@ -914,8 +914,8 @@ void killUser(uid_t uid)
+ 
+ /* Wrapper around vfork to prevent the child process from clobbering
+    the caller's stack frame in the parent. */
+-static pid_t doFork(bool allowVfork, std::function<void()> fun) __attribute__((noinline));
+-static pid_t doFork(bool allowVfork, std::function<void()> fun)
++pid_t doFork(bool allowVfork, std::function<void()> fun) __attribute__((noinline));
++pid_t doFork(bool allowVfork, std::function<void()> fun)
+ {
+ #ifdef __linux__
+     pid_t pid = allowVfork ? vfork() : fork();
+diff --git a/src/libutil/util.hh b/src/libutil/util.hh
+index 54936a5c..824a35b9 100644
+--- a/src/libutil/util.hh
++++ b/src/libutil/util.hh
+@@ -265,6 +265,8 @@ string runProgram(Path program, bool searchPath = false,
+     const Strings & args = Strings(),
+     const std::optional<std::string> & input = {});
+ 
++pid_t doFork(bool allowVfork, std::function<void()> fun);
++
+ struct RunOptions
+ {
+     Path program;
+-- 
+2.19.2
+

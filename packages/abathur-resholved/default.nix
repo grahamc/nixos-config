@@ -1,8 +1,9 @@
 { callPackage }:
 let
   src = builtins.fetchGit {
-    url = "https://github.com/grahamc/resholved";
+    url = "https://github.com/abathur/resholved";
     ref = "master";
-    rev = "a739fa1f3afaec26f1b1677568e64af22ed68697";
+    rev = "1a7144b2ea831b75cad0af3482c3fae04e705577";
   };
-in callPackage src {}
+in
+(callPackage src {}).resholved

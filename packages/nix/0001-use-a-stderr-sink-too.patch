@@ -1,0 +1,61 @@
+From 53d452d11367a5cc00d16da625086c414795e774 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Tue, 16 Jul 2019 17:04:51 -0400
+Subject: [PATCH] use a stderr sink too
+
+---
+ src/libstore/build.cc | 1 +
+ src/libutil/util.cc   | 5 ++++-
+ src/libutil/util.hh   | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index 0d62c096..d2283df1 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -1648,6 +1648,7 @@ void DerivationGoal::buildDone()
+                 RunOptions opts(settings.postBuildHook, args);
+                 auto sink = FdSink(postBuildHookOutput.writeSide.get());
+                 opts.standardOut = &sink;
++                opts.standardErr = &sink;
+                 runProgram2(opts);
+ 
+                          });
+diff --git a/src/libutil/util.cc b/src/libutil/util.cc
+index 17aee2d5..e57f1dbf 100644
+--- a/src/libutil/util.cc
++++ b/src/libutil/util.cc
+@@ -1015,14 +1015,17 @@ void runProgram2(const RunOptions & options)
+     }
+ 
+     /* Create a pipe. */
+-    Pipe out, in;
++    Pipe out, err, in;
+     if (options.standardOut) out.create();
++    if (options.standardErr) err.create();
+     if (source) in.create();
+ 
+     /* Fork. */
+     Pid pid = startProcess([&]() {
+         if (options.standardOut && dup2(out.writeSide.get(), STDOUT_FILENO) == -1)
+             throw SysError("dupping stdout");
++        if (options.standardErr && dup2(err.writeSide.get(), STDERR_FILENO) == -1)
++            throw SysError("dupping stderr");
+         if (source && dup2(in.readSide.get(), STDIN_FILENO) == -1)
+             throw SysError("dupping stdin");
+ 
+diff --git a/src/libutil/util.hh b/src/libutil/util.hh
+index fce3cab8..7a0155d4 100644
+--- a/src/libutil/util.hh
++++ b/src/libutil/util.hh
+@@ -276,6 +276,7 @@ struct RunOptions
+     std::optional<std::string> input;
+     Source * standardIn = nullptr;
+     Sink * standardOut = nullptr;
++    Sink * standardErr = nullptr;
+     bool _killStderr = false;
+ 
+     RunOptions(const Path & program, const Strings & args)
+-- 
+2.19.2
+

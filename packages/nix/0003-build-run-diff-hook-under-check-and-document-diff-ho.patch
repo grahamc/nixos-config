@@ -1,0 +1,420 @@
+From 0e5fe9896d8c49c4e19eabc446b9f6cffaed3698 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Fri, 10 May 2019 16:39:31 -0400
+Subject: [PATCH 3/6] build: run diff-hook under --check and document diff-hook
+
+---
+ .../advanced-topics/advanced-topics.xml       |   1 +
+ doc/manual/advanced-topics/diff-hook.xml      | 207 ++++++++++++++++++
+ doc/manual/command-ref/conf-file.xml          |  81 ++++++-
+ src/libstore/build.cc                         |  30 ++-
+ 4 files changed, 303 insertions(+), 16 deletions(-)
+ create mode 100644 doc/manual/advanced-topics/diff-hook.xml
+
+diff --git a/doc/manual/advanced-topics/advanced-topics.xml b/doc/manual/advanced-topics/advanced-topics.xml
+index b710f9f2..c304367a 100644
+--- a/doc/manual/advanced-topics/advanced-topics.xml
++++ b/doc/manual/advanced-topics/advanced-topics.xml
+@@ -7,5 +7,6 @@
+ <title>Advanced Topics</title>
+ 
+ <xi:include href="distributed-builds.xml" />
++<xi:include href="diff-hook.xml" />
+ 
+ </part>
+diff --git a/doc/manual/advanced-topics/diff-hook.xml b/doc/manual/advanced-topics/diff-hook.xml
+new file mode 100644
+index 00000000..d2613f6d
+--- /dev/null
++++ b/doc/manual/advanced-topics/diff-hook.xml
+@@ -0,0 +1,207 @@
++<chapter xmlns="http://docbook.org/ns/docbook"
++      xmlns:xlink="http://www.w3.org/1999/xlink"
++      xmlns:xi="http://www.w3.org/2001/XInclude"
++      xml:id="chap-diff-hook"
++      version="5.0"
++      >
++
++<title>Verifying Build Reproducibility with <option linkend="conf-diff-hook">diff-hook</option></title>
++
++<subtitle>Check build reproducibility by running builds multiple times
++and comparing their results.</subtitle>
++
++<para>Specify a program with Nix's <xref linkend="conf-diff-hook" /> to
++compare build results when two builds produce different results. Note:
++this hook is only executed if the results are not the same, this hook
++is not used for determining if the results are the same.</para>
++
++<para>For purposes of demonstration, we'll use the following Nix file,
++<filename>deterministic.nix</filename> for testing:</para>
++
++<programlisting>
++let
++  inherit (import &lt;nixpkgs&gt; {}) runCommand;
++in {
++  stable = runCommand "stable" {} ''
++    touch $out
++  '';
++
++  unstable = runCommand "unstable" {} ''
++    echo $RANDOM > $out
++  '';
++}
++</programlisting>
++
++<para>Additionally, <filename>nix.conf</filename> contains:
++
++<programlisting>
++diff-hook = /etc/nix/my-diff-hook
++run-diff-hook = true
++</programlisting>
++
++where <filename>/etc/nix/my-diff-hook</filename> is an executable
++file containing:
++
++<programlisting>
++#!/bin/sh
++exec &gt;&amp;2
++echo "For derivation $3:"
++/run/current-system/sw/bin/runuser -u nobody -- /run/current-system/sw/bin/diff -r "$1" "$2"
++</programlisting>
++
++<warning>
++  <para>The diff hook can be run as root. Take care to run as little
++  as possible as root, for this example we use <command>runuser</command>
++  to drop privileges.
++  </para>
++</warning>
++</para>
++
++<section>
++  <title>
++    Spot-Checking Build Determinism
++  </title>
++
++  <para>
++    Verify a path which already exists in the Nix store by passing
++    <option>--check</option> to the build command.
++  </para>
++
++  <para>If the build passes and is deterministic, Nix will exit with a
++  status code of 0:</para>
++
++  <screen>
++$ nix-build ./deterministic.nix -A stable
++these derivations will be built:
++  /nix/store/z98fasz2jqy9gs0xbvdj939p27jwda38-stable.drv
++building '/nix/store/z98fasz2jqy9gs0xbvdj939p27jwda38-stable.drv'...
++/nix/store/yyxlzw3vqaas7wfp04g0b1xg51f2czgq-stable
++
++$ nix-build ./deterministic.nix -A stable --check
++checking outputs of '/nix/store/z98fasz2jqy9gs0xbvdj939p27jwda38-stable.drv'...
++/nix/store/yyxlzw3vqaas7wfp04g0b1xg51f2czgq-stable
++</screen>
++
++  <para>If the build is not deterministic, Nix will exit with a status
++  code of 1:</para>
++
++  <screen>
++$ nix-build ./deterministic.nix -A unstable
++these derivations will be built:
++  /nix/store/cgl13lbj1w368r5z8gywipl1ifli7dhk-unstable.drv
++building '/nix/store/cgl13lbj1w368r5z8gywipl1ifli7dhk-unstable.drv'...
++/nix/store/krpqk0l9ib0ibi1d2w52z293zw455cap-unstable
++
++$ nix-build ./deterministic.nix -A unstable --check
++checking outputs of '/nix/store/cgl13lbj1w368r5z8gywipl1ifli7dhk-unstable.drv'...
++error: derivation '/nix/store/cgl13lbj1w368r5z8gywipl1ifli7dhk-unstable.drv' may not be deterministic: output '/nix/store/krpqk0l9ib0ibi1d2w52z293zw455cap-unstable' differs
++</screen>
++
++<para>In the Nix daemon's log, we will now see:
++<screen>
++For derivation /nix/store/cgl13lbj1w368r5z8gywipl1ifli7dhk-unstable.drv:
++1c1
++&lt; 8108
++---
++&gt; 30204
++</screen>
++</para>
++
++  <para>Using <option>--check</option> with <option>--keep-failed</option>
++  will cause Nix to keep the second build's output in a special,
++  <literal>.check</literal> path:</para>
++
++  <screen>
++$ nix-build ./deterministic.nix -A unstable --check --keep-failed
++checking outputs of '/nix/store/cgl13lbj1w368r5z8gywipl1ifli7dhk-unstable.drv'...
++note: keeping build directory '/tmp/nix-build-unstable.drv-0'
++error: derivation '/nix/store/cgl13lbj1w368r5z8gywipl1ifli7dhk-unstable.drv' may not be deterministic: output '/nix/store/krpqk0l9ib0ibi1d2w52z293zw455cap-unstable' differs from '/nix/store/krpqk0l9ib0ibi1d2w52z293zw455cap-unstable.check'
++</screen>
++
++  <para>In particular, notice the
++  <literal>/nix/store/krpqk0l9ib0ibi1d2w52z293zw455cap-unstable.check</literal>
++  output. Nix has copied the build results to that directory where you
++  can examine it.</para>
++
++  <note xml:id="check-dirs-are-unregistered">
++    <title><literal>.check</literal> paths are not registered store paths</title>
++
++    <para>Check paths are not protected against garbage collection,
++    and this path will be deleted on the next garbage collection.</para>
++
++    <para>The path is guaranteed to be alive for the duration of
++    <xref linkend="conf-diff-hook" />'s execution, but may be deleted
++    any time after.</para>
++
++    <para>If the comparison is performed as part of automated tooling,
++    please use the diff-hook or author your tooling to handle the case
++    where the build was not deterministic and also a check path does
++    not exist.</para>
++  </note>
++
++  <para>
++    <option>--check</option> is only usable if the derivation has
++    been built on the system already. If the derivation has not been
++    built Nix will fail with the error:
++    <screen>
++error: some outputs of '/nix/store/hzi1h60z2qf0nb85iwnpvrai3j2w7rr6-unstable.drv' are not valid, so checking is not possible
++</screen>
++
++    Run the build without <option>--check</option>, and then try with
++    <option>--check</option> again.
++  </para>
++</section>
++
++<section>
++  <title>
++    Automatic and Optionally Enforced Determinism Verification
++  </title>
++
++  <para>
++    Automatically verify every build at build time by executing the
++    build multiple times.
++  </para>
++
++  <para>
++    Setting <xref linkend="conf-repeat" /> and
++    <xref linkend="conf-enforce-determinism" /> in your
++    <filename>nix.conf</filename> permits the automated verification
++    of every build Nix performs.
++  </para>
++
++  <para>
++    The following configuration will run each build three times, and
++    will require the build to be deterministic:
++
++    <programlisting>
++enforce-determinism = true
++repeat = 2
++</programlisting>
++  </para>
++
++  <para>
++    Setting <xref linkend="conf-enforce-determinism" /> to false as in
++    the following configuration will run the build multiple times,
++    execute the build hook, but will allow the build to succeed even
++    if it does not build reproducibly:
++
++    <programlisting>
++enforce-determinism = false
++repeat = 1
++</programlisting>
++  </para>
++
++  <para>
++    An example output of this configuration:
++    <screen>
++$ nix-build ./test.nix -A unstable
++these derivations will be built:
++  /nix/store/ch6llwpr2h8c3jmnf3f2ghkhx59aa97f-unstable.drv
++building '/nix/store/ch6llwpr2h8c3jmnf3f2ghkhx59aa97f-unstable.drv' (round 1/2)...
++building '/nix/store/ch6llwpr2h8c3jmnf3f2ghkhx59aa97f-unstable.drv' (round 2/2)...
++output '/nix/store/6xg356v9gl03hpbbg8gws77n19qanh02-unstable' of '/nix/store/ch6llwpr2h8c3jmnf3f2ghkhx59aa97f-unstable.drv' differs from '/nix/store/6xg356v9gl03hpbbg8gws77n19qanh02-unstable.check' from previous round
++/nix/store/6xg356v9gl03hpbbg8gws77n19qanh02-unstable
++</screen>
++  </para>
++</section>
++</chapter>
+diff --git a/doc/manual/command-ref/conf-file.xml b/doc/manual/command-ref/conf-file.xml
+index f0da1f61..a1a5d6e1 100644
+--- a/doc/manual/command-ref/conf-file.xml
++++ b/doc/manual/command-ref/conf-file.xml
+@@ -1,7 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
+ <refentry xmlns="http://docbook.org/ns/docbook"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xmlns:xi="http://www.w3.org/2001/XInclude"
+-          xml:id="sec-conf-file">
++          xml:id="sec-conf-file"
++          version="5">
+ 
+ <refmeta>
+   <refentrytitle>nix.conf</refentrytitle>
+@@ -240,6 +242,64 @@ false</literal>.</para>
+ 
+   </varlistentry>
+ 
++  <varlistentry xml:id="conf-diff-hook"><term><literal>diff-hook</literal></term>
++  <listitem>
++    <para>
++      Absolute path to an executable capable of diffing build results.
++      The hook executes if <xref linkend="conf-run-diff-hook" /> is
++      true, and the output of a build is known to not be the same.
++      This program is not executed to determine if two results are the
++      same.
++    </para>
++
++    <warning>
++      <para>
++        The root user executes the diff hook in a daemonised
++        installation. See <xref linkend="chap-diff-hook" /> for
++        information on using the diff hook safely.
++      </para>
++    </warning>
++
++    <para>The diff hook program receives three parameters:</para>
++
++    <orderedlist>
++      <listitem>
++        <para>
++          A path to the previous build's results
++        </para>
++      </listitem>
++
++      <listitem>
++        <para>
++          A path to the current build's results
++        </para>
++      </listitem>
++
++      <listitem>
++        <para>
++          The path to the build's derivation
++        </para>
++      </listitem>
++    </orderedlist>
++
++    <para>The diff hook should not print data to stderr or stdout, as
++    output is not displayed to the user. However, if information is
++    printed, it will be printed in the <command>nix-daemon</command>
++    log.</para>
++
++    <para>When using the Nix daemon, <literal>diff-hook</literal> must
++    be set in the <filename>nix.conf</filename> configuration file, and
++    cannot be passed at the command line.
++    </para>
++  </listitem>
++  </varlistentry>
++
++  <varlistentry xml:id="conf-enforce-determinism">
++    <term><literal>enforce-determinism</literal></term>
++
++    <listitem><para>See <xref linkend="conf-repeat" />.</para></listitem>
++  </varlistentry>
++
+   <varlistentry xml:id="conf-extra-sandbox-paths">
+     <term><literal>extra-sandbox-paths</literal></term>
+ 
+@@ -595,9 +655,9 @@ password <replaceable>my-password</replaceable>
+     they are deterministic. The default value is 0. If the value is
+     non-zero, every build is repeated the specified number of
+     times. If the contents of any of the runs differs from the
+-    previous ones, the build is rejected and the resulting store paths
+-    are not registered as “valid” in Nix’s database.</para></listitem>
+-
++    previous ones and <xref linkend="conf-enforce-determinism" /> is
++    true, the build is rejected and the resulting store paths are not
++    registered as “valid” in Nix’s database.</para></listitem>
+   </varlistentry>
+ 
+   <varlistentry xml:id="conf-require-sigs"><term><literal>require-sigs</literal></term>
+@@ -628,6 +688,19 @@ password <replaceable>my-password</replaceable>
+ 
+   </varlistentry>
+ 
++  <varlistentry xml:id="conf-run-diff-hook"><term><literal>run-diff-hook</literal></term>
++  <listitem>
++    <para>
++      If true, enable the execution of <xref linkend="conf-diff-hook" />.
++    </para>
++
++    <para>
++      When using the Nix daemon, <literal>run-diff-hook</literal> must
++      be set in the <filename>nix.conf</filename> configuration file,
++      and cannot be passed at the command line.
++    </para>
++  </listitem>
++  </varlistentry>
+ 
+   <varlistentry xml:id="conf-sandbox"><term><literal>sandbox</literal></term>
+ 
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index 30825add..8492e79b 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -461,6 +461,19 @@ static void commonChildInit(Pipe & logPipe)
+     close(fdDevNull);
+ }
+ 
++void handleDiffHook(Path tryA, Path tryB, Path drvPath)
++{
++    auto diffHook = settings.diffHook;
++    if (diffHook != "" && settings.runDiffHook) {
++        try {
++            auto diff = runProgram(diffHook, true, {tryA, tryB, drvPath});
++            if (diff != "")
++                printError(chomp(diff));
++        } catch (Error & error) {
++            printError("diff hook execution failed: %s", error.what());
++        }
++    }
++}
+ 
+ //////////////////////////////////////////////////////////////////////
+ 
+@@ -3039,8 +3052,7 @@ void DerivationGoal::registerOutputs()
+     InodesSeen inodesSeen;
+ 
+     Path checkSuffix = ".check";
+-    bool runDiffHook = settings.runDiffHook;
+-    bool keepPreviousRound = settings.keepFailed || runDiffHook;
++    bool keepPreviousRound = settings.keepFailed || settings.runDiffHook;
+ 
+     std::exception_ptr delayedException;
+ 
+@@ -3185,11 +3197,14 @@ void DerivationGoal::registerOutputs()
+             if (!worker.store.isValidPath(path)) continue;
+             auto info = *worker.store.queryPathInfo(path);
+             if (hash.first != info.narHash) {
++                handleDiffHook(path, actualPath, drvPath);
++
+                 if (settings.keepFailed) {
+                     Path dst = worker.store.toRealPath(path + checkSuffix);
+                     deletePath(dst);
+                     if (rename(actualPath.c_str(), dst.c_str()))
+                         throw SysError(format("renaming '%1%' to '%2%'") % actualPath % dst);
++
+                     throw Error(format("derivation '%1%' may not be deterministic: output '%2%' differs from '%3%'")
+                         % drvPath % path % dst);
+                 } else
+@@ -3254,16 +3269,7 @@ void DerivationGoal::registerOutputs()
+                     ? fmt("output '%1%' of '%2%' differs from '%3%' from previous round", i->second.path, drvPath, prev)
+                     : fmt("output '%1%' of '%2%' differs from previous round", i->second.path, drvPath);
+ 
+-                auto diffHook = settings.diffHook;
+-                if (prevExists && diffHook != "" && runDiffHook) {
+-                    try {
+-                        auto diff = runProgram(diffHook, true, {prev, i->second.path});
+-                        if (diff != "")
+-                            printError(chomp(diff));
+-                    } catch (Error & error) {
+-                        printError("diff hook execution failed: %s", error.what());
+-                    }
+-                }
++                handleDiffHook(prev, i->second.path, drvPath);
+ 
+                 if (settings.enforceDeterminism)
+                     throw NotDeterministic(msg);
+-- 
+2.19.2
+

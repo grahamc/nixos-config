@@ -14,54 +14,29 @@
   boot.extraModulePackages = [ ];
   boot.kernelParams = [ "mem_sleep_default=deep" ];
 
-  boot.initrd.luks.devices = {
-    cryptkey = {
-      device = "/dev/disk/by-uuid/b1f400d6-abc8-4bcd-b813-8299f4904c26";
-    };
-
-    cryptroot = {
-      device = "/dev/disk/by-uuid/42ebff49-eb4d-4f7e-a1ab-9cb6d8b71eb2";
-      keyFile = "/dev/mapper/cryptkey";
-    };
-
-    cryptswap = {
-      device = "/dev/disk/by-uuid/0512a685-d190-438d-9e26-db1381514ae5";
-      keyFile = "/dev/mapper/cryptkey";
-    };
-  };
-
-  boot.initrd.postMountCommands = ''
-    # Don't keep the cryptkey available all the time.
-    cryptsetup close /dev/mapper/cryptkey
-  '';
-
   boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r rpool/local/blank-root@blank
+    zfs rollback -r tank/system/blank-root@blank
   '';
 
   fileSystems."/" =
-    { device = "rpool/local/blank-root";
+    { device = "tank/system/blank-root";
       fsType = "zfs";
     };
 
   fileSystems."/home" =
-    { device = "rpool/safe/home";
+    { device = "tank/user/home";
       fsType = "zfs";
     };
 
   fileSystems."/nix" =
-    { device = "rpool/local/nix";
+    { device = "tank/local/nix";
       fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/0EDF-0FA9";
+    { device = "/dev/disk/by-uuid/3A62-0D0D";
       fsType = "vfat";
     };
-
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/8265fee0-7541-41b7-92a2-e059f34a68ae"; }
-    ];
 
   nix.maxJobs = lib.mkDefault 8;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";

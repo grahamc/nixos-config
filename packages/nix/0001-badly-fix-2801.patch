@@ -1,0 +1,38 @@
+From 72e4a17a0171cbaf6cd4a07fabe8e2fdcfe8f4c9 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Sun, 12 May 2019 09:49:27 -0400
+Subject: [PATCH 1/5] badly fix #2801
+
+---
+ src/libstore/build.cc | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index 91eb97df..b3ca8068 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -1837,11 +1837,13 @@ void DerivationGoal::startBuilder()
+                     "but this is only allowed when 'sandbox' is 'relaxed'") % drvPath);
+ #endif
+             useChroot = true;
++            needsHashRewrite = !useChroot;
+         }
+         else if (settings.sandboxMode == smDisabled)
+             useChroot = false;
+         else if (settings.sandboxMode == smRelaxed)
+             useChroot = !fixedOutput && !noChroot;
++        needsHashRewrite = !useChroot;
+     }
+ 
+     if (worker.store.storeDir != worker.store.realStoreDir) {
+@@ -1850,6 +1852,7 @@ void DerivationGoal::startBuilder()
+         #else
+             throw Error("building using a diverted store is not supported on this platform");
+         #endif
++            needsHashRewrite = !useChroot;
+     }
+ 
+     /* If `build-users-group' is not empty, then we have to build as
+-- 
+2.19.2
+

@@ -1,0 +1,23 @@
+From d75bdb5793e5ebf9e480f5a0012d141347725801 Mon Sep 17 00:00:00 2001
+From: Daiderd Jordan <daiderd@gmail.com>
+Date: Sun, 12 May 2019 16:46:21 +0200
+Subject: [PATCH 2/6] build: add test for sandboxed --check
+
+---
+ tests/linux-sandbox.sh | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tests/linux-sandbox.sh b/tests/linux-sandbox.sh
+index acfd46c5..52967d07 100644
+--- a/tests/linux-sandbox.sh
++++ b/tests/linux-sandbox.sh
+@@ -25,3 +25,6 @@ nix path-info -r $outPath | grep input-2
+ nix ls-store -R -l $outPath | grep foobar
+ 
+ nix cat-store $outPath/foobar | grep FOOBAR
++
++# Test --check without hash rewriting.
++nix-build dependencies.nix --no-out-link --check --sandbox-paths /nix/store
+-- 
+2.19.2
+

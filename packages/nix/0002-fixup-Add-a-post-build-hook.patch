@@ -1,0 +1,28 @@
+From 9b55c672873b089a05bbac1039d0b4694745ad34 Mon Sep 17 00:00:00 2001
+From: regnat <rg@regnat.ovh>
+Date: Fri, 12 Jul 2019 00:49:39 +0200
+Subject: [PATCH 2/2] fixup! Add a post-build-hook
+
+---
+ src/libstore/build.cc | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index 23b56a0a..c5a7dfd6 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -1636,7 +1636,10 @@ void DerivationGoal::buildDone()
+             Strings args;
+             for (auto outputPath: outputPaths)
+                 args.push_front(outputPath);
+-            auto lines = runProgram(settings.postBuildHook, false, args);
++            args.push_front("--");
++            args.push_front(drvPath);
++            RunOptions opts(settings.postBuildHook, args);
++            runProgram2(opts);
+         }
+ 
+         if (buildMode == bmCheck) {
+-- 
+2.21.0
+

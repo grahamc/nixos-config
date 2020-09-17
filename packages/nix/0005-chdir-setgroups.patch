@@ -1,0 +1,29 @@
+From 2de35ba3332f2bc6d8e2834bdc55b1d949d30824 Mon Sep 17 00:00:00 2001
+From: Graham Christensen <graham@grahamc.com>
+Date: Sat, 11 May 2019 15:57:38 -0400
+Subject: [PATCH 5/6] chdir, setgroups
+
+---
+ src/libstore/build.cc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index bfa00f3c..c2cc6f87 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -466,8 +466,12 @@ void handleDiffHook(bool allowVfork, uid_t uid, uid_t gid, Path tryA, Path tryB,
+     auto diffHook = settings.diffHook;
+     if (diffHook != "" && settings.runDiffHook) {
+         auto wrapper = [&]() {
++            if (chdir("/") == -1)
++                throw SysError("chdir / failed");
+             if (setgid(gid) == -1)
+                 throw SysError("setgid failed");
++            if (setgroups(0, 0) == -1)
++                throw SysError("setgroups failed");
+             if (setuid(uid) == -1)
+                 throw SysError("setuid failed");
+ 
+-- 
+2.19.2
+

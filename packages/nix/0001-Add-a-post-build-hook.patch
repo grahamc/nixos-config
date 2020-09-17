@@ -1,0 +1,60 @@
+From 4df11e3e2358f83109e096942c3c2163b2e75bc1 Mon Sep 17 00:00:00 2001
+From: regnat <rg@regnat.ovh>
+Date: Thu, 11 Jul 2019 20:23:03 +0200
+Subject: [PATCH] Add a post-build-hook
+
+---
+ src/libstore/build.cc   | 12 ++++++++++++
+ src/libstore/globals.hh |  2 ++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/src/libstore/build.cc b/src/libstore/build.cc
+index 350ac409..23b56a0a 100644
+--- a/src/libstore/build.cc
++++ b/src/libstore/build.cc
+@@ -1629,6 +1629,16 @@ void DerivationGoal::buildDone()
+            being valid. */
+         registerOutputs();
+ 
++        if (settings.postBuildHook != "") {
++            printMsg(lvlChatty, format("executing post-build hook '%1%'")
++                % settings.postBuildHook);
++            auto outputPaths = drv->outputPaths();
++            Strings args;
++            for (auto outputPath: outputPaths)
++                args.push_front(outputPath);
++            auto lines = runProgram(settings.postBuildHook, false, args);
++        }
++
+         if (buildMode == bmCheck) {
+             done(BuildResult::Built);
+             return;
+@@ -2363,6 +2373,7 @@ void DerivationGoal::startBuilder()
+         }
+         debug(msg);
+     }
++
+ }
+ 
+ 
+@@ -4631,3 +4642,4 @@ void LocalStore::repairPath(const Path & path)
+ 
+ 
+ }
++
+diff --git a/src/libstore/globals.hh b/src/libstore/globals.hh
+index 0af8215d..391a5989 100644
+--- a/src/libstore/globals.hh
++++ b/src/libstore/globals.hh
+@@ -315,6 +315,8 @@ public:
+         "pre-build-hook",
+         "A program to run just before a build to set derivation-specific build settings."};
+ 
++    Setting<std::string> postBuildHook{this, "", "post-build-hook", "TODO"};
++
+     Setting<std::string> netrcFile{this, fmt("%s/%s", nixConfDir, "netrc"), "netrc-file",
+         "Path to the netrc file used to obtain usernames/passwords for downloads."};
+ 
+-- 
+2.19.2
+
