@@ -1,0 +1,24 @@
+[package]
+name = "guiduck"
+version = "0.1.0"
+authors = ["Graham Christensen <graham@grahamc.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "receive"
+path = "src/receive.rs"
+
+[[bin]]
+name = "send"
+path = "src/send.rs"
+
+[[bin]]
+name = "bogus"
+path = "src/bogus.rs"
+
+[dependencies]
+clap = "2.33.1"
+zbus = "1.0.0"
+zvariant = "2.0.0"

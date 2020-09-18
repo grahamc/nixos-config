@@ -145,7 +145,7 @@ in
         --prefix PATH : ${self.lib.makeBinPath bins}
     '';
 
-    guiduck = (import ../../../github.com/grahamc/guiduck/Cargo.nix {}).rootCrate.build;
+    guiduck = (self.callPackage ./guiduck/Cargo.nix {}).rootCrate.build;
     guiduckAlias = name: self.writeScriptBin name ''
       #! ${self.runtimeShell}
       exec -a "${name}" ${self.grahamc.guiduck}/bin/send "$@"
