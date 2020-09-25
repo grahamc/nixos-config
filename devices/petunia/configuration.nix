@@ -138,7 +138,6 @@ in
   };
 
   time.timeZone = secrets.timezone;
-  security.pam.services.lightdm.enableKwallet = true;
 
   environment = {
     binsh = "${pkgs.dash}/bin/dash";
@@ -540,27 +539,6 @@ in
   # Only start emacs for actual users, lol
   systemd.user.services.emacs.unitConfig = {
     ConditionGroup = "users";
-  };
-
-  virtualisation.libvirtd = {
-    enable = true;
-    /*
-    this doesn't belong in extraConfig:
-    extraConfig = ''
-      <pool type="dir">
-        <name>default</name>
-        <target>
-          <path>/var/lib/virt/images</path>
-        </target>
-      </pool>
-    '';
-    */
-  };
-  # virtualisation.virtualbox.host.enable = true; # broken with linux_latest on 2020-09-10_
-  # virtualisation.virtualbox.host.enableExtensionPack = true;
-  virtualisation.docker = {
-    enable = false;
-    storageDriver = "zfs";
   };
 
   services.printing.enable = true;
