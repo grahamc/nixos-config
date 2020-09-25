@@ -21,7 +21,7 @@
   fileSystems."/" =
     { device = "tank/system/blank-root";
       fsType = "zfs";
-      options = [ "nosuid" ];
+      options = [ "nosuid" "noexec" ];
     };
 
   fileSystems."/home" =
@@ -39,7 +39,7 @@
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/3A62-0D0D";
       fsType = "vfat";
-      options = [ "nosuid" ];
+      options = [ "nosuid" "noexec" ];
     };
 
   nix.maxJobs = lib.mkDefault 8;
