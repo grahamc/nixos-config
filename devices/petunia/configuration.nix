@@ -23,7 +23,6 @@ in
       ./hardware-configuration.nix
       ../../packages/services.nix
       (import ./wireguard-ensure.nix { inherit secrets; })
-      ./vault.nix
     ];
 
   console = {
