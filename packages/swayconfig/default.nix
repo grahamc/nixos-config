@@ -4,7 +4,7 @@
   mutate ./config {
   inherit i3status bemenu pulseaudioFull volume
   backlight mako screenshot systemd;
-  kitty = grahamc.kitty;
+  alacritty = grahamc.alacritty;
 
   sway_cycle_workspace = sway-cycle-workspace;
   i3status_conf = mutate ./i3status {

@@ -65,7 +65,7 @@ font pango:monospace 12
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec @systemd@/bin/systemd-run --user --scope @kitty@/bin/kitty
+bindsym $mod+Return exec @systemd@/bin/systemd-run --user --scope @alacritty@/bin/alacritty
 
 # kill focused window
 bindsym $mod+Shift+apostrophe kill

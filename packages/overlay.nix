@@ -89,7 +89,7 @@ in
 
 
   grahamc = {
-    kitty = self.grahamc.binWithPath "${self.kitty}/bin/kitty" [
+    alacritty = self.grahamc.binWithPath "${self.alacritty}/bin/alacritty" [
       (self.grahamc.guiduckAlias "firefox")
       self.custom-emacs
       self.direnv
