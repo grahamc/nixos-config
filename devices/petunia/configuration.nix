@@ -423,7 +423,7 @@ in
       Type = "simple";
       ExecStart = ''
         ${pkgs.grahamc.guiduck}/bin/receive \
-          --map firefox ${pkgs.firefox}/bin/firefox
+          --map firefox ${pkgs.firefox-wayland}/bin/firefox
       '';
       Restart = "on-failure";
       RestartSec = 1;
