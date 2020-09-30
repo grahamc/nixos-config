@@ -80,14 +80,14 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id @systemd@/bin/systemd-run --us
 bindsym XF86AudioLowerVolume exec --no-startup-id @systemd@/bin/systemd-run --user --scope @volume@ down
 bindsym XF86AudioMute exec --no-startup-id @systemd@/bin/systemd-run --user --scope  @pulseaudioFull@/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-bindsym XF86MonBrightnessUp exec @systemd@/bin/systemd-run --user --scope @backlight@ up
-bindsym XF86MonBrightnessDown exec @systemd@/bin/systemd-run --user --scope @backlight@ down
+bindsym XF86MonBrightnessUp exec @systemd@/bin/systemd-run --user --scope @backlight@/bin/backlight up
+bindsym XF86MonBrightnessDown exec @systemd@/bin/systemd-run --user --scope @backlight@/bin/backlight down
 
 bindsym XF86KbdBrightnessUp exec @systemd@/bin/systemd-run --user --scope kbdlight up 20
 bindsym XF86KbdBrightnessDown exec @systemd@/bin/systemd-run --user --scope kbdlight down 20
 
 # the F9/Find icon
-bindsym XF86Search exec @systemd@/bin/systemd-run --user --scope @killFocused@
+bindsym XF86Search exec @systemd@/bin/systemd-run --user --scope @killFocused@/bin/kill-focused
 
 # change focus
 bindsym $mod+h focus left

@@ -29,7 +29,7 @@ let
 in
 {
   abathur-resholved = self.callPackage ./abathur-resholved {};
-  resholve = { src, inputs }: self.runCommand
+  resholve = { name, src, inputs }: self.runCommand
     "${builtins.baseNameOf src}-resholved"
     {
       nativeBuildInputs = [ self.abathur-resholved ];
@@ -37,8 +37,9 @@ in
       RESHOLVE_PATH = "${self.lib.makeBinPath inputs}";
     }
     ''
-      resholver < ${src} > $out
-      chmod --reference=${src} $out
+      mkdir -p $out/bin
+      resholver < ${src} > $out/bin/${name}
+      chmod --reference=${src} $out/bin/${name}
     '';
 
 
