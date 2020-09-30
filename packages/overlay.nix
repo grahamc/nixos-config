@@ -189,6 +189,8 @@ in
     ./did-graham-commit-his-repos
     {};
 
+  kill-focused = self.callPackage ./kill-focused {};
+
   motd-massive = self.callPackage
     ./motd
     {};

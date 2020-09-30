@@ -86,8 +86,8 @@ bindsym XF86MonBrightnessDown exec @systemd@/bin/systemd-run --user --scope @bac
 bindsym XF86KbdBrightnessUp exec @systemd@/bin/systemd-run --user --scope kbdlight up 20
 bindsym XF86KbdBrightnessDown exec @systemd@/bin/systemd-run --user --scope kbdlight down 20
 
-# the F9/Find icon?
-bindsym XF86Search exec @systemd@/bin/systemd-run --user --scope loginctl lock-session
+# the F9/Find icon
+bindsym XF86Search exec @systemd@/bin/systemd-run --user --scope @killFocused@
 
 # change focus
 bindsym $mod+h focus left
