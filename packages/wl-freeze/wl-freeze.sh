@@ -18,10 +18,10 @@ scope_cache=$(mktemp freezer.XXXX -t)
 trap cleanup EXIT
 
 cleanup() {
-	local scope
-  while read -r scope < "$scope_cache"; do
-    echo 0 > "$scope/cgroup.freeze"
-  done
+  local scope
+  while read -r scope; do
+    echo 0 > "$scope/cgroup.freeze" || true
+  done < "$scope_cache"
   rm "$scope_cache"
 }
 
@@ -77,6 +77,14 @@ freezer() {
 }
 
 main() {
+    # check if kernel parameter is set
+    if ! grep -Fq "cgroup_no_v1=all" "/proc/cmdline"; then
+      err "To use this script you have to set the kernel paramet 'cgroup_no_v1' to 'all'"
+      err "Please add this to your kernel parameters:"
+      printf '"cgroup_no_v1=all"'
+      exit 2
+    fi
+
     local myscopedir
     myscopedir=$(scopedirforpid "$PPID")
     echo "Will not freeze $myscopedir"
