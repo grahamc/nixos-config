@@ -14,6 +14,17 @@ err() {
     echo "$@" >&2
 }
 
+scope_cache=$(mktemp freezer.XXXX -t)
+trap cleanup EXIT
+
+cleanup() {
+	local scope
+  while read -r scope < "$scope_cache"; do
+    echo 0 > "$scope/cgroup.freeze"
+  done
+  rm "$scope_cache"
+}
+
 scopedirforpid() {
     local pid=$1
     local scope
@@ -54,13 +65,13 @@ freezer() {
             # Race condition: if these processes are exiting, these
             # freeze files may no longer exist. Ignore failures.
             echo 1 > "$last_scopedir/cgroup.freeze"  || true
+            echo "$last_scopedir" >> "$scope_cache"
         fi
 
         # Race condition: if these processes are exiting, these
         # freeze files may no longer exist. Ignore failures.
-        systemctl kill --user --signal CONT \
-                  "$(echo "$scope" | rev | cut -d'/' -f1 | rev)" || true
         echo 0 > "$scope/cgroup.freeze" || true
+        sed -i "\_${scope}_d" "$scope_cache"
         last_scopedir="$scope"
     done
 }
