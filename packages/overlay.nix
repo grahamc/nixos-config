@@ -191,6 +191,8 @@ in
 
   kill-focused = self.callPackage ./kill-focused {};
 
+  wl-freeze = self.callPackage ./wl-freeze {};
+
   motd-massive = self.callPackage
     ./motd
     {};
