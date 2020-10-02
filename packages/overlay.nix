@@ -228,6 +228,14 @@ in
     ./nixpkgs-pre-push
     {};
 
+  oil = super.oil.overrideAttrs ({ ... }: {
+    version = "0.8.1";
+    src = self.fetchurl {
+      url = "https://www.oilshell.org/download/oil-0.8.1.tar.xz";
+      sha256 = "0mhzys1siry848v7swr1iv2wp329ksw0gpz1qd82fmlakml5brc1";
+    };
+  });
+
   pass = upgradeOverride
     super.pass
     (
