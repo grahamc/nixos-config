@@ -140,7 +140,7 @@ in
   time.timeZone = secrets.timezone;
 
   environment = {
-    binsh = "${pkgs.dash}/bin/dash";
+    binsh = "${pkgs.oil}/bin/osh";
     variables = {
       EDITOR = "emacs -nw";
       MOZ_ENABLE_WAYLAND = "1";
