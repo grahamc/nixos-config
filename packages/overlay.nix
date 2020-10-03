@@ -150,7 +150,10 @@ in
       #! ${self.runtimeShell}
       exec -a "${name}" ${self.grahamc.guiduck}/bin/send "$@"
     '';
-  };
+
+    snoop = self.callPackage ./snoop {};
+    snoopedosh = self.grahamc.snoop "${self.oil}/bin/osh";
+ };
 
   h = self.callPackage
     ./h
