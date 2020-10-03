@@ -29,12 +29,14 @@ let
 in
 {
   abathur-resholved = self.callPackage ./abathur-resholved {};
-  resholve = { src, inputs }: self.runCommand
+  resholve = { src, inputs, allow ? {} }: self.runCommand
     "${builtins.baseNameOf src}-resholved"
     {
       nativeBuildInputs = [ self.abathur-resholved ];
       #SHELL_RUNTIME_DEPENDENCY_PATH = "${self.lib.makeBinPath inputs}";
       RESHOLVE_PATH = "${self.lib.makeBinPath inputs}";
+      RESHOLVE_ALLOW = toString
+        (self.lib.mapAttrsToList (name: value: map (y: name + ":" + y) value) allow);
     }
     ''
       resholver < ${src} > $out
