@@ -139,6 +139,12 @@ in
 
   time.timeZone = secrets.timezone;
 
+  security = {
+    audit = {
+      enable = true;
+    };
+  };
+
   environment = {
     binsh = "${pkgs.oil}/bin/osh";
     variables = {
