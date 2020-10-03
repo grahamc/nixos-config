@@ -146,7 +146,7 @@ in
   };
 
   environment = {
-    binsh = "${pkgs.oil}/bin/osh";
+    binsh = pkgs.grahamc.snoop "${pkgs.oil}/bin/osh";
     variables = {
       EDITOR = "emacs -nw";
       MOZ_ENABLE_WAYLAND = "1";
