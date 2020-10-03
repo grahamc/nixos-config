@@ -1,4 +1,4 @@
-#!@oil@/bin/osh
+#!/usr/bin/env osh
 
 (
   pstree -w -p "$$"
