@@ -1,5 +1,6 @@
 {
   imports = [
+    ./nixos-software-manager/service.nix
     ./recognize-thunderbolt/service.nix
     # ./aenea/service.nix
     ./autorandr-configs/service.nix

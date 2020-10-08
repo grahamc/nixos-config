@@ -155,6 +155,8 @@ in
 
     snoop = self.callPackage ./snoop {};
     snoopedosh = self.grahamc.snoop "${self.oil}/bin/osh";
+
+    nixos-software-manager = self.callPackage ./nixos-software-manager {};
  };
 
   h = self.callPackage

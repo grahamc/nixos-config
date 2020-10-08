@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eux
+
+sys="$1"
+todo="$2"
+
+nix-env --profile /nix/var/nix/profiles/system --set "$sys"
+/nix/var/nix/profiles/system/bin/switch-to-configuration "$todo"
+
