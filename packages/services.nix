@@ -1,6 +1,7 @@
 {
   imports = [
     ./nixos-software-manager/service.nix
+    ./kensington-slimblade-trackball/service.nix
     ./recognize-thunderbolt/service.nix
     # ./aenea/service.nix
     ./autorandr-configs/service.nix
