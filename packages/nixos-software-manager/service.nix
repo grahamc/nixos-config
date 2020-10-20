@@ -5,6 +5,9 @@ let
   nixos_config = "/home/grahamc/projects/grahamc/nixos-config/devices/petunia/configuration.nix";
 in 
 {
+  environment.etc.nixpkgs.source = pkgs.path;
+  nix.nixPath = [ "nixpkgs=/etc/nixpkgs" ];
+
   systemd.tmpfiles.rules = [ "d ${scratch} 0755 root root -" ];
 
   systemd.services.stage-upgrade = {
