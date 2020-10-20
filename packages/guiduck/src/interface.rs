@@ -1,7 +1,18 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
+use std::thread;
 use zbus::dbus_interface;
+fn ugly_reap_in_background(mut child: Child) {
+    thread::spawn(move || match child.wait() {
+        Ok(status) => {
+            println!("Utility exited: «{:?}»", status);
+        }
+        Err(e) => {
+            println!("Waiting on a command failed?: «{:?}»", e);
+        }
+    });
+}
 
 pub struct GuiDuckInterface {
     executables: HashMap<String, String>,
@@ -15,11 +26,17 @@ impl GuiDuckInterface {
     fn handle_request(&self, cwd: PathBuf, utility: String, arg: Option<&str>) -> bool {
         self.log_launch_request(&cwd, &utility, arg);
         let ret = self.spawn(cwd, utility, arg);
-        if let Err(e) = ret {
-            self.log_launch_error(e);
-            return false;
-        } else {
-            return true;
+
+        match ret {
+            Ok(child) => {
+                ugly_reap_in_background(child);
+                return true;
+            }
+
+            Err(e) => {
+                self.log_launch_error(e);
+                return false;
+            }
         }
     }
 

@@ -157,10 +157,10 @@ rec {
       };
       "cc" = rec {
         crateName = "cc";
-        version = "1.0.58";
+        version = "1.0.61";
         edition = "2018";
         crateBin = [];
-        sha256 = "065m2fphrv5csy8hvv37msi3a739mfkgw7pcg71dfw9jwnr6z87r";
+        sha256 = "0pcq3hidadsjl8hg66cyn3zyx0clfkj6nrf4bzkkhqim13gcnrzd";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -182,9 +182,9 @@ rec {
       };
       "clap" = rec {
         crateName = "clap";
-        version = "2.33.1";
+        version = "2.33.3";
         edition = "2015";
-        sha256 = "0a91g4m6rcqpf6gzxh43cj6mnj9g8ahpr634baim6kcmgza81ymx";
+        sha256 = "00i065a58987k1sbzqmlz721rw521zcg08jmsh40gi3khp3qmr9p";
         authors = [
           "Kevin K. <kbknapp@gmail.com>"
         ];
@@ -316,11 +316,18 @@ rec {
       };
       "fastrand" = rec {
         crateName = "fastrand";
-        version = "1.3.3";
+        version = "1.4.0";
         edition = "2018";
-        sha256 = "1vgbd3b6mmrdqcazi3rwviix5vc7wjj00pa33qhwv08ghh4wpa9n";
+        sha256 = "1qvz1i7g5mb2hcsaawrvxx88b8vwrsr85qr98ffmrkj5fh2sypya";
         authors = [
           "Stjepan Glavina <stjepang@gmail.com>"
+        ];
+        dependencies = [
+          {
+            name = "instant";
+            packageId = "instant";
+            target = { target, features }: (target."arch" == "wasm32");
+          }
         ];
         
       };
@@ -355,9 +362,9 @@ rec {
       };
       "hermit-abi" = rec {
         crateName = "hermit-abi";
-        version = "0.1.15";
+        version = "0.1.17";
         edition = "2018";
-        sha256 = "1ac5bij39rhzs8zngfxi109dh0h3v0jl5ng8595f9yg7nsbd3vix";
+        sha256 = "1s1ss7xypnbpjglmj5k39svzsmni1rqp57a91qi5pyv0yxjmbjjs";
         authors = [
           "Stefan Lankes"
         ];
@@ -373,11 +380,30 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" ];
       };
+      "instant" = rec {
+        crateName = "instant";
+        version = "0.1.7";
+        edition = "2018";
+        sha256 = "0rlyrpvq27vdwgiladc3dcj2lx8rlv0smid7s36n11zaywc2lcb3";
+        authors = [
+          "sebcrozet <developer@crozet.re>"
+        ];
+        dependencies = [
+          {
+            name = "cfg-if";
+            packageId = "cfg-if";
+          }
+        ];
+        features = {
+          "now" = [ "time" ];
+          "wasm-bindgen" = [ "js-sys" "wasm-bindgen_rs" "web-sys" ];
+        };
+      };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.74";
+        version = "0.2.79";
         edition = "2015";
-        sha256 = "045x2imb534fkl33wv97jrr2x0jrzdlg5xzm5n159dvqrwijiw52";
+        sha256 = "0hw7qnlymw5gi5c3xd7mirpgrc5l0pvqpjg9jb3vzqw0dq3gcj14";
         authors = [
           "The Rust Project Developers"
         ];
@@ -424,6 +450,19 @@ rec {
         ];
         
       };
+      "once_cell" = rec {
+        crateName = "once_cell";
+        version = "1.4.1";
+        edition = "2018";
+        sha256 = "1ba56vr8n85xgajnn78pg6iag4inwil3mqg90wi5jaz6xzkm23i6";
+        authors = [
+          "Aleksey Kladov <aleksey.kladov@gmail.com>"
+        ];
+        features = {
+          "default" = [ "std" ];
+        };
+        resolvedDefaultFeatures = [ "default" "std" ];
+      };
       "proc-macro-crate" = rec {
         crateName = "proc-macro-crate";
         version = "0.1.5";
@@ -442,9 +481,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.19";
+        version = "1.0.24";
         edition = "2018";
-        sha256 = "04lb4n7g5z9mq6in39i7yb1m5bb107dfawc2rf4227npnn2z1x84";
+        sha256 = "0wcabxzrddcjmryndw8fpyxcq6rw63m701vx86xxf03y3bp081qy";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -493,9 +532,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.114";
+        version = "1.0.117";
         edition = "2015";
-        sha256 = "1lwcxlh8c09cs6qmwr6w68hl989mczwmwrzgc3p7hl0aixcgf5sk";
+        sha256 = "06nwyyma9hch1abjqj0y9cb09m1y6lbzbsc7jff6483pvs1sk3xq";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -521,9 +560,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.114";
+        version = "1.0.117";
         edition = "2015";
-        sha256 = "13lgjxsc617yhblm779jwg43gxab2dfgrpyd6znvl3v90i5yj2ra";
+        sha256 = "0kn7ais3zv9ajbyc216qm14r61zwlm229815yd4anjmlmmraxlfb";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -585,9 +624,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.36";
+        version = "1.0.45";
         edition = "2018";
-        sha256 = "0l2jpd2r91hkchcmiaafs6srjnd1kqk9q5rnnl3ivn7rn6y9insc";
+        sha256 = "0mimgajf9y1xnhhvn28v2xl77mhwhxdgn27qf4iibmhnzwr5977a";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -634,9 +673,9 @@ rec {
       };
       "toml" = rec {
         crateName = "toml";
-        version = "0.5.6";
+        version = "0.5.7";
         edition = "2018";
-        sha256 = "06n7j8z63hj6g0kj2x6sqwxnm4q3s0q5d873bdk41vqy1cb2vjgz";
+        sha256 = "0iannv6pb226h0q9vlqg7hdn36fs146yrahw016n107g1fxlbkvm";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -775,9 +814,9 @@ rec {
       };
       "zbus" = rec {
         crateName = "zbus";
-        version = "1.0.0";
+        version = "1.2.1";
         edition = "2018";
-        sha256 = "09v40wfdiq6b7dkvfym6bcs8yd571n0yn3kkr8vpap7xrdr7rf8w";
+        sha256 = "1nk28fgcxy7w6y7bj4rrda9i6fjlwv72a9vvilq7hxy8xac1m2is";
         authors = [
           "Zeeshan Ali <zeeshanak@gnome.org>"
         ];
@@ -804,6 +843,10 @@ rec {
             packageId = "nix";
           }
           {
+            name = "once_cell";
+            packageId = "once_cell";
+          }
+          {
             name = "scoped-tls";
             packageId = "scoped-tls";
           }
@@ -825,10 +868,6 @@ rec {
             packageId = "zvariant";
             features = [ "enumflags2" ];
           }
-          {
-            name = "zvariant_derive";
-            packageId = "zvariant_derive";
-          }
         ];
         features = {
           "xml" = [ "serde-xml-rs" ];
@@ -836,12 +875,12 @@ rec {
       };
       "zbus_macros" = rec {
         crateName = "zbus_macros";
-        version = "1.0.0";
+        version = "1.2.1";
         edition = "2018";
-        sha256 = "12js7bg3rj5fm2zdapnr7lmyaimj6b9fnfsdnhi0kfac1aig5hf0";
+        sha256 = "1958g53gjl8hp7f1krlpf8611kcdi9wg19kqk2ibgwv7pr8d194w";
         procMacro = true;
         authors = [
-          "Marc-André Lureau <marcandre.lureau@redhat.com"
+          "Marc-André Lureau <marcandre.lureau@redhat.com>"
         ];
         dependencies = [
           {
@@ -866,9 +905,9 @@ rec {
       };
       "zvariant" = rec {
         crateName = "zvariant";
-        version = "2.0.1";
+        version = "2.2.0";
         edition = "2018";
-        sha256 = "10258ixm1svklw2li8fb0wcz4m13ackh5j2n3k5q0dqsgpk8bgzh";
+        sha256 = "0h17n02k2cv523gf2hgsibzwanddv7gq4h7637dbw0a18ldb6ygv";
         authors = [
           "Zeeshan Ali <zeeshanak@gnome.org>"
         ];
@@ -888,20 +927,29 @@ rec {
             packageId = "serde";
             features = [ "derive" ];
           }
+          {
+            name = "zvariant_derive";
+            packageId = "zvariant_derive";
+          }
         ];
-        
+        features = {
+        };
         resolvedDefaultFeatures = [ "enumflags2" ];
       };
       "zvariant_derive" = rec {
         crateName = "zvariant_derive";
-        version = "2.0.0";
+        version = "2.2.0";
         edition = "2018";
-        sha256 = "1ifp48pjkfbirnbrxwcignkdwqz24w2hi18lim53hmr7q7l2d1yn";
+        sha256 = "1vw0qyqhfwj0bkqps8njirbvrh65csh2xrsma3as74wxllag8nv0";
         procMacro = true;
         authors = [
           "Zeeshan Ali <zeeshanak@gnome.org>"
         ];
         dependencies = [
+          {
+            name = "proc-macro-crate";
+            packageId = "proc-macro-crate";
+          }
           {
             name = "proc-macro2";
             packageId = "proc-macro2";
@@ -913,6 +961,7 @@ rec {
           {
             name = "syn";
             packageId = "syn";
+            features = [ "extra-traits" "full" ];
           }
         ];
         
