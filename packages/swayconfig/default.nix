@@ -6,6 +6,7 @@
   backlight mako screenshot systemd;
   alacritty = grahamc.alacritty;
   killFocused = kill-focused;
+  guilauncher = grahamc.guilauncher;
 
   sway_cycle_workspace = sway-cycle-workspace;
   i3status_conf = mutate ./i3status {

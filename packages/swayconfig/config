@@ -71,7 +71,7 @@ bindsym $mod+Return exec @systemd@/bin/systemd-run --user --scope @alacritty@/bi
 bindsym $mod+Shift+apostrophe kill
 
 # start dmenu (a program launcher)
-bindsym $mod+e exec @systemd@/bin/systemd-run --user --scope --setenv=BEMENU_BACKEND=wayland --setenv=PATH=@guis@/bin @bemenu@/bin/bemenu-run -i
+bindsym $mod+e exec @guilauncher@
 bindsym --release $mod+Ctrl+3 exec @systemd@/bin/systemd-run --user --scope @screenshot@ full-screen
 bindsym --release $mod+Ctrl+4 exec @systemd@/bin/systemd-run --user --scope @screenshot@ select
 

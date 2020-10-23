@@ -107,6 +107,8 @@ in
       self.xdg_utils
     ];
 
+    guilauncher = self.callPackage ./guilauncher {};
+
     guis = self.buildEnv {
       name = "grahams-guis";
       pathsToLink = [ "/bin" ];
