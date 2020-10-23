@@ -7,6 +7,7 @@
   alacritty = grahamc.alacritty;
   killFocused = kill-focused;
   guilauncher = grahamc.guilauncher;
+  spawn = grahamc.spawn;
 
   sway_cycle_workspace = sway-cycle-workspace;
   i3status_conf = mutate ./i3status {

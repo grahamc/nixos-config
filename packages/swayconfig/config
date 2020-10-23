@@ -65,29 +65,29 @@ font pango:monospace 12
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec @systemd@/bin/systemd-run --user --scope @alacritty@/bin/alacritty
+bindsym $mod+Return exec @spawn@ @alacritty@/bin/alacritty
 
 # kill focused window
 bindsym $mod+Shift+apostrophe kill
 
 # start dmenu (a program launcher)
 bindsym $mod+e exec @guilauncher@
-bindsym --release $mod+Ctrl+3 exec @systemd@/bin/systemd-run --user --scope @screenshot@ full-screen
-bindsym --release $mod+Ctrl+4 exec @systemd@/bin/systemd-run --user --scope @screenshot@ select
+bindsym --release $mod+Ctrl+3 exec @spawn@ @screenshot@ full-screen
+bindsym --release $mod+Ctrl+4 exec @spawn@ @screenshot@ select
 
 
-bindsym XF86AudioRaiseVolume exec --no-startup-id @systemd@/bin/systemd-run --user --scope @volume@ up
-bindsym XF86AudioLowerVolume exec --no-startup-id @systemd@/bin/systemd-run --user --scope @volume@ down
-bindsym XF86AudioMute exec --no-startup-id @systemd@/bin/systemd-run --user --scope  @pulseaudioFull@/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id @spawn@ @volume@ up
+bindsym XF86AudioLowerVolume exec --no-startup-id @spawn@ @volume@ down
+bindsym XF86AudioMute exec --no-startup-id @spawn@  @pulseaudioFull@/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-bindsym XF86MonBrightnessUp exec @systemd@/bin/systemd-run --user --scope @backlight@ up
-bindsym XF86MonBrightnessDown exec @systemd@/bin/systemd-run --user --scope @backlight@ down
+bindsym XF86MonBrightnessUp exec @spawn@ @backlight@ up
+bindsym XF86MonBrightnessDown exec @spawn@ @backlight@ down
 
-bindsym XF86KbdBrightnessUp exec @systemd@/bin/systemd-run --user --scope kbdlight up 20
-bindsym XF86KbdBrightnessDown exec @systemd@/bin/systemd-run --user --scope kbdlight down 20
+bindsym XF86KbdBrightnessUp exec @spawn@ kbdlight up 20
+bindsym XF86KbdBrightnessDown exec @spawn@ kbdlight down 20
 
 # the F9/Find icon
-bindsym XF86Search exec @systemd@/bin/systemd-run --user --scope @killFocused@
+bindsym XF86Search exec @spawn@ @killFocused@
 
 # change focus
 bindsym $mod+h focus left
@@ -137,7 +137,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # move a workspace to another workspace (corresponds to the alt of F8)
-bindsym $mod+l exec --no-startup-id @systemd@/bin/systemd-run --user --scope @sway_cycle_workspace@
+bindsym $mod+l exec --no-startup-id @spawn@ @sway_cycle_workspace@
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -171,7 +171,7 @@ bindsym $mod+Shift+j reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+p restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+period exec @systemd@/bin/systemd-run --user --scope "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+period exec @spawn@ "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
