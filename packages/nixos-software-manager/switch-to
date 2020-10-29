@@ -7,4 +7,5 @@ todo="$2"
 
 nix-env --profile /nix/var/nix/profiles/system --set "$sys"
 /nix/var/nix/profiles/system/bin/switch-to-configuration "$todo"
+echo "Upgrade exited with: $?"
 

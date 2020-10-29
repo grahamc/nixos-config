@@ -54,7 +54,7 @@ in
   systemd.user.timers.prompt-upgrade = {
     wantedBy = [ "ac.target" ];
     partOf = [ "ac.target" ];
-    timerConfig.OnCalendar = "hourly";
+    timerConfig.OnCalendar = "*:0/5"; #"hourly";
     unitConfig = {
       StopWhenUnneeded = true;
     };

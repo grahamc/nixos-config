@@ -1,4 +1,4 @@
-{ resholve, mutate, coreutils, sway, nix, gnome3 }:
+{ resholve, mutate, coreutils, sway, nix, nix-diff, gnome3 }:
 let 
   switchto = resholve {
     src = ./switch-to;
@@ -19,7 +19,7 @@ let
     src = mutate ./prompt-upgrade.sh {
       inherit switchto;
     };
-    inputs = [ coreutils sway gnome3.zenity ];
+    inputs = [ coreutils sway gnome3.zenity nix nix-diff ];
     allow = {
       resholved_inputs = [
 	"/run/wrappers/bin/pkexec"
