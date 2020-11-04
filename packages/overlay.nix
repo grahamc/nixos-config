@@ -201,6 +201,7 @@ in
     {};
 
   kill-focused = self.callPackage ./kill-focused {};
+  freeze-focused = self.callPackage ./freeze-focused {};
 
   wl-freeze = self.callPackage ./wl-freeze {};
 

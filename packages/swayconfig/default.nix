@@ -1,11 +1,12 @@
 { mutate, xorg, i3status, bemenu, pulseaudioFull,
   volume, backlight, mako, lib, screenshot, sway-cycle-workspace,
-  systemd, secrets, grahamc, kill-focused }:
+  systemd, secrets, grahamc, kill-focused, freeze-focused }:
   mutate ./config {
   inherit i3status bemenu pulseaudioFull volume
   backlight mako screenshot systemd;
   alacritty = grahamc.alacritty;
   killFocused = kill-focused;
+  freezeFocused = freeze-focused;
   guilauncher = grahamc.guilauncher;
   spawn = grahamc.spawn;
 

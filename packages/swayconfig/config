@@ -88,6 +88,7 @@ bindsym XF86KbdBrightnessDown exec @spawn@ kbdlight down 20
 
 # the F9/Find icon
 bindsym XF86Search exec @spawn@ @killFocused@
+bindsym XF86AudioPlay exec @spawn@ @freezeFocused@
 
 # change focus
 bindsym $mod+h focus left
