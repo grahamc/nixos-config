@@ -33,6 +33,12 @@ in
     "${builtins.baseNameOf src}-resholved"
     {
       nativeBuildInputs = [ self.abathur-resholved ];
+      buildInputs = [
+        (self.runCommand "sh" {} ''
+          mkdir -p $out/bin
+          ln -s ${self.oil}/bin/osh $out/bin/sh
+        '')
+      ];
       #SHELL_RUNTIME_DEPENDENCY_PATH = "${self.lib.makeBinPath inputs}";
       RESHOLVE_PATH = "${self.lib.makeBinPath inputs}";
       RESHOLVE_ALLOW = toString
@@ -41,6 +47,7 @@ in
     ''
       resholver < ${src} > $out
       chmod --reference=${src} $out
+      patchShebangs $out
     '';
 
 
