@@ -272,6 +272,9 @@ in
 
       helvetica
       vegur # the official NixOS font
+
+      # waybar ...
+      font-awesome
     ];
   };
 
