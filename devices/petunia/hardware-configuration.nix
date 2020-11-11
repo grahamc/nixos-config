@@ -21,25 +21,25 @@
   fileSystems."/" =
     { device = "tank/system/blank-root";
       fsType = "zfs";
-      options = [ "nosuid" "noexec" ];
+      options = [ "nodev" "nosuid" "noexec" ];
     };
 
   fileSystems."/home" =
     { device = "tank/user/home";
       fsType = "zfs";
-      options = [ "nosuid" ];
+      options = [ "nodev" "nosuid" ];
     };
 
   fileSystems."/nix" =
     { device = "tank/local/nix";
       fsType = "zfs";
-      options = [ "nosuid" ];
+      options = [ "nodev" "nosuid" ];
     };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/3A62-0D0D";
       fsType = "vfat";
-      options = [ "nosuid" "noexec" ];
+      options = [ "nodev" "nosuid" "noexec" ];
     };
 
   nix.maxJobs = lib.mkDefault 8;
