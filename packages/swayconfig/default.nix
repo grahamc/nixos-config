@@ -1,25 +1,20 @@
-{ mutate, xorg, i3status, bemenu, pulseaudioFull,
+{ mutate, xorg, bemenu, waybar, pulseaudioFull,
   volume, backlight, mako, lib, screenshot, sway-cycle-workspace,
-  systemd, secrets, grahamc, kill-focused, freeze-focused }:
+  systemd, secrets, grahamc, kill-focused, freeze-focused, pavucontrol }:
   mutate ./config {
-  inherit i3status bemenu pulseaudioFull volume
+  inherit bemenu pulseaudioFull volume
   backlight mako screenshot systemd;
   alacritty = grahamc.alacritty;
   killFocused = kill-focused;
   freezeFocused = freeze-focused;
   guilauncher = grahamc.guilauncher;
   spawn = grahamc.spawn;
+  waybar = waybar.override { pulseSupport = true; };
 
   sway_cycle_workspace = sway-cycle-workspace;
-  i3status_conf = mutate ./i3status {
-    remote_tzs = lib.lists.imap0 (i: tz: ''
-        tztime remote${toString i} {
-          format = "-%d %H:%M:%S %Z"
-          timezone = "${tz}"
-        }
-        order += "tztime remote${toString i}"
-
-      '') secrets.location.remote_timezones;
+  waybar_conf = mutate ./waybar {
+    inherit pavucontrol;
+    inherit (grahamc) spawn;
   };
 
   bgimage = ../../nixos-nineish.png;

@@ -1,0 +1,79 @@
+{
+    // "layer": "top", // Waybar at top layer
+     "position": "top", // Waybar position (top|bottom|left|right)
+    "height": 20, // Waybar height (to be removed for auto height)
+    // "width": 1280, // Waybar width
+    // Choose the order of the modules
+    "modules-left": ["sway/workspaces", "sway/mode" ],
+    "modules-center": ["sway/window"],
+    "modules-right": [ "idle_inhibitor", "pulseaudio", "network", "battery", "clock#Europe/Paris", "clock", "tray"],
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+    "clock": {
+        // "timezone": "America/New_York",
+        "format": "{:%Y-%m-%d %H:%M %Z}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "clock#Europe/Paris": {
+        "timezone": "Europe/Paris",
+        "format": "{:%H:%M %Z}",
+        "tooltip-format": "<big>{:%Y-%m-%d %H:%M %Z}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%H:%M %Z}"
+
+    },
+    "battery": {
+        "states": {
+            // "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        // "format-good": "", // An empty format will hide the module
+        // "format-full": "",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "network": {
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+        "format-wifi": "",
+      	"tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        "format-linked": "{ifname} (No IP) ",
+        "format-disconnected": "⚠",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "pulseaudio": {
+        "format": "{volume}% {icon} {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": "🔇 {icon} {format_source}",
+        "format-muted": "🔇 {format_source}",
+        "format-source": "{volume}% ",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "@spawn@ @pavucontrol@/bin/pavucontrol",
+        // scrolling is backwards, so disable it
+      	"scroll-step": 0
+    }
+}
