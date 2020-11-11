@@ -24,6 +24,13 @@ if [ "$newsyspath" = "$prevsyspath" ]; then
 	exit 0
 fi
 
+agecurrentsystem=$(stat -c '%Y' /run/current-system)
+agenewsystem=$(stat -c '%Y' /var/cache/nixos-software-manager/nixos-update-manager/system)
+if [ "$agecurrentsystem" -gt "$agenewsystem" ]; then
+	echo "Current system is newer than the staged system upgrade, not nagging."
+	exit 1
+fi	
+
 prevversion="$(/run/current-system/sw/bin/nixos-version)"
 newversion="$($newsyspath/sw/bin/nixos-version)"
 
